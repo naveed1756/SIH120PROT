@@ -117,7 +117,7 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 ### `ml/`, `optim/`
 | Path | Task | Status | What it does |
 |---|---|---|---|
-| `ml/card_library.py` | T07 | ✅ | `python -m ml.card_library [n]`: samples 9 × 1,500 cards, simulates (2 processes, ~4.5 min), noise, validity + label checks → `out/cards.parquet` |
+| `ml/card_library.py` | T07 | ✅ | `python -m ml.card_library [n]`: samples 9 × 1,500 cards, simulates (2 processes, ~4.5 min), noise, validity + label checks → `out/cards.parquet`. `load_cards()` also reads `out/cards_part*.parquet` (the library as delivered to this folder, split < 20 MB) |
 | `ml/features.py` | T11 | ⬜ | Fourier descriptors + geometric card features |
 | `ml/train_classifier.py` | T11 | ⬜ | XGBoost card classifier, split by operating range |
 | `optim/l0_cycle.py`, `optim/pareto.py` | T15 | ⬜ | Analytical cycle model + NSGA-II Pareto (Could) |

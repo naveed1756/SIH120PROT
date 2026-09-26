@@ -36,7 +36,8 @@ def medoid(g, max_n=300, seed=0):
 
 def main():
     S.apply()
-    df = pd.read_parquet(ROOT / "out" / "cards.parquet")
+    from ml.card_library import load_cards
+    df = load_cards()
     df = df[df.keep]
     fig, axs = plt.subplots(3, 3, figsize=(14.0, 10.5))
     fig.subplots_adjust(left=0.06, right=0.985, top=0.885, bottom=0.075, hspace=0.62, wspace=0.22)

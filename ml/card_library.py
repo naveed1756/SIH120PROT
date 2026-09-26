@@ -134,3 +134,23 @@ def main(n_per_class=1500):
 
 if __name__ == "__main__":
     main(int(sys.argv[1]) if len(sys.argv) > 1 else 1500)
+
+
+def load_cards(columns=None):
+    """Read the card library: out/cards.parquet, or out/cards_part*.parquet if it was
+    delivered in parts (each file < 20 MB for transfer)."""
+    single = OUT / "cards.parquet"
+    if single.exists():
+        return pd.read_parquet(single, columns=columns)
+    parts = sorted(OUT.glob("cards_part*.parquet"))
+    if not parts:
+        raise FileNotFoundError("no card library in out/ (run: python -m ml.card_library)")
+    return pd.concat([pd.read_parquet(p, columns=columns) for p in parts], ignore_index=True)
+
+
+def split_for_transfer(n_parts=2):
+    """Write out/cards_part{i}.parquet (zstd) from out/cards.parquet."""
+    df = pd.read_parquet(OUT / "cards.parquet")
+    for i, idx in enumerate(np.array_split(np.arange(len(df)), n_parts), 1):
+        df.iloc[idx].to_parquet(OUT / f"cards_part{i}.parquet", index=False, compression="zstd",
+                                compression_level=19)

@@ -88,7 +88,7 @@ X_SF = 0.50                  # Derived: sandface quality for VIT grade D (3B Fig
 P_BH_INJ_KSC = 99.0          # Derived: bottomhole injection pressure (3A section 9, 3B section 2)
 T_INJ_D = 18.0               # P-37 OIL (14-21 d), mid value
 SOAK_RATIO = 0.55            # P-37 OIL (0.5-0.6 of injection time)
-T_PROD_D = 120.0             # Assumed production window for the PoC cycle (T09 knob 1)
+T_PROD_D = 150.0             # T09 knob 1: 120 -> 150 d so rod-float onset (~day 125) falls inside the cycle
 
 # --------------------------------------------------------------- inflow (T04)
 P_WF_KSC = 10.0              # Assumed pump-intake / bottomhole flowing pressure for the cold IPR
@@ -110,7 +110,7 @@ ROD_LEN_M = 1100.0           # Assumed pump setting depth
 E_STEEL = 2.07e11            # Literature, Pa
 RHO_STEEL = 7850.0           # Literature, kg/m3
 K_C_DRAG = 1.5               # Assumed coupling/guide drag multiplier
-PLUNGER_D_M = None           # set in T09 so N_inflow is 5-6 SPM at the production peak
+PLUNGER_D_M = 2.25 * IN_M     # T09: largest standard plunger; N_inflow at the production peak = 6.9 SPM (closest to the 5-6 band)
 STROKE_M = 3.0               # Assumed beam-unit stroke length
 PLUNGER_SIZES_IN = [1.25, 1.5, 1.75, 2.0, 2.25]  # standard API plunger sizes (brief T09)
 T06_TEST_PLUNGER_IN = 1.75   # Assumed plunger for the T06 checks and the A1 cross-check until T09 sizes it

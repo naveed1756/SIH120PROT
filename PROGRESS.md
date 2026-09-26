@@ -16,10 +16,10 @@ folder as a git bundle (`.sync/poc.bundle`, see DEVINSTRUCT.md §3).
 | T06 | done | Static F_pr = 42.43 kN = 28.81 (buoyant rods, 26.19 N/m) + 13.62 (F_fl, 1.75", p_int 20 ksc) kN; normal card N 5, S 3 m, μ 0.5: closure 0.6 %, area > 0, **plunger stroke 2.834 m** | a·Δt/Δx = 0.77; 3 strokes, 3rd kept; ~2.4 s per card single, batched over cards |
 | T07 | done | 9 × 1,500 cards in 264 s (2 processes); valid (closed ≤ 5 %, finite): normal 99.1, pound 91.6, gas 98.6, float 100, tv 99.6, sv 99.4, unseated 95.3, parted 97.5, tagging 95.9 %; 13,104 kept after label-consistency drop | `out/cards.parquet` (git-ignored; regenerate `python -m ml.card_library`). Asset A3 |
 | T08 | todo | | Should |
-| T09 | todo | | |
+| T09 | done | Plunger 2.25" (N_inflow at peak 6.88 SPM); baseline N 6.88 SPM, v_down 1.08 m/s; **onset day 125.2 analytic, 121.2 wave equation (−4.0 d, >3 d: both reported)**; now = day 124.6; heater 6 kW and hydraulic (S 6 m, df 0.6, N 3.44): no onset in 150 d; glide min margin 0.76; cross-check min load +7.7 / −1.8 / −8.7 kN at days 95 / 125 / 140 | 7 tests pass. Asset A1 + notes. Onset target 30–80 d not reachable with listed knobs (Decisions) |
 | T10 | todo | | Should |
 | T11 | todo | | Should |
-| T12 | todo | | |
+| T12 | done | cycle_timeseries (4,271 h), 178 thermal frames + textures (daily), 27 library + 3 cross-check cards, rod_motion (normal + float), tubing_profiles; 11 MB | `python tools/export_web.py`; schema-lite test passes (6 tests). Additive extras only (Decisions) |
 | T13 | todo | | |
 | T14 | todo | | Could |
 | T15 | todo | | Could |
@@ -27,7 +27,8 @@ folder as a git bundle (`.sync/poc.bundle`, see DEVINSTRUCT.md §3).
 
 ## Tuned knobs
 - K_MD = 6,600 mD (cold rate 18.0 bbl/d) — T04. Layer-1 value 500 mD kept as `K_MD_LAYER1` (gives 1.4 bbl/d)
-- PLUNGER_D_M = … ; float onset day (baseline) = … ; with heater = … ; hydraulic = … — T09
+- PLUNGER_D_M = 2.25" ; float onset day (baseline) = 125.2 analytic / 121.2 wave equation ; with 6 kW heater = none in cycle ; hydraulic S 6 m df 0.6 = none in cycle — T09
+- T_PROD_D = 150 d (T09 knob 1; was 120). Water-cut constants and F_INV scanned, unchanged; heater baseline 0 kW
 
 ## Decisions
 - 2026-09-26 09:50 · The folder holding CLAUDE.md is the repo root (no extra `baghewala-twin-poc/` level) · that is where the user put the brief.
@@ -63,6 +64,13 @@ folder as a git bundle (`.sync/poc.bundle`, see DEVINSTRUCT.md §3).
 - 2026-09-26 12:10 · Card validity ("closed") = |F_pr(3T) − F_pr(2T)| ≤ 5 % of the load range, on the clean simulated card before noise. The first version compared the first and last recorded samples (one sample apart) on the noisy card, which failed periodic cards with a sharp load change at the stroke boundary and any card with 2–5 % noise. T06's own 1 % test uses the same periodicity metric.
 - 2026-09-26 12:10 · Library sampling: non-float classes draw μ ≤ min(3 Pa·s, 0.8 × the float-onset viscosity for that N, S); rod_float draws μ in 5–40 Pa·s and N ≥ 1.15 × the float-onset speed, so the label is physically plausible before simulation; the simulated float flag must still agree or the card is dropped (label_ok). Hydraulic N capped at the feasible maximum for S and down_fraction 0.5–0.65. Noise and ±1 % position jitter applied to the surface card only (the downhole card is computed, not measured). rod_parted cards are batched by length so node spacing stays ~10 m.
 
+- 2026-09-26 13:30 · **T09 plunger:** no standard size puts N_inflow at the production peak (61 m³/d liquid) in 5–6 SPM; the largest, 2.25", gives 6.88 SPM (closest) and is used · consequence of the DEMO K_MD rates.
+- 2026-09-26 13:40 · **T09 knobs:** baseline onset was ~day 125, outside both the 120-d cycle and the 30–80 d target. Knob 1: T_PROD_D 120 → 150 (within §8's day 10–150 limit); water-cut constants scanned (FW0, FW_INF, TAU_W_D) without an onset inside 30–80. Knob 2: F_INV 0.5–0.8, no effect (the inversion happens on day ~11, long before the tubing is cool). Knob 3: a heater only delays onset. **30–80 d is not reachable with the listed knobs**; onset stays in 10–150, so this is recorded, not blocked. Root cause: DEMO K_MD rates keep the tubing warm.
+- 2026-09-26 13:45 · T09 μ_eff = arithmetic mean of μ_mix(z) over the string (exactly the length-weighted harmonic mean of v_fall). Wave-equation onset = first day (1-d scan, batched) where the minimum polished-rod load < 0 at baseline N and the T05 profile, normal pump, p_int = P_WF_KSC. It precedes the analytic onset by 4.0 d (dynamic stress-wave overshoot on the downstroke); both are reported in A1 and its notes.
+- 2026-09-26 13:50 · **A1 strip 1 plots the hot-zone radius at T ≥ T_NN (70 °C) per layer** from the 6-hourly snapshots, not r_h (5 K), which grows through production by conduction; r_h end values are stated in the strip text and notes.
+- 2026-09-26 14:10 · **T12 contract:** keys exactly as the brief; additive extras only. Outside production, T_wh_C / mu_tubing_eff_Pas / water_cut are null (pump off, no measurement), spm_* = 0, float_margin* = 1. Thermal frames exported daily (every 4th snapshot) at 640 × 360 (+ 256 × 128 textures) to keep web data at 11 MB; frames carry an extra "tex" key. rod_motion.json holds the normal stroke (day 95 cross-check card) under the contract keys and the float stroke (day 140) under "float". A2 assets (120-d run) were not re-rendered (user).
+- 2026-09-26 14:10 · CSS production average with T_PROD_D = 150: 51.9 bbl/d (still outside 20–40; noted).
+
 ## Deferred
 - S2 tubing-profile figure (Should tier; after all Musts).
 - Live-oil (GOR) correction, Refutas diluent blending (B.9), aquathermolysis multiplier: not needed for the PoC assets.
@@ -76,3 +84,5 @@ folder as a git bundle (`.sync/poc.bundle`, see DEVINSTRUCT.md §3).
 - `assets/A2_thermal_cycle.mp4` — 592 frames (6-hourly) of the r–z temperature field, 49 s at 12 fps (T03/T04)
 - `assets/A2_end_injection|A2_end_soak|A2_day60.png/.svg` — stills (T03/T04)
 - `assets/A3_card_library.png/.svg` — medoid card per class from 13,104 kept synthetic cards (T07)
+- `assets/A1_coupling.png/.svg` + `A1_coupling_notes.md` — the CSS → SRP coupling chart, 5 strips + 3 cross-check cards (T09)
+- `web/public/data/` — T12 exports for the dashboard

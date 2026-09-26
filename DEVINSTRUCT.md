@@ -46,6 +46,9 @@ python -m twin.scenario_cycle           # full CSS cycle -> out\ (needed by make
 python figures\make_thermal_cycle.py    # A2 frames + mp4 (needs ffmpeg on PATH)
 python -m ml.card_library               # 13,500 synthetic cards -> out\cards.parquet (~5 min)
 python figures\make_card_library.py     # A3
+python -m twin.float_glide               # T09 -> out\float_glide.* (needs cycle.parquet)
+python figures\make_coupling.py         # A1 + A1_coupling_notes.md
+python tools\export_web.py              # T12 -> web\public\data (~30 s)
 ```
 
 macOS / Linux: `python3 -m venv .venv && . .venv/bin/activate`, then the same.
@@ -85,6 +88,7 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 |---|---|
 | `requirements.txt` | Python deps (numpy, scipy, iapws, matplotlib, pandas, pyarrow, xgboost, scikit-learn, pytest; pymoo only for T15) |
 | `pytest.ini`, `conftest.py` | Test config; `conftest.py` puts the root on `sys.path` so `import twin` works |
+| `tools/export_web.py` | T12: `python tools/export_web.py [--no-frames]` → `web/public/data/` (JSON contracts, thermal frames + textures, cards). Needs `out/` from scenario_cycle, float_glide, card library |
 | `tools/sync.ps1` | Windows helper: adopts/pulls the `.sync\poc.bundle` commits (first run inits git) |
 | `.gitignore`, `.gitattributes` | Ignores venv, caches, `out/`, node, sync bundles, OS/editor files; line-ending and binary rules |
 
@@ -112,7 +116,7 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 | `rodpump.py` | T06 | ✅ | Damped wave equation, explicit FD, **batched over cards**; `simulate()` returns the 3rd stroke (200 pts), float flag, closure, plunger stroke; `record_rod=True` for stress along the rod |
 | `pumpbc.py` | T07 | ✅ | Pump tension per class (9 classes) as a vectorised state machine; `CLASSES`, `CAUSES`, `fluid_load()` |
 | `gibbs.py` | T08 | ⬜ | Surface → downhole card inversion (Should) |
-| `float_glide.py` | T09 | ⬜ | Rod-fall float margin, float-onset forecast, SPM glide path |
+| `float_glide.py` | T09 | ✅ | `python -m twin.float_glide`: rod-fall float margin, plunger sizing, onset forecast (analytic + wave-equation scan), heater/hydraulic what-ifs, glide path → `out/float_glide.parquet`, notes JSON, cross-check cards |
 
 ### `ml/`, `optim/`
 | Path | Task | Status | What it does |
@@ -130,7 +134,8 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 | `tests/test_*.py` | Done-when checks from CLAUDE.md §5, one file per module. `tests/conftest.py` runs the full cycle once per session (shared fixture `cycle`) |
 | `out/` | Intermediate data (npz, parquet, raw frames). **Git-ignored**, regenerate with scripts |
 | `assets/` | Final PPT assets (PNG + SVG, MP4) + `assets/README.md` manifest (T16) |
-| `web/` | Vite + React + three.js dashboard (T13); `web/public/data/` holds T12 exports |
+| `web/` | Vite + React + three.js dashboard (T13); `web/public/data/` holds T12 exports (**tracked in git** so the dashboard runs without the Python pipeline; regenerate with `tools/export_web.py`) |
+| `tests/test_float_glide.py`, `tests/test_web_exports.py` | T09 done-when (onset, glide ≥ 0, cross-check) and T12 schema-lite (keys, equal lengths, no NaN; nulls only outside production) |
 
 ---
 
@@ -152,7 +157,7 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 | 1 | T00 setup · T01 params/style · T02 rheology | ✅ | `S1_viscosity` |
 | 2 | T03 thermal grid · T04 inflow + cycle | ✅ (K_MD awaits confirmation) | `A6a_marx_langenheim`, `A2_thermal_cycle.mp4`, A2 stills |
 | 3 | T05 wellbore · T06 rod string · T07 pump BCs + card library | ✅ | `S2_tubing_profiles`, `A3_card_library` |
-| 4 | T09 float + glide path · T12 web exports | ⬜ | `A1_coupling` (+ notes) |
+| 4 | T09 float + glide path · T12 web exports | ✅ | `A1_coupling` (+ notes), `web/public/data/` |
 | 5 | T13 dashboard · T16 manifest | ⬜ | `A4_dashboard` |
 | 6 | T08 · T10 · T11 · T14 · T15 (Should/Could) | ⬜ | `A6b`, `A7`, `A5`, `A8`, `A9` |
 
@@ -161,3 +166,4 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 - **Git (26 Sep):** repo initialised; `.gitignore`/`.gitattributes`; this file; docs committed.
 - **Part 2 (26 Sep):** `steam.py`, `thermal_rz.py`, `inflow.py`, `scenario_cycle.py`; 34 tests pass (~35 s); assets A6a, A2 (mp4 + 3 stills). K_MD = 6,600 mD DEMO (above the 5,000 mD guard; see PROGRESS.md Blocked). CSS average 53 bbl/d (outside 20–40 note band).
 - **Part 3 (26 Sep):** K_MD reverted to 6,600 mD (user). `wellbore.py`, `kinematics.py`, `pumpbc.py`, `rodpump.py`, `ml/card_library.py`; 53 tests pass; asset A3. Card library: 13,104 kept cards, every class ≥ 91.6 % valid.
+- **Part 4 (26 Sep):** `float_glide.py`, `figures/make_coupling.py`, `tools/export_web.py`; plunger 2.25", T_PROD_D 150 d; onset day 125.2 (analytic) vs 121.2 (wave equation), both reported; 66 tests pass. Assets A1 + notes; web data (11 MB). Card library delivered to the folder as `out/cards_part1/2.parquet`.

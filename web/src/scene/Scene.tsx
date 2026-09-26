@@ -1,6 +1,6 @@
 import { OrbitControls } from "@react-three/drei";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Bloom, EffectComposer, Vignette } from "@react-three/postprocessing";
+import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { texUrl, type Phase, type RodMotion, type ThermalMeta } from "../data";
@@ -101,13 +101,13 @@ export default function Scene(p: Props) {
       dpr={p.present ? 2 : [1, 2]}
       gl={{ antialias: true, preserveDrawingBuffer: true }}
       camera={{ position: [46, 5, 58], fov: 30, near: 0.5, far: 400 }}
-      onCreated={({ gl }) => gl.setClearColor("#0b0f0d")}
+      onCreated={({ gl }) => gl.setClearColor("#EEF0EB")}
     >
       <ClockDriver clock={clock} spm={moving ? p.spm : 0} frozen={p.frozenPhase} />
       <FrameCounter onReady={p.onReady} texReady={texReady} />
       <CameraRig cam={p.cam} />
-      <ambientLight intensity={0.45} />
-      <hemisphereLight args={["#cfe0ff", "#1a1410", 0.5]} />
+      <ambientLight intensity={0.75} />
+      <hemisphereLight args={["#ffffff", "#b9b2a4", 0.6]} />
       <directionalLight position={[12, 22, 16]} intensity={1.6} />
       <pointLight
         position={[3, depthToY(PAY_TOP_M + 2), 3]}
@@ -133,8 +133,7 @@ export default function Scene(p: Props) {
       </group>
       <OrbitControls target={[0, -10.5, 0]} enableDamping makeDefault maxDistance={120} minDistance={8} />
       <EffectComposer multisampling={4}>
-        <Bloom mipmapBlur intensity={0.85} luminanceThreshold={0.95} luminanceSmoothing={0.2} />
-        <Vignette offset={0.25} darkness={0.55} />
+        <Bloom mipmapBlur intensity={0.6} luminanceThreshold={1.05} luminanceSmoothing={0.2} />
       </EffectComposer>
     </Canvas>
   );

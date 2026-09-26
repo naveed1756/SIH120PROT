@@ -124,16 +124,6 @@ function Dashboard({ d }: { d: Data }) {
     twhDrop: (c.T_wh_C[i30] ?? 0) - (c.T_wh_C[ie] ?? 0),
   };
   const recActive = pumping && tH >= ev.t_h - 0.5;
-  const trend = useMemo(() => {
-    const out = { d: [] as number[], base: [] as number[], glide: [] as number[], now: prodDay(c, ev.t_h) };
-    for (let t = ev.t_h - 30 * 24; t <= Math.min(ev.t_h + 12 * 24, end); t += 6) {
-      const k = hourIdx(c, t);
-      out.d.push(prodDay(c, t));
-      out.base.push(c.float_margin[k]);
-      out.glide.push(c.float_margin_glide[k]);
-    }
-    return out;
-  }, [c, ev.t_h, end]);
 
   const [ready, setReady] = useState(false);
   useEffect(() => {
@@ -154,18 +144,18 @@ function Dashboard({ d }: { d: Data }) {
       <header className="top">
         <div className="title">
           <h1>Baghewala Well-to-Surface Twin</h1>
-          <span className="chip">BGW-SYN-01 · {c.label}</span>
+          <span className="chip">Synthetic well BGW-SYN-01 · prototype v0</span>
           <span className={`chip scen ${scenario}`}>
-            {scenario === "baseline" ? "current practice" : scenario === "glide" ? "AI glide path (approved)" : "what-if: 6 kW heater"}
+            {scenario === "baseline" ? "Current practice" : scenario === "glide" ? "AI speed plan approved" : "What if: 6 kW downhole heater"}
           </span>
         </div>
         <div className="kpis">
-          {kpi("oil", pumping ? `${c.q_oil_bpd[i].toFixed(0)} bbl/d` : "—")}
-          {kpi("water cut", c.water_cut[i] !== null ? `${(100 * (c.water_cut[i] as number)).toFixed(0)} %` : "—")}
-          {kpi("T_in pump", `${c.T_in_C[i].toFixed(0)} °C`)}
-          {kpi("T wellhead", twh !== null ? `${twh.toFixed(0)} °C` : "—")}
-          {kpi("μ_eff tubing", muNow !== null ? `${muNow.toFixed(muNow < 0.1 ? 3 : 2)} Pa·s` : "—")}
-          {kpi("pump speed", pumping ? `${N.toFixed(1)} SPM` : "off")}
+          {kpi("Oil rate", pumping ? `${c.q_oil_bpd[i].toFixed(0)} bbl/day` : "—")}
+          {kpi("Water cut", c.water_cut[i] !== null ? `${(100 * (c.water_cut[i] as number)).toFixed(0)} %` : "—")}
+          {kpi("Temp. at pump", `${c.T_in_C[i].toFixed(0)} °C`)}
+          {kpi("Temp. at surface", twh !== null ? `${twh.toFixed(0)} °C` : "—")}
+          {kpi("Tubing viscosity", muNow !== null ? `${muNow.toFixed(muNow < 0.1 ? 3 : 1)} Pa·s` : "—")}
+          {kpi("Pump speed", pumping ? `${N.toFixed(1)} strokes/min` : "off")}
           <div className="unit">
             <button className={unit === "beam" ? "on" : ""} onClick={() => setUnit("beam")}>Beam</button>
             <button className={unit === "hydraulic" ? "on" : ""} onClick={() => setUnit("hydraulic")}>Hydraulic</button>
@@ -194,17 +184,19 @@ function Dashboard({ d }: { d: Data }) {
           <div className="scene-over">
             <div className="legend3d">
               <div>
-                <span>Reservoir / fluid T</span>
+                <span>Temperature</span>
                 <i className="inferno" />
-                <em>50</em><em>310 °C</em>
+                <em>{50} °C</em>
+                <em>310 °C</em>
               </div>
               <div>
                 <span>Rod stress</span>
                 <i className="stress" />
-                <em>{STRESS_RANGE[0]}</em><em>{STRESS_RANGE[1]} MPa · red = compression</em>
+                <em>{STRESS_RANGE[0]} MPa</em>
+                <em>{STRESS_RANGE[1]} MPa</em>
               </div>
             </div>
-            {!PRESENT && !ts && <div className="hint">drag to orbit · scroll to zoom</div>}
+            {!PRESENT && !ts && <div className="hint">Drag to rotate · scroll to zoom · depth compressed, widths exaggerated</div>}
             {ts?.caption && <div className="tour-cap">{ts.caption}</div>}
           </div>
         </div>
@@ -224,7 +216,6 @@ function Dashboard({ d }: { d: Data }) {
               fInv={F_INV}
               lead={ev.onset_t_h - ev.t_h}
               {...rec}
-              trend={trend}
               onApprove={() => setScenario("glide")}
               onHeater={() => setScenario(scenario === "heater" ? "baseline" : "heater")}
               onReset={() => setScenario("baseline")}
@@ -274,7 +265,7 @@ function TourOverlay({ kind }: { kind: "title" | "A3" | "A5" | "end" }) {
     return (
       <div className="overlay end">
         <div className="chain">
-          {["T1 Reservoir heat", "T1-B Rheology", "T2-A Wellbore", "T2-B Rods & pump", "D Card library", "F Forecast", "O Glide path", "H Advice"].map((x, k) => (
+          {["Steam heat in the reservoir", "Oil thickness vs temperature", "Heat loss up the well", "Rods & pump", "AI failure-card library", "Rod-float forecast", "Pump-speed plan", "Advice to the operator"].map((x, k) => (
             <span key={x} className={k >= 4 ? "ai" : ""}>{x}</span>
           ))}
         </div>

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { COLORS, inferno, type RodStroke } from "../data";
 import {
-  depthToY, MID_END_M, PAY_H, PAY_TOP_M, PUMP_DEPTH_M, R_CASING, R_RES, R_ROD, R_TUB_I, R_TUB_O, rToX, scaleAt, TOP_M,
+  depthToY, MID_END_M, PAY_H, PAY_TOP_M, PUMP_DEPTH_M, R_CASING, R_RES, R_ROD, R_TUB_I, R_TUB_O, scaleAt, TOP_M,
   WIN_BOT_M, WIN_TOP_M,
 } from "./geom";
 import type { StrokeClock } from "./Scene";
@@ -125,16 +125,16 @@ export function Well({ clock, depth_m, stroke, moving, fluidZ, fluidT, labels }:
         <meshStandardMaterial color="#b9c2bd" metalness={0.8} roughness={0.3} />
       </mesh>
       {/* break symbols around the compressed section */}
-      <Line points={zig(depthToY(TOP_M) - 0.15)} color="#cfd6d2" lineWidth={1.6} />
-      <Line points={zig(depthToY(MID_END_M) + 0.15)} color="#cfd6d2" lineWidth={1.6} />
+      <Line points={zig(depthToY(TOP_M) - 0.15)} color="#4A534E" lineWidth={1.6} />
+      <Line points={zig(depthToY(MID_END_M) + 0.15)} color="#4A534E" lineWidth={1.6} />
       {labels && (
         <>
-          <Html position={[1.0, depthToY(12), 0]} className="lbl">VIT tubing · fluid colour = temperature</Html>
-          <Html position={[1.0, depthToY(24), 0]} className="lbl">Rod string · colour = stress</Html>
+          <Html position={[1.0, depthToY(12), 0]} className="lbl">Insulated tubing · colour = fluid temperature</Html>
+          <Html position={[1.0, depthToY(24), 0]} className="lbl">Sucker rods · colour = stress</Html>
           <Html position={[1.2, depthToY(560), 0]} className="lbl dim">
-            30 → 1,090 m compressed · radii exaggerated
+            30 m to 1,090 m depth shortened
           </Html>
-          <Html position={[0.9, depthToY(PUMP_DEPTH_M + 1.5), 0]} className="lbl">Pump · 1,100 m</Html>
+          <Html position={[0.9, depthToY(PUMP_DEPTH_M + 1.5), 0]} className="lbl">Pump at 1,100 m</Html>
         </>
       )}
     </group>
@@ -205,16 +205,11 @@ export function Reservoir({ tex, labels }: { tex: THREE.Texture | null; labels: 
       {tops.map((y, k) => faceLine(y, k === 1 || k === 2, k))}
       {labels && (
         <>
-          {["L1", "L2", "L3"].map((l, k) => (
-            <Html key={l} position={[R_RES - 0.6, (tops[k] + tops[k + 1]) / 2, 0.05]} center className="lbl tiny">{l}</Html>
-          ))}
-          <Html position={[R_RES + 0.3, tops[0] + 0.1, 0]} className="lbl">Pay top ≈ 1,150 m</Html>
+          <Html position={[R_RES - 2.6, (tops[0] + tops[3]) / 2, 0.05]} center className="lbl tiny">3 oil layers</Html>
+          <Html position={[R_RES + 0.6, tops[0] + 0.1, 0]} className="lbl">Oil sand at ≈ 1,150 m</Html>
           <Html position={[R_RES - 1.2, yTop - 0.9, 0.05]} center className="lbl tiny dim">cap rock</Html>
-          <Html position={[R_RES - 1.2, yBot + 0.9, 0.05]} center className="lbl tiny dim">base rock</Html>
-          {[1, 10, 100].map((r) => (
-            <Html key={r} position={[rToX(r), yBot - 0.15, 0.05]} center className="lbl tiny dim tick">{`${r} m`}</Html>
-          ))}
-          <Html position={[R_RES / 2, yBot - 1.0, 0.05]} center className="lbl tiny dim">radius from the well (log scale)</Html>
+          <Html position={[2.2, yBot + 0.9, 0.05]} center className="lbl tiny dim">base rock</Html>
+          <Html position={[R_RES * 0.55, yBot - 1.1, 0.05]} center className="lbl tiny dim">Distance from the well: 0.1 m at the centre to 150 m at the edge (log scale)</Html>
         </>
       )}
     </group>
@@ -227,16 +222,16 @@ export function Ground() {
     <group>
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
         <ringGeometry args={[R_CASING + 0.02, R_RES, 96, 1, 0, 1.5 * Math.PI]} />
-        <meshStandardMaterial color="#2c3630" roughness={1} side={THREE.DoubleSide} />
+        <meshStandardMaterial color="#D5DBD3" roughness={1} side={THREE.DoubleSide} />
       </mesh>
       {/* earth cut faces between the surface and the reservoir window */}
       <mesh position={[(R_RES + R_CASING) / 2, yRes / 2, -0.01]}>
         <planeGeometry args={[R_RES - R_CASING, -yRes]} />
-        <meshBasicMaterial color="#1b231f" transparent opacity={0.55} side={THREE.DoubleSide} depthWrite={false} />
+        <meshBasicMaterial color="#C9C1B1" transparent opacity={0.45} side={THREE.DoubleSide} depthWrite={false} />
       </mesh>
       <mesh position={[-0.01, yRes / 2, (R_RES + R_CASING) / 2]} rotation={[0, Math.PI / 2, 0]}>
         <planeGeometry args={[R_RES - R_CASING, -yRes]} />
-        <meshBasicMaterial color="#161d1a" transparent opacity={0.55} side={THREE.DoubleSide} depthWrite={false} />
+        <meshBasicMaterial color="#BDB4A3" transparent opacity={0.45} side={THREE.DoubleSide} depthWrite={false} />
       </mesh>
     </group>
   );

@@ -91,6 +91,8 @@ folder as a git bundle (`.sync/poc.bundle`, see DEVINSTRUCT.md §3).
 - 2026-09-26 18:00 · T15 proxy: XGBoost `reg:quantileerror` with α 0.1/0.5/0.9 (multi-quantile), 80/20 hold-out for R² and coverage, final model on all 20k. P10–P90 coverage is only ~64 % because the L0 target is deterministic (the bands reflect fit error, not physics uncertainty); reported, not tuned. Crossed quantiles are clipped for plotting only.
 - 2026-09-26 18:00 · tests/test_params.py now flattens dict-valued constants (K_VIT_GRADES, OIL_PRACTICE, DESIGN_BOUNDS); the finiteness check itself is unchanged.
 
+- 2026-09-26 17:30 · **Dashboard switched to a light theme** at the user's request (CLAUDE.md T13 says dark; user wins). Layout rebuilt so nothing overlaps down to ~1200 × 680 px: panels share the height in a grid and plots scale inside their boxes. All text in plain words: no underscores or bare symbols ("Tubing viscosity (Pa·s)", "strokes/min", "Rod-float margin, 0 = rods start to float", speeds explained as "pump pulls the rods down at … / rods can fall through the oil at …"). A4 re-shot.
+
 ## Deferred
 - MP4 recording of the dashboard demo tour (screen-record `?tour=1&present=1`).
 - Flowback phase (T2-A natural-flow mode, end-of-natural-flow forecast): plan.md optional; not in CLAUDE.md.

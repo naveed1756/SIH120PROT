@@ -150,14 +150,14 @@ export const COLORS = {
   surface: "#546B1C",
   ai: "#5A4A8C",
   warn: "#A3321F",
-  // lighter tints of the same hues for lines and text on the dark background
-  thermalL: "#E08A45",
-  wellboreL: "#6FA3D6",
-  surfaceL: "#9DBA55",
-  aiL: "#A796E6",
-  warnL: "#E0654F",
-  amber: "#D9A23A",
-  green: "#6FB36A",
+  // tints of the same hues (light theme: lines on white stay readable)
+  thermalL: "#C0692A",
+  wellboreL: "#3A74AD",
+  surfaceL: "#7C9A34",
+  aiL: "#6E5DAA",
+  warnL: "#C0452F",
+  amber: "#C28A1C",
+  green: "#4E9A55",
 };
 
 export const CAPTION =

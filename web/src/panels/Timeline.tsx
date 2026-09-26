@@ -46,15 +46,15 @@ export default function Timeline(p: Props) {
     <div className="timeline">
       <div className="tl-left">
         <div className="clock">
-          <div className="d">day {day.toFixed(1)}</div>
-          <div className="p">{ph === "production" ? "pumped" : ph} · day {phDay.toFixed(1)}</div>
+          <div className="d">Cycle day {day.toFixed(1)}</div>
+          <div className="p">{ph === "production" ? "Pumping" : ph === "injection" ? "Steam injection" : "Soak (well shut in)"} · day {phDay.toFixed(1)}</div>
         </div>
         {!p.present && (
           <div className="ctl">
-            <button onClick={p.onPlay}>{p.playing ? "❚❚ Pause" : "▶ Play"}</button>
+            <button onClick={p.onPlay}>{p.playing ? "Pause" : "Play"}</button>
             <select value={p.speed} onChange={(e) => p.onSpeed(+e.target.value)}>
               {[0.5, 2, 8].map((s) => (
-                <option key={s} value={s}>{s} d/s</option>
+                <option key={s} value={s}>{s} days/s</option>
               ))}
             </select>
             <button onClick={p.onNow}>Jump to “now”</button>
@@ -69,28 +69,28 @@ export default function Timeline(p: Props) {
               <XAxis dataKey="t" type="number" domain={[0, b.end]} hide />
               <YAxis yAxisId="q" hide domain={[0, 70]} />
               <YAxis yAxisId="m" hide domain={[-0.6, 1.1]} />
-              <Area yAxisId="q" dataKey="q" stroke={COLORS.surfaceL} fill={COLORS.surface} fillOpacity={0.35} strokeWidth={1.2} isAnimationActive={false} connectNulls={false} />
+              <Area yAxisId="q" dataKey="q" stroke={COLORS.surface} fill={COLORS.surface} fillOpacity={0.12} strokeWidth={1.2} isAnimationActive={false} connectNulls={false} />
               {p.scenario !== "baseline" && (
-                <Line yAxisId="m" dataKey="mb" stroke="#8a938e" strokeDasharray="3 3" dot={false} strokeWidth={1} isAnimationActive={false} />
+                <Line yAxisId="m" dataKey="mb" stroke="#9AA39E" strokeDasharray="3 3" dot={false} strokeWidth={1} isAnimationActive={false} />
               )}
-              <Line yAxisId="m" dataKey="m" stroke={p.scenario === "baseline" ? "#e8ece9" : COLORS.aiL} dot={false} strokeWidth={p.scenario === "baseline" ? 1.4 : 2.2} isAnimationActive={false} />
-              <ReferenceLine yAxisId="m" y={0} stroke={COLORS.warnL} strokeOpacity={0.7} />
-              <ReferenceLine yAxisId="m" x={ev.t_h} stroke={COLORS.aiL} strokeDasharray="2 2" />
-              <ReferenceLine yAxisId="m" x={p.tH} stroke="#ffffff" strokeWidth={1.5} />
+              <Line yAxisId="m" dataKey="m" stroke={p.scenario === "baseline" ? "#27302B" : COLORS.ai} dot={false} strokeWidth={p.scenario === "baseline" ? 1.4 : 2.2} isAnimationActive={false} />
+              <ReferenceLine yAxisId="m" y={0} stroke={COLORS.warn} strokeOpacity={0.6} strokeDasharray="4 3" />
+              <ReferenceLine yAxisId="m" x={ev.t_h} stroke={COLORS.ai} strokeDasharray="2 2" />
+              <ReferenceLine yAxisId="m" x={p.tH} stroke="#1E2622" strokeWidth={1.5} />
             </ComposedChart>
           </ResponsiveContainer>
           <div className="chart-lg">
-            <span><i style={{ background: COLORS.surfaceL }} />oil rate (bbl/d, 0–70)</span>
-            <span><i style={{ background: p.scenario === "baseline" ? "#e8ece9" : COLORS.aiL }} />float margin</span>
-            <span><i style={{ background: COLORS.warnL }} />margin = 0</span>
-            <span><i style={{ background: COLORS.aiL }} className="dash" />“now” event (forecast)</span>
+            <span><i style={{ background: COLORS.surface }} />Oil rate</span>
+            <span><i style={{ background: p.scenario === "baseline" ? "#27302B" : COLORS.ai }} />Rod-float margin</span>
+            <span><i style={{ background: COLORS.warn }} />Float line (margin 0)</span>
+            <span><i style={{ background: COLORS.ai }} className="dash" />Forecast raised</span>
           </div>
         </div>
         <div className="bar">
           {seg(0, b.injEnd, "Injection", "inj")}
           {seg(b.injEnd, b.soakEnd, "Soak", "soak")}
-          {seg(b.soakEnd, b.end, "Pumped production", "prod")}
-          <div className="fb" style={{ left: `${(100 * b.soakEnd) / b.end}%` }}>flowback not modelled (PoC)</div>
+          {seg(b.soakEnd, b.end, "Pumping", "prod")}
+          <div className="fb" style={{ left: `${(100 * b.soakEnd) / b.end}%` }}>no natural-flow phase in this prototype</div>
           <div className="evt" style={{ left: `${(100 * ev.t_h) / b.end}%` }} title="float forecast" />
           <input
             type="range"

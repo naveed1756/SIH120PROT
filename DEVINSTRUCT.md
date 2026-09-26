@@ -54,6 +54,9 @@ python figures\make_sectional_speed.py  # A7 (T10)
 python -m ml.train_classifier            # T11 -> out\classifier_report.json
 python figures\make_classifier.py       # A5 confusion + F1 bars
 python figures\make_tubing_profiles.py  # S2
+python figures\make_vit_quality.py      # A8 (T14)
+python -m optim.pareto                   # T15 -> out\pareto.json (~40 s)
+python figures\make_pareto.py           # A9
 ```
 
 macOS / Linux: `python3 -m venv .venv && . .venv/bin/activate`, then the same.
@@ -87,6 +90,7 @@ git pull --ff-only .sync\poc.bundle main
 
 `reset --hard` only touches tracked files; your own untracked files are left alone.
 If you edit files locally, commit them before pulling. `.sync/` is git-ignored.
+From Part 7 on, bundles may be **incremental** (only new commits, to stay under the 20 MB transfer limit): they need the previous part pulled first; `git pull` says which commit is missing otherwise.
 Planned upgrade: a GitHub repo (push from the workspace, `git pull` here). See PROGRESS.md.
 
 Commit style: `T0x: short summary`, one commit per task or per part.
@@ -130,6 +134,7 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 | `rodpump.py` | T06 | ✅ | Damped wave equation, explicit FD, **batched over cards**; `simulate()` returns the 3rd stroke (200 pts), float flag, closure, plunger stroke; `record_rod=True` for stress along the rod |
 | `pumpbc.py` | T07 | ✅ | Pump tension per class (9 classes) as a vectorised state machine; `CLASSES`, `CAUSES`, `fluid_load()` |
 | `gibbs.py` | T08 | ✅ | Surface → downhole card inversion (Everitt–Jennings, marching in space); `downhole_batch()` for many cards |
+| `injection.py` | T14 | ✅ | Steam quality march down the tubing by VIT grade (W.1 series resistances, Hasan–Kabir formation) |
 | `float_glide.py` | T09 | ✅ | `python -m twin.float_glide`: rod-fall float margin, plunger sizing, onset forecast (analytic + wave-equation scan), heater/hydraulic what-ifs, glide path → `out/float_glide.parquet`, notes JSON, cross-check cards |
 
 ### `ml/`, `optim/`
@@ -138,7 +143,7 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 | `ml/card_library.py` | T07 | ✅ | `python -m ml.card_library [n]`: samples 9 × 1,500 cards, simulates (2 processes, ~4.5 min), noise, validity + label checks → `out/cards.parquet`. `load_cards()` also reads `out/cards_part*.parquet` (the library as delivered to this folder, split < 20 MB) |
 | `ml/features.py` | T11 | ✅ | Fourier descriptors, shape stats, slopes, Gibbs-based downhole fillage (from the noisy surface card) |
 | `ml/train_classifier.py` | T11 | ✅ | `python -m ml.train_classifier`: XGBoost, train μ ≤ 10 Pa·s & depth ≤ 1,050 m, test the rest; 5-fold CV; → `out/classifier_report.json`, `out/features.parquet` (~30 s) |
-| `optim/l0_cycle.py`, `optim/pareto.py` | T15 | ⬜ | Analytical cycle model + NSGA-II Pareto (Could) |
+| `optim/l0_cycle.py`, `optim/pareto.py` | T15 | ✅ | L0 cycle model (Marx–Langenheim → Boberg–Lantz → J ratio), 20k Sobol, XGBoost quantile proxy, NSGA-II; `python -m optim.pareto` (~40 s) |
 
 ### `figures/`, `tests/`, outputs
 | Path | What it is |
@@ -180,7 +185,7 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 | 4 | T09 float + glide path · T12 web exports | ✅ | `A1_coupling` (+ notes), `web/public/data/` |
 | 5 | T13 dashboard (static Must) · T16 manifest | ✅ | `A4_dashboard`, `assets/README.md` |
 | 6 | T08 · T10 · T11 · T13 tour · S2 (Should) | ✅ | `A6b`, `A7`, `A5`, `S2`, demo tour |
-| 7 | T14 · T15 (Could) | ⬜ | `A8`, `A9` |
+| 7 | T14 · T15 (Could) | ✅ | `A8`, `A9` |
 
 ## 7. Changelog
 - **Part 1 (26 Sep):** repo skeleton, params, style, rheology + tests (21 pass), S1 figure.
@@ -190,3 +195,4 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 - **Part 4 (26 Sep):** `float_glide.py`, `figures/make_coupling.py`, `tools/export_web.py`; plunger 2.25", T_PROD_D 150 d; onset day 125.2 (analytic) vs 121.2 (wave equation), both reported; 66 tests pass. Assets A1 + notes; web data (11 MB). Card library delivered to the folder as `out/cards_part1/2.parquet`.
 - **Part 5 (26 Sep):** `web/` dashboard (Vite + React + r3f): animated pump jack / hydraulic unit, compressed-depth cutaway well with rod stress wave and tubing temperature, reservoir cutaway from the thermal textures, live card, tubing profiles, float gauge, recommendation with Approve / heater what-if, timeline scrubber. A4 screenshot 3840 × 2160; `assets/README.md` manifest. Extra web data: cards/tubing timelines.
 - **Part 6 (26 Sep):** flowback note (timeline, A1 axis, manifest). `twin/gibbs.py` (T08, round trip ≤ 3.7 %), `figures/make_sectional_speed.py` (T10), `ml/features.py` + `ml/train_classifier.py` (T11, macro-F1 0.80 on the held-out range), dashboard demo tour, S2 figure; A4 re-shot; 74 tests.
+- **Part 7 (26 Sep):** `twin/injection.py` + A8 (T14, all VIT grades within ±0.06 after adding 3B W.1 annulus/cement resistances), `optim/l0_cycle.py` + `optim/pareto.py` + A9 (T15). pymoo added to requirements. 81 tests. All CLAUDE.md tasks done.

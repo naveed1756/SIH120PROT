@@ -19,14 +19,11 @@ DEVINSTRUCT.md §2.
 | `A6b_gibbs_roundtrip.png` | The diagnostic direction works: the pump card is recovered from the surface card. | T2-B diagnostic (Gibbs) | RMS 0.6 % (normal) and 3.7 % (fluid pound) of the load range at 0.5 Pa·s; 1.9 % at 10 Pa·s | Feasibility & viability |
 | `A7_sectional_speed.png` | Same pump speed, no rod float: slowing only the downstroke of a hydraulic unit clears the float. | O1 · T2-B | Day 135, N 4.5 SPM, S 4 m: downstroke 50 → 56 % of the cycle, max down speed 0.78 → 0.65 m/s, min load -0.8 → +4.5 kN | Impact & benefits |
 | `S2_tubing_profiles.png` | The tubing, not the reservoir, sets the viscosity the rods see. | T2-A (Ramey W.13) · T1-B | Wellhead 189 → 64 °C from day 5 to day 100; μ at the top 0.0007 → 8 Pa·s | Technical approach / backup |
+| `A8_vit_quality.png` | Tubing insulation decides how much steam reaches the pay; the wellbore model reproduces Layer 3B's grade study. | T2-A injection mode | Sandface quality E/D/C/B 0.59 / 0.51 / 0.34 / 0.23 (3B 0.61 / 0.54 / 0.37 / 0.25); bare tubing condenses at 779 m | Technical approach / backup |
+| `A9_pareto.png` | The twin can design the steam cycle: a Pareto front of oil per cycle-day vs SOR, with a knee design and OIL's current practice for reference. | O3 (stage v0) · T1-D-like proxy | Knee 1,710 t at 3.3 t/h, soak 0.74: J1 41.0 bbl/d vs OIL practice 39.5; SOR levels unrealistically low (DEMO permeability), shape only | Impact & benefits (optional) |
 | `S1_viscosity.png` | Placeholder rheology prior anchored on OIL's 11,500 cP at 50 °C. | T1-B | μ 11.7 / 0.30 / 0.011 Pa·s at 50 / 100 / 200 °C | Feasibility (small) or backup |
 
-## Not built yet (Could tier)
-
-| File | Task |
-|---|---|
-| `A8_vit_quality.png` | T14 injection steam quality by VIT grade |
-| `A9_pareto.png` | T15 CSS design Pareto on an L0 proxy |
+## Also available
 
 The dashboard also has a 75 s **demo tour** (`Demo tour` button, or `?tour=1`) following the CLAUDE.md §7 storyboard; no MP4 of it is recorded yet (screen-record `npm run preview` with `?tour=1&present=1`).
 

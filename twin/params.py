@@ -97,6 +97,30 @@ FW_INF = 0.25                # Assumed, late water cut
 TAU_W_D = 20.0               # Assumed, water-cut decay time (days)
 R_H_DT_K = 5.0               # 3A 5.4 definition of heated radius: T - T_R >= 5 K
 
+# ------------------------------------------- injection steam quality (T14, 3B 4.2-4.4)
+VIT_R_INS_I_M = 0.04445      # 3B 6 Assumed: inner tube OD 3 1/2" (insulation inner radius)
+VIT_R_INS_O_M = 0.0503       # 3B 6 Assumed: outer tube ID of 4 1/2" VIT (insulation outer radius)
+K_VIT_GRADES = {"E": 0.004, "D": 0.01, "C": 0.03, "B": 0.05}  # 3B Fig. 3, apparent vacuum-layer k (W/mK)
+C_CPL = 1.3                  # 3B 4.2 joint coupling factor (prior 1.2-1.4), brief T14
+K_E_FORM = 2.0               # 3B Fig. 3 formation conductivity (W/mK)
+CASING_RI_M = 0.0797         # Assumed: 7" 26 lb/ft casing, ID 6.276"
+CASING_RO_M = 0.0889         # Assumed: 7" casing OD
+VIT_R_TO_M = 0.05715         # Assumed: VIT outer tube OD 4 1/2" (annulus inner radius)
+K_CEM = 0.7                  # Literature, thermal cement conductivity (W/mK), 3B W.1 cement term
+EPS_STEEL = 0.9              # 3B 4.2 emissivity of oxidised steel
+K_N2 = 0.04                  # Literature, N2 conductivity at ~150 C (W/mK), bare-tubing annulus
+DZ_INJ_M = 10.0              # brief T14: 10 m segments
+T_FORM_DAYS = 1.0            # brief T14: R_form at t = 1 day
+
+# ------------------------------------------------ O3 L0 cycle proxy (T15, 3B 5.2-5.5)
+Q_CUT_BPD = 8.0              # brief T15 Assumed economic cut-off (applied to the CSS uplift, see PROGRESS.md)
+T_MOB_D = 5.0                # brief T15: mobilisation / downtime days per cycle
+L_MAX_D = 730.0              # L0 integration cap (days of production)
+M_OIL_VOL = 959.0 * 2000.0   # Derived: produced-oil volumetric heat capacity (rho15 x cp ~ 2 kJ/kgK), J/m3K
+M_WATER_VOL = 4.1e6          # Literature, produced-water volumetric heat capacity near 100 C, J/m3K
+OIL_PRACTICE = {"M_s_t": 1340.0, "rate_tph": 3.1, "x": 0.65, "soak": 0.55}  # 3B 5.2 / OIL: current practice point
+DESIGN_BOUNDS = {"M_s_t": (600.0, 2500.0), "rate_tph": (2.5, 3.3), "x": (0.60, 0.70), "soak": (0.3, 0.8)}  # 3B 5.2
+
 # ------------------------------------------------------------ wellbore (T05)
 T_SURF_GEO_C = 30.0          # P-31 Assumed surface geothermal temperature
 LR_PER_M3D_VIT_D = 72.0      # Derived from 3B section 4.5 table (5 m3/d -> 360 m), metres per m3/d

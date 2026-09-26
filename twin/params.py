@@ -30,10 +30,8 @@ TOP_PAY_M = 1150.0           # P-01 OIL (field level ~1,150 m)
 H_LAYERS_M = [4.0, 3.0, 3.0] # P-02 Layer1 (10 m total, range 5-23) / P-03 Assumed split; top -> bottom
 KH_CONTRAST = [1.0, 0.6, 1.4]  # P-03 Assumed (kh multipliers, top -> bottom)
 PHI = 0.19                   # P-04 Layer1 (18-20 %)
-K_MD_LAYER1 = 500.0          # P-05 Layer1 (<1,000 mD); gives a cold rate of only ~1.4 bbl/d (3A FC-1)
-K_MD = 6600.0                # DEMO: tuned to OIL field-level figures (FC-1), not a Baghewala prediction.
-                             # Effective kh: cold rate 18 bbl/d. EXCEEDS the CLAUDE.md 8 guard of 5,000 mD;
-                             # lumps residual heat / heaters / diluent / shear-thinning (3A FC-1). See PROGRESS.md
+K_MD = 500.0                 # P-05 Layer1 (<1,000 mD). User decision 26 Sep: keep the documented value,
+                             # no DEMO tuning. Cold rate ~1.4 bbl/d, below field evidence (3A FC-1, 3A 9)
 T_R_C = 50.0                 # P-06 OIL
 P_INIT_KSC = 116.0           # P-07 OIL (initial reservoir pressure)
 P_NEARWELL_KSC = 75.0        # P-08 Assumed (depleted near-well pressure, to calibrate)

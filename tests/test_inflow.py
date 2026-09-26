@@ -6,11 +6,9 @@ from twin import inflow
 from twin import params as P
 
 
-def test_cold_rate_matches_registry_parameters():
-    # Brief's 18 +/- 1 bbl/d DEMO target superseded by the user (26 Sep): K_MD stays at the
-    # Layer-1 value, which gives the ~1.4 bbl/d that 3A section 9 / FC-1 document.
+def test_cold_rate_18_bpd():
     q = inflow.cold_rate_m3s() * P.DAY_S / P.BBL_M3
-    assert q == pytest.approx(1.4, abs=0.1)
+    assert q == pytest.approx(18.0, abs=1.0)
 
 
 def test_cycle_runs_under_5_minutes(cycle):

@@ -55,11 +55,13 @@ folder as a git bundle (`.sync/poc.bundle`, see DEVINSTRUCT.md §3).
 - r_h (T − T_R ≥ 5 K) at end of injection: L1 18.6 m, L2 15.5 m, L3 13.5 m (β = 2 override). Mobile radius (T ≥ T_NN) is smaller and shrinks through production; r_h itself keeps growing slowly by conduction, so **A1 strip 1 should plot r_m (T ≥ 70 °C) or r_50**, which do shrink (Part 4 decision).
 - Average 53 bbl/d is **outside the 20–40 band** (target ~25–26). Cause: after 1,340 t of steam the 10 m pay stays hot (T_in 284 °C → 132 °C over 120 d), so the heated/cold productivity ratio stays near its geometric ceiling ln(r_e/r_w)/ln(r_e/r_h) ≈ 3.3. Not forced, as the brief asks. Levers if you want the field average: fewer days of production in the average, a lower β/thicker pay, or a larger r_e. None is a listed knob, so nothing was changed.
 
+- 2026-09-26 11:30 · K_MD: user briefly chose the Layer-1 500 mD (commit bd2d810, rate 4.2 → 4.6 bbl/d, T04 decline check failed), then reverted to the 6,600 mD DEMO value (this state) and accepted it. The 5,000 mD guard exceedance is accepted by the user; A2 assets were rendered with 6,600 mD and stay.
+
 ## Deferred
 - Live-oil (GOR) correction, Refutas diluent blending (B.9), aquathermolysis multiplier: not needed for the PoC assets.
 
 ## Blocked
-- **K_MD above the 5,000 mD guard (CLAUDE.md §8).** Proceeding with 6,600 mD as a labelled DEMO effective kh; awaiting human confirmation. Alternatives: (a) keep 6,600 mD; (b) cap at 5,000 mD → cold rate 13.6 bbl/d (fails the 18 ± 1 test, would be reported); (c) 1,000 mD × 23 m (top of Layer 1) → ~6 bbl/d.
+- ~~K_MD above the 5,000 mD guard~~ **resolved 26 Sep 11:30: user accepted 6,600 mD (DEMO effective kh).** Alternatives: (a) keep 6,600 mD; (b) cap at 5,000 mD → cold rate 13.6 bbl/d (fails the 18 ± 1 test, would be reported); (c) 1,000 mD × 23 m (top of Layer 1) → ~6 bbl/d.
 
 ## Assets produced
 - `assets/S1_viscosity.png/.svg` — placeholder rheology prior (T02)

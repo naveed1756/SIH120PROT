@@ -20,10 +20,10 @@ folder as a git bundle (`.sync/poc.bundle`, see DEVINSTRUCT.md §3).
 | T10 | todo | | Should |
 | T11 | todo | | Should |
 | T12 | done | cycle_timeseries (4,271 h), 178 thermal frames + textures (daily), 27 library + 3 cross-check cards, rod_motion (normal + float), tubing_profiles; 11 MB | `python tools/export_web.py`; schema-lite test passes (6 tests). Additive extras only (Decisions) |
-| T13 | todo | | |
+| T13 | static done (Must) | `npm run build` OK; preview renders, 0 console errors (1 warning: THREE.Clock deprecation inside @react-three/fiber); `assets/A4_dashboard.png` 3840 × 2160 at the "now" event | Vite 8 + React 19 + r3f 9 + drei + postprocessing + Recharts. Scrubber, play, beam/hydraulic toggle, Approve / heater what-if, animated pump + rod stress wave, steam particles already work. **Demo tour (Should) not built yet** |
 | T14 | todo | | Could |
 | T15 | todo | | Could |
-| T16 | todo | | |
+| T16 | done (Must set) | `assets/README.md`: 7 assets with message, modules/innovations, key numbers, slide; Should/Could assets listed as not built | Update again after Part 6 |
 
 ## Tuned knobs
 - K_MD = 6,600 mD (cold rate 18.0 bbl/d) — T04. Layer-1 value 500 mD kept as `K_MD_LAYER1` (gives 1.4 bbl/d)
@@ -71,6 +71,12 @@ folder as a git bundle (`.sync/poc.bundle`, see DEVINSTRUCT.md §3).
 - 2026-09-26 14:10 · **T12 contract:** keys exactly as the brief; additive extras only. Outside production, T_wh_C / mu_tubing_eff_Pas / water_cut are null (pump off, no measurement), spm_* = 0, float_margin* = 1. Thermal frames exported daily (every 4th snapshot) at 640 × 360 (+ 256 × 128 textures) to keep web data at 11 MB; frames carry an extra "tex" key. rod_motion.json holds the normal stroke (day 95 cross-check card) under the contract keys and the float stroke (day 140) under "float". A2 assets (120-d run) were not re-rendered (user).
 - 2026-09-26 14:10 · CSS production average with T_PROD_D = 150: 51.9 bbl/d (still outside 20–40; noted).
 
+- 2026-09-26 15:30 · **T13 extra data files** (additive, contract untouched): `cards_timeline.json` (wave-equation cards every production day for baseline / glide / heater) and `tubing_timeline.json` (T, μ profiles per day, with and without heater), plus heater traces in cycle_timeseries. Needed for the "live card" and tubing panels; 14 MB total web data.
+- 2026-09-26 15:30 · Timeline cards carry `settled` (closure ≤ 5 %, the library validity rule). On the glide path at days 2–10 the tubing fluid is nearly water (μ ~0.001–0.007 Pa·s), the rod string is almost undamped and 3 strokes do not settle; ringing dips below zero load (days 8–10). The UI labels these "transient not settled", not rod float.
+- 2026-09-26 15:35 · Dashboard shows the analytic/wave-equation gap honestly: when the wave-equation card clips but the analytic margin is still ≥ 0 (days ~121–125), the card is amber with "clipping starts · models differ by ~4 d".
+- 2026-09-26 15:40 · 3D scene: surface kit at true scale; underground 0–30 m and 1,090–1,175 m at 0.2 units/m, 30–1,090 m compressed into 5 units between break symbols; radii exaggerated (labelled). Reservoir = 270° cutaway cylinder whose faces sample tex_*.png (log r 0.1–150 m); bloom on hot zones. Rod stress/motion from rod_motion.json (normal stroke, or the float stroke when the scenario margin < 0), stroke rate from the scenario SPM. Soak tubing shown at the geotherm (shut in).
+- 2026-09-26 15:40 · Known simplification carried into the dashboard: the "current practice" baseline (peak-inflow SPM all cycle) assumes a full pump; in reality it would pump off (fluid pound) as inflow falls. Per brief; stated in assets/README.md.
+
 ## Deferred
 - S2 tubing-profile figure (Should tier; after all Musts).
 - Live-oil (GOR) correction, Refutas diluent blending (B.9), aquathermolysis multiplier: not needed for the PoC assets.
@@ -86,3 +92,5 @@ folder as a git bundle (`.sync/poc.bundle`, see DEVINSTRUCT.md §3).
 - `assets/A3_card_library.png/.svg` — medoid card per class from 13,104 kept synthetic cards (T07)
 - `assets/A1_coupling.png/.svg` + `A1_coupling_notes.md` — the CSS → SRP coupling chart, 5 strips + 3 cross-check cards (T09)
 - `web/public/data/` — T12 exports for the dashboard
+- `assets/A4_dashboard.png` — dashboard at the "now" event, 3840 × 2160 (T13)
+- `assets/README.md` — manifest (T16)

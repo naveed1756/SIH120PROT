@@ -44,7 +44,7 @@ def test_cycle_timeseries():
         if k == "phase":
             continue
         for v, pr in zip(d[k], prod):
-            assert finite(v, allow_null=(k in ("T_wh_C", "mu_tubing_eff_Pas", "water_cut") and not pr)), k
+            assert finite(v, allow_null=(k in ("T_wh_C", "mu_tubing_eff_Pas", "water_cut", "T_wh_heater_C", "mu_tubing_eff_heater_Pas") and not pr)), k
     assert finite(d["r_h_m"])
     ev = d["events"]
     assert ev and all({"t_h", "type", "lead_h", "msg"} <= set(e) for e in ev)

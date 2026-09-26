@@ -52,7 +52,16 @@ python tools\export_web.py              # T12 -> web\public\data (~30 s)
 ```
 
 macOS / Linux: `python3 -m venv .venv && . .venv/bin/activate`, then the same.
-Web (from Part 5 on): `cd web; npm install; npm run dev`.
+Web dashboard (Node 20+):
+
+```powershell
+cd web
+npm install                     # once
+npm run dev                     # http://localhost:5173  (live reload)
+npm run build; npm run preview  # production build on http://localhost:4173
+npm run screenshot              # A4: needs preview running; Playwright Chromium (npx playwright install chromium once)
+```
+URL options: `?present=1` (no cursor, pixel ratio 2), `?shot=1` (frozen stroke), `?t=<cycle hour>`, `?scenario=baseline|glide|heater`, `?unit=beam|hydraulic`.
 
 ---
 
@@ -135,6 +144,11 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 | `out/` | Intermediate data (npz, parquet, raw frames). **Git-ignored**, regenerate with scripts |
 | `assets/` | Final PPT assets (PNG + SVG, MP4) + `assets/README.md` manifest (T16) |
 | `web/` | Vite + React + three.js dashboard (T13); `web/public/data/` holds T12 exports (**tracked in git** so the dashboard runs without the Python pipeline; regenerate with `tools/export_web.py`) |
+| `web/src/data.ts` | Types + loaders for `public/data`, scenario helpers (margin, SPM, hours-to-float), colours, CAPTION |
+| `web/src/App.tsx` | Layout (3D 60 % · panels 40 % · timeline), state: time, scenario, unit, play loop, URL options |
+| `web/src/scene/` | `Scene.tsx` (Canvas, lights, bloom, stroke clock), `PumpJack.tsx` (beam + hydraulic units, wellhead), `Well.tsx` (casing/VIT/fluid column/rod stress, reservoir shader, ground, steam), `geom.ts` (depth compression, kinematics) |
+| `web/src/panels/` | `Panels.tsx` (card, tubing, gauge, recommendation, status chips; small SVG plots), `Timeline.tsx` (Recharts strip + phase scrubber) |
+| `web/scripts/screenshot.mjs` | Playwright screenshot → `assets/A4_dashboard.png`, reports console errors |
 | `tests/test_float_glide.py`, `tests/test_web_exports.py` | T09 done-when (onset, glide ≥ 0, cross-check) and T12 schema-lite (keys, equal lengths, no NaN; nulls only outside production) |
 
 ---
@@ -158,7 +172,7 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 | 2 | T03 thermal grid · T04 inflow + cycle | ✅ (K_MD awaits confirmation) | `A6a_marx_langenheim`, `A2_thermal_cycle.mp4`, A2 stills |
 | 3 | T05 wellbore · T06 rod string · T07 pump BCs + card library | ✅ | `S2_tubing_profiles`, `A3_card_library` |
 | 4 | T09 float + glide path · T12 web exports | ✅ | `A1_coupling` (+ notes), `web/public/data/` |
-| 5 | T13 dashboard · T16 manifest | ⬜ | `A4_dashboard` |
+| 5 | T13 dashboard (static Must) · T16 manifest | ✅ | `A4_dashboard`, `assets/README.md` |
 | 6 | T08 · T10 · T11 · T14 · T15 (Should/Could) | ⬜ | `A6b`, `A7`, `A5`, `A8`, `A9` |
 
 ## 7. Changelog
@@ -167,3 +181,4 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 - **Part 2 (26 Sep):** `steam.py`, `thermal_rz.py`, `inflow.py`, `scenario_cycle.py`; 34 tests pass (~35 s); assets A6a, A2 (mp4 + 3 stills). K_MD = 6,600 mD DEMO (above the 5,000 mD guard; see PROGRESS.md Blocked). CSS average 53 bbl/d (outside 20–40 note band).
 - **Part 3 (26 Sep):** K_MD reverted to 6,600 mD (user). `wellbore.py`, `kinematics.py`, `pumpbc.py`, `rodpump.py`, `ml/card_library.py`; 53 tests pass; asset A3. Card library: 13,104 kept cards, every class ≥ 91.6 % valid.
 - **Part 4 (26 Sep):** `float_glide.py`, `figures/make_coupling.py`, `tools/export_web.py`; plunger 2.25", T_PROD_D 150 d; onset day 125.2 (analytic) vs 121.2 (wave equation), both reported; 66 tests pass. Assets A1 + notes; web data (11 MB). Card library delivered to the folder as `out/cards_part1/2.parquet`.
+- **Part 5 (26 Sep):** `web/` dashboard (Vite + React + r3f): animated pump jack / hydraulic unit, compressed-depth cutaway well with rod stress wave and tubing temperature, reservoir cutaway from the thermal textures, live card, tubing profiles, float gauge, recommendation with Approve / heater what-if, timeline scrubber. A4 screenshot 3840 × 2160; `assets/README.md` manifest. Extra web data: cards/tubing timelines.

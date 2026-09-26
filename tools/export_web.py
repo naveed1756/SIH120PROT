@@ -5,13 +5,20 @@ Run after python -m twin.scenario_cycle, python -m twin.float_glide and the card
 
 Contracts are those of CLAUDE.md T12. Additive extras (documented in DEVINSTRUCT.md):
 - cycle_timeseries.json: T_wh_C, mu_tubing_eff_Pas and water_cut are null outside production (pump off);
-  spm_* = 0 and float_margin* = 1 outside production. Extra keys: "day", "prod_start_h".
+  spm_* = 0 and float_margin* = 1 outside production. Extra keys: "day", "prod_start_h", and the
+  6 kW heater what-if traces float_margin_heater, spm_float_heater, T_wh_heater_C, mu_tubing_eff_heater_Pas.
   events carry extra "spm_from", "spm_to", "onset_t_h" fields.
 - thermal frames: one per 24 h (every 4th 6-h snapshot) to keep the web bundle small;
   f%04d.png are labelled 640 x 360 frames, tex_%04d.png are 256 x 128 textures. Each meta
   frame has an extra "tex" key; meta has "tex_r_range_m" / "tex_z_range_m" (elevation above
   the base of the pay, top row of the image = top of the range).
 - rod_motion.json: contract keys hold the normal stroke; the float stroke is under "float".
+- New files (not in the contract): cards_timeline.json and tubing_timeline.json feed the live
+  card and tubing panels (every production day; baseline / glide / heater scenarios).
+  "settled" = closure <= CLOSURE_MAX (5 %, the card-library validity rule). At near-water tubing
+  viscosity (~0.002 Pa.s, days 8-10 on the glide path) the rod string is almost undamped, the
+  3-stroke run has not settled and the ringing can dip below zero load: the UI must label such
+  cards "transient, not settled" and must not report them as rod float.
 """
 import json
 import sys
@@ -34,6 +41,7 @@ TEX_W, TEX_H = 256, 128
 TEX_R = (0.1, 150.0)
 T_MIN, T_MAX = 50.0, 310.0
 PROFILE_DAYS = [5, 30, 60, 100]
+TIMELINE_STEP_D = 1.0
 
 
 def _r(a, nd=4):
@@ -85,6 +93,10 @@ def cycle_timeseries(cyc, fg, notes):
         "spm_glide": _r(spread("N_glide", 0.0)),
         "spm_inflow": _r(spread("N_inflow", 0.0)),
         "spm_float": _r(np.minimum(spread("N_float", 0.0), 99.0)),
+        "float_margin_heater": _r(spread("margin_heater", 1.0)),
+        "spm_float_heater": _r(np.minimum(spread("N_float_heater", 0.0), 99.0)),
+        "T_wh_heater_C": _r(spread("T_wh_heater_C", np.nan)),
+        "mu_tubing_eff_heater_Pas": _r(spread("mu_eff_heater_Pas", np.nan)),
         "events": [{"t_h": round(now_h, 2), "type": "FLOAT_FORECAST", "lead_h": 14, "msg": msg,
                     "spm_from": round(a, 2), "spm_to": round(b, 2), "onset_t_h": round(on_h, 2)}],
     }
@@ -182,6 +194,43 @@ def tubing_profiles(cyc):
     return out
 
 
+def timelines(cyc, fg, step_d=TIMELINE_STEP_D):
+    """Extra files for the live dashboard panels (additive, not in the T12 contract):
+    cards_timeline.json: wave-equation surface/downhole cards every step_d production days for
+      the three dashboard scenarios (baseline N, AI glide N, baseline N + 6 kW heater);
+    tubing_timeline.json: T(z), mu(z) on the same days, without and with the heater."""
+    from twin import float_glide as FG
+    from twin import pumpbc as PB
+    from twin import rodpump as RP
+    pr = FG.production_frame(cyc)
+    days = np.arange(0.0, float(pr.day.max()) + 1e-9, step_d)
+    rows = [pr.iloc[int(np.argmin(np.abs(pr.day.values - d)))] for d in days]
+    F_fl = PB.fluid_load(P.P_WF_KSC, P.PLUNGER_D_M / P.IN_M, P.ROD_LEN_M)[0]
+    N_base = float(fg.N_base.iloc[0])
+    N_glide = np.interp(days, fg.day, fg.N_glide)
+    from ml.card_library import CLOSURE_MAX
+    tub, cards_out = {"days": _r(days)}, {"days": _r(days), "t_h": _r([r.t_h for r in rows], 7)}
+    for key, heater, N in (("baseline", 0.0, np.full(len(days), N_base)), ("glide", 0.0, N_glide),
+                           ("heater", FG.HEATER_WHATIF_KW, np.full(len(days), N_base))):
+        prof = [W.profile(r.T_in, r.q_liq_m3d, r.f_w, heater) for r in rows]
+        mu = np.array([p["mu_Pas"] for p in prof])
+        res = RP.simulate(np.full(len(days), P.ROD_LEN_M), N, P.STROKE_M, mu, PB.CID["normal"], F_fl,
+                          n_nodes=mu.shape[1] - 1)
+        settled = res["closure"] <= CLOSURE_MAX
+        cards_out[key] = {"spm": _r(N), "float": [bool(f) for f in res["float"]],
+                          "settled": [bool(x) for x in settled], "closure": _r(res["closure"], 3),
+                          "min_load_raw_kN": _r(res["min_load_raw"] / 1e3),
+                          "surface": {"pos_m": [_r(a) for a in res["surf_pos"]],
+                                      "load_kN": [_r(a / 1e3) for a in res["surf_load"]]},
+                          "downhole": {"pos_m": [_r(a) for a in res["dh_pos"]],
+                                       "load_kN": [_r(a / 1e3) for a in res["dh_load"]]}}
+        if key != "glide":
+            tub["z_m"] = _r(prof[0]["z_m"])
+            tub[key] = {"T_C": [_r(p["T_C"]) for p in prof], "mu_Pas": [_r(p["mu_Pas"]) for p in prof]}
+    _dump("cards_timeline.json", cards_out)
+    _dump("tubing_timeline.json", tub)
+
+
 def main(frames=True):
     cyc = pd.read_parquet(OUT / "cycle.parquet")
     fg = pd.read_parquet(OUT / "float_glide.parquet")
@@ -190,6 +239,7 @@ def main(frames=True):
     tubing_profiles(cyc)
     rod_motion()
     cards(notes)
+    timelines(cyc, fg)
     m = thermal(frames)
     print(f"exported to {DATA} ({len(m['frames'])} thermal frames)")
 

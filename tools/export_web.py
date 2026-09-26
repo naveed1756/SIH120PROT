@@ -21,6 +21,7 @@ Contracts are those of CLAUDE.md T12. Additive extras (documented in DEVINSTRUCT
   cards "transient, not settled" and must not report them as rod float.
 """
 import json
+import shutil
 import sys
 from pathlib import Path
 
@@ -240,6 +241,11 @@ def main(frames=True):
     rod_motion()
     cards(notes)
     timelines(cyc, fg)
+    tour = ROOT / "web" / "public" / "tour"          # PNG overlays used by the dashboard's demo tour
+    tour.mkdir(parents=True, exist_ok=True)
+    for f in ("A3_card_library.png", "A5_confusion.png"):
+        if (ROOT / "assets" / f).exists():
+            shutil.copyfile(ROOT / "assets" / f, tour / f)
     m = thermal(frames)
     print(f"exported to {DATA} ({len(m['frames'])} thermal frames)")
 

@@ -15,17 +15,20 @@ DEVINSTRUCT.md §2.
 | `A2_end_injection.png`, `A2_end_soak.png`, `A2_day60.png` | Stills of the same field at three moments of the cycle. | T1-A | Steam injection 3.1 t/h for 18 d at 99 ksc(g) bottomhole, 1.63 MW to the sandface | Technical approach |
 | `A3_card_library.png` | No failure data? The twin generates it: nine pump conditions from the rod-string wave equation. | T2-B, D1 · I6 | 13,104 labelled synthetic cards (9 classes × 1,500, 91.6–100 % valid per class), 2–5 % noise on surface cards | Technical approach |
 | `A6a_marx_langenheim.png` | The thermal grid reproduces the Marx–Langenheim analytical heated area. | T1-A verification | Grid 275 / 402 m² vs analytical 276 / 403 m² at 14 / 21 days (−1 %) | Feasibility & viability |
+| `A5_confusion.png`, `A5_f1_bars.png` | The AI learns failure modes from simulated cards and is tested on an operating range it never saw. | D1 · I6 | Macro-F1 0.80 on 5,917 held-out cards (μ > 10 Pa·s or depth > 1,050 m); 5-fold CV in range 0.80; weakest: tagging vs normal | Feasibility & viability |
+| `A6b_gibbs_roundtrip.png` | The diagnostic direction works: the pump card is recovered from the surface card. | T2-B diagnostic (Gibbs) | RMS 0.6 % (normal) and 3.7 % (fluid pound) of the load range at 0.5 Pa·s; 1.9 % at 10 Pa·s | Feasibility & viability |
+| `A7_sectional_speed.png` | Same pump speed, no rod float: slowing only the downstroke of a hydraulic unit clears the float. | O1 · T2-B | Day 135, N 4.5 SPM, S 4 m: downstroke 50 → 56 % of the cycle, max down speed 0.78 → 0.65 m/s, min load -0.8 → +4.5 kN | Impact & benefits |
+| `S2_tubing_profiles.png` | The tubing, not the reservoir, sets the viscosity the rods see. | T2-A (Ramey W.13) · T1-B | Wellhead 189 → 64 °C from day 5 to day 100; μ at the top 0.0007 → 8 Pa·s | Technical approach / backup |
 | `S1_viscosity.png` | Placeholder rheology prior anchored on OIL's 11,500 cP at 50 °C. | T1-B | μ 11.7 / 0.30 / 0.011 Pa·s at 50 / 100 / 200 °C | Feasibility (small) or backup |
 
-## Not built yet (Should / Could tier, Part 6)
+## Not built yet (Could tier)
 
 | File | Task |
 |---|---|
-| `A6b_gibbs_roundtrip.png` | T08 Gibbs surface → downhole inversion |
-| `A7_sectional_speed.png` | T10 hydraulic sectional-speed before/after |
-| `A5_confusion.png`, `A5_f1_bars.png` | T11 card classifier (split by operating range) |
-| `S2_tubing_profiles.png` | T05 extra figure |
-| `A8_vit_quality.png`, `A9_pareto.png` | T14, T15 (Could) |
+| `A8_vit_quality.png` | T14 injection steam quality by VIT grade |
+| `A9_pareto.png` | T15 CSS design Pareto on an L0 proxy |
+
+The dashboard also has a 75 s **demo tour** (`Demo tour` button, or `?tour=1`) following the CLAUDE.md §7 storyboard; no MP4 of it is recorded yet (screen-record `npm run preview` with `?tour=1&present=1`).
 
 ## How A4 was made
 
@@ -37,6 +40,8 @@ image is reproducible. The only console message is a THREE.Clock deprecation war
 raised inside @react-three/fiber (no errors).
 
 ## Notes an Oil India reviewer may ask about
+- No **flowback** (natural-flow) phase: Layer 2 has one between soak and pumped, plan.md makes it
+  optional and the PoC goes straight to pumping after soak (marked on the dashboard timeline and the A1 axis).
 - K_MD = 6,600 mD is a DEMO effective kh tuned to the 18 bbl/d cold rate (above the Layer 1
   500 mD); production averages 52 bbl/d, above the field's ~26 bbl/d (see PROGRESS.md).
 - Rod-float onset lands at production day ~121–125, not mid-cycle (days 30–80): with these

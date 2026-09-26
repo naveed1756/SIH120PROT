@@ -5,6 +5,7 @@ import {
 import { CardPanel, Gauge, Recommendation, StatusStrip, TubingPanel } from "./panels/Panels";
 import Timeline from "./panels/Timeline";
 import Scene from "./scene/Scene";
+import { tourState, TOUR_S } from "./tour";
 import { STRESS_RANGE } from "./scene/Well";
 
 const q = new URLSearchParams(window.location.search);
@@ -35,6 +36,10 @@ function Dashboard({ d }: { d: Data }) {
   const [scenario, setScenario] = useState<Scenario>((q.get("scenario") as Scenario) || "baseline");
   const [unit, setUnit] = useState<"beam" | "hydraulic">((q.get("unit") as "beam") || "beam");
   const [playing, setPlaying] = useState(false);
+  const [tourSec, setTourSec] = useState<number | null>(
+    q.get("tourAt") !== null ? +(q.get("tourAt") as string) : q.get("tour") === "1" ? 0 : null,
+  );
+  const tourFrozen = q.get("tourAt") !== null;
   const [speed, setSpeed] = useState(2);
   const end = c.t_h[c.t_h.length - 1];
 
@@ -62,6 +67,33 @@ function Dashboard({ d }: { d: Data }) {
       last.current = null;
     };
   }, [playing, speed, end]);
+
+  // demo tour (storyboard, CLAUDE.md section 7)
+  const touring = tourSec !== null;
+  useEffect(() => {
+    if (!touring || tourFrozen) return;
+    let raf = 0;
+    let t0: number | null = null;
+    const step = (now: number) => {
+      if (t0 === null) t0 = now;
+      const s = (now - t0) / 1000;
+      if (s >= TOUR_S) {
+        setTourSec(null);
+        return;
+      }
+      setTourSec(s);
+      raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [touring, tourFrozen]);
+  const ts = touring ? tourState(tourSec as number, c) : null;
+  useEffect(() => {
+    if (ts) {
+      setTH(ts.tH);
+      setScenario(ts.scenario);
+    }
+  }, [ts?.tH, ts?.scenario]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const i = hourIdx(c, tH);
   const ph = c.phase[i];
@@ -156,6 +188,7 @@ function Dashboard({ d }: { d: Data }) {
             TinC={c.T_in_C[i]}
             present={PRESENT}
             frozenPhase={SHOT ? 0.62 : null}
+            cam={ts ? ts.cam : null}
             onReady={() => setReady(true)}
           />
           <div className="scene-over">
@@ -171,7 +204,8 @@ function Dashboard({ d }: { d: Data }) {
                 <em>{STRESS_RANGE[0]}</em><em>{STRESS_RANGE[1]} MPa · red = compression</em>
               </div>
             </div>
-            {!PRESENT && <div className="hint">drag to orbit · scroll to zoom</div>}
+            {!PRESENT && !ts && <div className="hint">drag to orbit · scroll to zoom</div>}
+            {ts?.caption && <div className="tour-cap">{ts.caption}</div>}
           </div>
         </div>
         <aside className="side">
@@ -210,12 +244,49 @@ function Dashboard({ d }: { d: Data }) {
         onScrub={(t) => setTH(t)}
         onPlay={() => setPlaying((v) => !v)}
         onSpeed={setSpeed}
+        touring={touring}
+        onTour={() => {
+          setPlaying(false);
+          setTourSec(touring ? null : 0);
+        }}
         onNow={() => {
           setPlaying(false);
           setTH(ev.t_h);
         }}
       />
       <footer className="caption">{CAPTION}</footer>
+      {ts?.overlay && <TourOverlay kind={ts.overlay} />}
+    </div>
+  );
+}
+
+function TourOverlay({ kind }: { kind: "title" | "A3" | "A5" | "end" }) {
+  const base = import.meta.env.BASE_URL + "tour/";
+  if (kind === "title")
+    return (
+      <div className="overlay title">
+        <h1>Baghewala Well-to-Surface Twin</h1>
+        <p>Cyclic steam stimulation and sucker-rod pumping, simulated as one system</p>
+        <span className="chip">synthetic well BGW-SYN-01 · OIL published parameters · prototype v0</span>
+      </div>
+    );
+  if (kind === "end")
+    return (
+      <div className="overlay end">
+        <div className="chain">
+          {["T1 Reservoir heat", "T1-B Rheology", "T2-A Wellbore", "T2-B Rods & pump", "D Card library", "F Forecast", "O Glide path", "H Advice"].map((x, k) => (
+            <span key={x} className={k >= 4 ? "ai" : ""}>{x}</span>
+          ))}
+        </div>
+        <p>synthetic well · OIL parameters · prototype v0</p>
+      </div>
+    );
+  const src = kind === "A3" ? "A3_card_library.png" : "A5_confusion.png";
+  const cap = kind === "A3" ? "No failure data? The twin generates it: 9 pump conditions" : "The classifier, tested on an operating range it never saw";
+  return (
+    <div className="overlay img">
+      <img src={base + src} alt={cap} />
+      <p>{cap}</p>
     </div>
   );
 }

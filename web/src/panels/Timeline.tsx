@@ -13,6 +13,8 @@ interface Props {
   onPlay: () => void;
   onSpeed: (s: number) => void;
   onNow: () => void;
+  touring: boolean;
+  onTour: () => void;
 }
 
 export default function Timeline(p: Props) {
@@ -56,6 +58,7 @@ export default function Timeline(p: Props) {
               ))}
             </select>
             <button onClick={p.onNow}>Jump to “now”</button>
+            <button className={p.touring ? "on" : ""} onClick={p.onTour}>{p.touring ? "■ Stop tour" : "Demo tour"}</button>
           </div>
         )}
       </div>
@@ -87,6 +90,7 @@ export default function Timeline(p: Props) {
           {seg(0, b.injEnd, "Injection", "inj")}
           {seg(b.injEnd, b.soakEnd, "Soak", "soak")}
           {seg(b.soakEnd, b.end, "Pumped production", "prod")}
+          <div className="fb" style={{ left: `${(100 * b.soakEnd) / b.end}%` }}>flowback not modelled (PoC)</div>
           <div className="evt" style={{ left: `${(100 * ev.t_h) / b.end}%` }} title="float forecast" />
           <input
             type="range"

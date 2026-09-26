@@ -12,15 +12,15 @@ folder as a git bundle (`.sync/poc.bundle`, see DEVINSTRUCT.md §3).
 | T02 | done | μ_oil 50/100/200 °C = 11.69 / 0.302 / 0.0109 Pa·s; HB = Walther at 50 s⁻¹ to 2e-16; mixture ratio μ(0.50)/μ(0.70) at 50 °C = 3,975 | 18 tests pass. Two deviations from the brief, see Decisions (monotone test, log-space blend). Asset S1 done |
 | T03 | done | Marx–Langenheim: grid 275 / 402 m² vs 276 / 403 m² at 14 / 21 d (−1 %); energy closure ≤ 1e-13 every step; 1-D slab vs erf < 3 %; r_h end of injection L1/L2/L3 = 18.6 / 15.5 / 13.5 m (override: top > bottom) | Solver: regime Picard + Jäger–Kačur fallback (18 steps used it, 0 halvings). Latent-heat condensation-front closure (Decisions). Assets A6a, A2 mp4 + 3 stills |
 | T04 | done | K_MD = 6,600 mD (DEMO) → cold 18.0 bbl/d; CSS production avg **53.1 bbl/d** (peak 58.0 at day 0, monotone decline to 47.6 at day 120); cycle runtime 26 s | **Average is outside the 20–40 note band; see Checkpoint.** K_MD exceeds the §8 5,000 mD guard: needs human confirmation (Blocked) |
-| T05 | done | Wellhead T at T_in 150 °C: 40.7 / 61.7 / 90.4 °C for 5 / 10 / 20 m³/d (3B: 41 / 62 / 91) | Ramey W.13 with L_R = 72 m per m³/d; heater rule of thumb 10 °C/kW at 5 m³/d. S2 figure deferred (Should tier) |
+| T05 | done | Wellhead T at T_in 150 °C: 40.7 / 61.7 / 90.4 °C for 5 / 10 / 20 m³/d (3B: 41 / 62 / 91) | Ramey W.13 with L_R = 72 m per m³/d; heater rule of thumb 10 °C/kW at 5 m³/d. S2 figure done (Part 6) |
 | T06 | done | Static F_pr = 42.43 kN = 28.81 (buoyant rods, 26.19 N/m) + 13.62 (F_fl, 1.75", p_int 20 ksc) kN; normal card N 5, S 3 m, μ 0.5: closure 0.6 %, area > 0, **plunger stroke 2.834 m** | a·Δt/Δx = 0.77; 3 strokes, 3rd kept; ~2.4 s per card single, batched over cards |
 | T07 | done | 9 × 1,500 cards in 264 s (2 processes); valid (closed ≤ 5 %, finite): normal 99.1, pound 91.6, gas 98.6, float 100, tv 99.6, sv 99.4, unseated 95.3, parted 97.5, tagging 95.9 %; 13,104 kept after label-consistency drop | `out/cards.parquet` (git-ignored; regenerate `python -m ml.card_library`). Asset A3 |
-| T08 | todo | | Should |
+| T08 | done | Round trip RMS: normal 0.55 / 0.46 %, fluid pound 3.67 / 2.26 % of load range at μ 0.5 / 1 Pa·s (≤ 5 %); at 10 Pa·s (informative) 0.34 / 1.92 % | `twin/gibbs.py` (single + batched); asset A6b |
 | T09 | done | Plunger 2.25" (N_inflow at peak 6.88 SPM); baseline N 6.88 SPM, v_down 1.08 m/s; **onset day 125.2 analytic, 121.2 wave equation (−4.0 d, >3 d: both reported)**; now = day 124.6; heater 6 kW and hydraulic (S 6 m, df 0.6, N 3.44): no onset in 150 d; glide min margin 0.76; cross-check min load +7.7 / −1.8 / −8.7 kN at days 95 / 125 / 140 | 7 tests pass. Asset A1 + notes. Onset target 30–80 d not reachable with listed knobs (Decisions) |
-| T10 | todo | | Should |
-| T11 | todo | | Should |
+| T10 | done | Hydraulic S 4 m, N 4.5 SPM; own float onset day 133; day 135: df 0.50 → min -0.79 kN (clipped), df 0.56 → min 4.53 kN (5.1 % of peak); v_down 0.78 → 0.65 m/s, v_up 1.08 m/s | Asset A7. Acceleration limit allows df ≤ 0.57 at this N |
+| T11 | done | Macro-F1 **0.797** on the held-out range (5,917 cards; accuracy 0.816); 5-fold CV in the training range 0.803 ± 0.015. Weakest: tagging 0.58, normal 0.62 (confused with each other), tv/sv leak ~0.78–0.80; rod float 1.000 | Split μ ≤ 10 Pa·s and depth ≤ 1,050 m (train 7,187). Assets A5 |
 | T12 | done | cycle_timeseries (4,271 h), 178 thermal frames + textures (daily), 27 library + 3 cross-check cards, rod_motion (normal + float), tubing_profiles; 11 MB | `python tools/export_web.py`; schema-lite test passes (6 tests). Additive extras only (Decisions) |
-| T13 | static done (Must) | `npm run build` OK; preview renders, 0 console errors (1 warning: THREE.Clock deprecation inside @react-three/fiber); `assets/A4_dashboard.png` 3840 × 2160 at the "now" event | Vite 8 + React 19 + r3f 9 + drei + postprocessing + Recharts. Scrubber, play, beam/hydraulic toggle, Approve / heater what-if, animated pump + rod stress wave, steam particles already work. **Demo tour (Should) not built yet** |
+| T13 | static done (Must) | `npm run build` OK; preview renders, 0 console errors (1 warning: THREE.Clock deprecation inside @react-three/fiber); `assets/A4_dashboard.png` 3840 × 2160 at the "now" event | Vite 8 + React 19 + r3f 9 + drei + postprocessing + Recharts. Scrubber, play, beam/hydraulic toggle, Approve / heater what-if, animated pump + rod stress wave, steam particles already work. Demo tour (Should) built: `Demo tour` button or `?tour=1` (75 s, §7 storyboard); `?tourAt=<s>` freezes a moment |
 | T14 | todo | | Could |
 | T15 | todo | | Could |
 | T16 | done (Must set) | `assets/README.md`: 7 assets with message, modules/innovations, key numbers, slide; Should/Could assets listed as not built | Update again after Part 6 |
@@ -77,8 +77,17 @@ folder as a git bundle (`.sync/poc.bundle`, see DEVINSTRUCT.md §3).
 - 2026-09-26 15:40 · 3D scene: surface kit at true scale; underground 0–30 m and 1,090–1,175 m at 0.2 units/m, 30–1,090 m compressed into 5 units between break symbols; radii exaggerated (labelled). Reservoir = 270° cutaway cylinder whose faces sample tex_*.png (log r 0.1–150 m); bloom on hot zones. Rod stress/motion from rod_motion.json (normal stroke, or the float stroke when the scenario margin < 0), stroke rate from the scenario SPM. Soak tubing shown at the geotherm (shut in).
 - 2026-09-26 15:40 · Known simplification carried into the dashboard: the "current practice" baseline (peak-inflow SPM all cycle) assumes a full pump; in reality it would pump off (fluid pound) as inflow falls. Per brief; stated in assets/README.md.
 
+- 2026-09-26 16:00 · **No flowback phase** (Layer 2 has Flowback: natural flow, rods idle). CLAUDE.md T04 defines injection → soak → pumped; plan.md: "Flowback optional, go straight to pumped after soak and note it on the timeline". Note added to the dashboard timeline, the A1 x-axis label and assets/README.md.
+
+- 2026-09-26 16:30 · T08 Gibbs inversion treats the recorded stroke as periodic (wrap-around time differences); uses the same c(x) and rod-load definition as the forward model. Batched version used by T11 features.
+- 2026-09-26 16:40 · T10 demo day = this hydraulic unit's own persistent float onset (first day after which every card clips) + 2 d. Early-production cards at near-water viscosity ring without settling and dip below zero (days 0–10); they are excluded by the "persistent" rule. S = 4 m (library lower bound), N = 4.5 SPM (same stroke volume per minute as 6 SPM on the 3 m beam unit). Raising df at the same N is limited by the 0.5 m/s² acceleration (df ≤ 0.57); 0.56 reached the > 5 % target.
+- 2026-09-26 16:50 · **T11 features:** min/max/mean load are taken on load / peak load (on the [0, 1] card they would be 0/1 by construction). Fillage is computed from a **Gibbs downhole card inverted from the noisy surface card** (what the field would have), not from the library's simulated pump card (that would leak the label). Gibbs inputs: pump setting depth (not the break depth for rod_parted), SPM and the card's μ (in the field μ would be inferred, I1). FFT descriptors use k = 1..12 as the brief says (|c1|/|c1| = 1 kept).
+- 2026-09-26 16:50 · T11 honesty notes: rod float scores ~1.0 because its clipped zero-load segment is distinctive and most of its cards (μ 5–40 Pa·s) sit in the test range; tagging vs normal are the main confusion (a 30 ms impulse is ~0.5 % of a stroke at 200 samples).
+- 2026-09-26 17:00 · T13 demo tour: keyframes in web/src/tour.ts (title 0–6 s, injection with camera down to the reservoir 6–22 s, soak → pumped 22–35 s, cooling to the "now" event 35–48 s, forecast 48–51 s, auto-Approve at 51 s, A3 / A5 overlays 55–68 s, causal-chain end card 68–75 s). Tour PNGs copied to web/public/tour by tools/export_web.py. No MP4 of the tour recorded (headless software WebGL is too slow for smooth capture); record with a screen recorder from `npm run preview` if the template takes a video link.
+
 ## Deferred
-- S2 tubing-profile figure (Should tier; after all Musts).
+- MP4 recording of the dashboard demo tour (screen-record `?tour=1&present=1`).
+- Flowback phase (T2-A natural-flow mode, end-of-natural-flow forecast): plan.md optional; not in CLAUDE.md.
 - Live-oil (GOR) correction, Refutas diluent blending (B.9), aquathermolysis multiplier: not needed for the PoC assets.
 
 ## Blocked
@@ -94,3 +103,7 @@ folder as a git bundle (`.sync/poc.bundle`, see DEVINSTRUCT.md §3).
 - `web/public/data/` — T12 exports for the dashboard
 - `assets/A4_dashboard.png` — dashboard at the "now" event, 3840 × 2160 (T13)
 - `assets/README.md` — manifest (T16)
+- `assets/A6b_gibbs_roundtrip.png/.svg` — Gibbs round trip (T08)
+- `assets/A7_sectional_speed.png/.svg` — hydraulic sectional speed before/after (T10)
+- `assets/A5_confusion.png`, `assets/A5_f1_bars.png` (+ .svg) — classifier (T11)
+- `assets/S2_tubing_profiles.png/.svg` — tubing T and μ at production days 5/30/60/100 (T05 extra)

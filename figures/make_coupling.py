@@ -86,7 +86,7 @@ def main():
         a.axvline(now, color=S.COLORS["ai"], lw=1.0, zorder=1)
     for a in axs[:-1]:
         plt.setp(a.get_xticklabels(), visible=False)
-    axs[-1].set_xlabel("Production day (after injection 18 d + soak 9.9 d)", fontsize=10)
+    axs[-1].set_xlabel("Pumped-production day (after injection 18 d + soak 9.9 d; flowback phase not modelled in the PoC, pumping starts after soak)", fontsize=10)
 
     def ylab(a, t):
         a.set_ylabel(t, fontsize=9.5, labelpad=6)

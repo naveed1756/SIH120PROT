@@ -1,9 +1,10 @@
 import { OrbitControls } from "@react-three/drei";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Bloom, EffectComposer, Vignette } from "@react-three/postprocessing";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { texUrl, type Phase, type RodMotion, type ThermalMeta } from "../data";
+import { CAMS, type Cam } from "../tour";
 import { depthToY, PAY_TOP_M } from "./geom";
 import { HydraulicUnit, PumpJack, Wellhead } from "./PumpJack";
 import { Ground, Reservoir, Steam, Well } from "./Well";
@@ -23,6 +24,7 @@ interface Props {
   TinC: number;
   present: boolean;
   frozenPhase: number | null;
+  cam?: Cam | null;
   onReady?: () => void;
 }
 
@@ -69,6 +71,22 @@ function FrameCounter({ onReady, texReady }: { onReady?: () => void; texReady: b
   return null;
 }
 
+function CameraRig({ cam }: { cam: Cam | null | undefined }) {
+  const { camera, controls } = useThree() as unknown as { camera: THREE.PerspectiveCamera; controls: { target: THREE.Vector3; update: () => void } | null };
+  const pos = useMemo(() => new THREE.Vector3(), []);
+  const tgt = useMemo(() => new THREE.Vector3(), []);
+  useFrame((_, dt) => {
+    if (!cam || !controls) return;
+    const k = 1 - Math.exp(-Math.min(dt, 0.1) * 1.6);
+    pos.set(...CAMS[cam].pos);
+    tgt.set(...CAMS[cam].target);
+    camera.position.lerp(pos, k);
+    controls.target.lerp(tgt, k);
+    controls.update();
+  });
+  return null;
+}
+
 export default function Scene(p: Props) {
   const clock = useRef<StrokeClock>({ phase: 0.3 });
   const [texReady, setTexReady] = useState(false);
@@ -87,6 +105,7 @@ export default function Scene(p: Props) {
     >
       <ClockDriver clock={clock} spm={moving ? p.spm : 0} frozen={p.frozenPhase} />
       <FrameCounter onReady={p.onReady} texReady={texReady} />
+      <CameraRig cam={p.cam} />
       <ambientLight intensity={0.45} />
       <hemisphereLight args={["#cfe0ff", "#1a1410", 0.5]} />
       <directionalLight position={[12, 22, 16]} intensity={1.6} />

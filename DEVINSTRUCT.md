@@ -48,7 +48,12 @@ python -m ml.card_library               # 13,500 synthetic cards -> out\cards.pa
 python figures\make_card_library.py     # A3
 python -m twin.float_glide               # T09 -> out\float_glide.* (needs cycle.parquet)
 python figures\make_coupling.py         # A1 + A1_coupling_notes.md
-python tools\export_web.py              # T12 -> web\public\data (~30 s)
+python tools\export_web.py              # T12 -> web\public\data (~1 min)
+python figures\make_gibbs.py            # A6b (T08)
+python figures\make_sectional_speed.py  # A7 (T10)
+python -m ml.train_classifier            # T11 -> out\classifier_report.json
+python figures\make_classifier.py       # A5 confusion + F1 bars
+python figures\make_tubing_profiles.py  # S2
 ```
 
 macOS / Linux: `python3 -m venv .venv && . .venv/bin/activate`, then the same.
@@ -61,7 +66,7 @@ npm run dev                     # http://localhost:5173  (live reload)
 npm run build; npm run preview  # production build on http://localhost:4173
 npm run screenshot              # A4: needs preview running; Playwright Chromium (npx playwright install chromium once)
 ```
-URL options: `?present=1` (no cursor, pixel ratio 2), `?shot=1` (frozen stroke), `?t=<cycle hour>`, `?scenario=baseline|glide|heater`, `?unit=beam|hydraulic`.
+URL options: `?present=1` (no cursor, pixel ratio 2), `?shot=1` (frozen stroke), `?tour=1` (run the demo tour), `?tourAt=<s>` (freeze the tour at a second), `?t=<cycle hour>`, `?scenario=baseline|glide|heater`, `?unit=beam|hydraulic`.
 
 ---
 
@@ -124,15 +129,15 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 | `kinematics.py` | T06 | ✅ | Polished-rod motion: beam sinusoid, hydraulic trapezoid (separate up/down speeds); `Kin` = precomputed fast version |
 | `rodpump.py` | T06 | ✅ | Damped wave equation, explicit FD, **batched over cards**; `simulate()` returns the 3rd stroke (200 pts), float flag, closure, plunger stroke; `record_rod=True` for stress along the rod |
 | `pumpbc.py` | T07 | ✅ | Pump tension per class (9 classes) as a vectorised state machine; `CLASSES`, `CAUSES`, `fluid_load()` |
-| `gibbs.py` | T08 | ⬜ | Surface → downhole card inversion (Should) |
+| `gibbs.py` | T08 | ✅ | Surface → downhole card inversion (Everitt–Jennings, marching in space); `downhole_batch()` for many cards |
 | `float_glide.py` | T09 | ✅ | `python -m twin.float_glide`: rod-fall float margin, plunger sizing, onset forecast (analytic + wave-equation scan), heater/hydraulic what-ifs, glide path → `out/float_glide.parquet`, notes JSON, cross-check cards |
 
 ### `ml/`, `optim/`
 | Path | Task | Status | What it does |
 |---|---|---|---|
 | `ml/card_library.py` | T07 | ✅ | `python -m ml.card_library [n]`: samples 9 × 1,500 cards, simulates (2 processes, ~4.5 min), noise, validity + label checks → `out/cards.parquet`. `load_cards()` also reads `out/cards_part*.parquet` (the library as delivered to this folder, split < 20 MB) |
-| `ml/features.py` | T11 | ⬜ | Fourier descriptors + geometric card features |
-| `ml/train_classifier.py` | T11 | ⬜ | XGBoost card classifier, split by operating range |
+| `ml/features.py` | T11 | ✅ | Fourier descriptors, shape stats, slopes, Gibbs-based downhole fillage (from the noisy surface card) |
+| `ml/train_classifier.py` | T11 | ✅ | `python -m ml.train_classifier`: XGBoost, train μ ≤ 10 Pa·s & depth ≤ 1,050 m, test the rest; 5-fold CV; → `out/classifier_report.json`, `out/features.parquet` (~30 s) |
 | `optim/l0_cycle.py`, `optim/pareto.py` | T15 | ⬜ | Analytical cycle model + NSGA-II Pareto (Could) |
 
 ### `figures/`, `tests/`, outputs
@@ -144,6 +149,7 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 | `out/` | Intermediate data (npz, parquet, raw frames). **Git-ignored**, regenerate with scripts |
 | `assets/` | Final PPT assets (PNG + SVG, MP4) + `assets/README.md` manifest (T16) |
 | `web/` | Vite + React + three.js dashboard (T13); `web/public/data/` holds T12 exports (**tracked in git** so the dashboard runs without the Python pipeline; regenerate with `tools/export_web.py`) |
+| `web/src/tour.ts` | Demo-tour keyframes (§7 storyboard): time, camera, scenario, captions, overlays |
 | `web/src/data.ts` | Types + loaders for `public/data`, scenario helpers (margin, SPM, hours-to-float), colours, CAPTION |
 | `web/src/App.tsx` | Layout (3D 60 % · panels 40 % · timeline), state: time, scenario, unit, play loop, URL options |
 | `web/src/scene/` | `Scene.tsx` (Canvas, lights, bloom, stroke clock), `PumpJack.tsx` (beam + hydraulic units, wellhead), `Well.tsx` (casing/VIT/fluid column/rod stress, reservoir shader, ground, steam), `geom.ts` (depth compression, kinematics) |
@@ -173,7 +179,8 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 | 3 | T05 wellbore · T06 rod string · T07 pump BCs + card library | ✅ | `S2_tubing_profiles`, `A3_card_library` |
 | 4 | T09 float + glide path · T12 web exports | ✅ | `A1_coupling` (+ notes), `web/public/data/` |
 | 5 | T13 dashboard (static Must) · T16 manifest | ✅ | `A4_dashboard`, `assets/README.md` |
-| 6 | T08 · T10 · T11 · T14 · T15 (Should/Could) | ⬜ | `A6b`, `A7`, `A5`, `A8`, `A9` |
+| 6 | T08 · T10 · T11 · T13 tour · S2 (Should) | ✅ | `A6b`, `A7`, `A5`, `S2`, demo tour |
+| 7 | T14 · T15 (Could) | ⬜ | `A8`, `A9` |
 
 ## 7. Changelog
 - **Part 1 (26 Sep):** repo skeleton, params, style, rheology + tests (21 pass), S1 figure.
@@ -182,3 +189,4 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 - **Part 3 (26 Sep):** K_MD reverted to 6,600 mD (user). `wellbore.py`, `kinematics.py`, `pumpbc.py`, `rodpump.py`, `ml/card_library.py`; 53 tests pass; asset A3. Card library: 13,104 kept cards, every class ≥ 91.6 % valid.
 - **Part 4 (26 Sep):** `float_glide.py`, `figures/make_coupling.py`, `tools/export_web.py`; plunger 2.25", T_PROD_D 150 d; onset day 125.2 (analytic) vs 121.2 (wave equation), both reported; 66 tests pass. Assets A1 + notes; web data (11 MB). Card library delivered to the folder as `out/cards_part1/2.parquet`.
 - **Part 5 (26 Sep):** `web/` dashboard (Vite + React + r3f): animated pump jack / hydraulic unit, compressed-depth cutaway well with rod stress wave and tubing temperature, reservoir cutaway from the thermal textures, live card, tubing profiles, float gauge, recommendation with Approve / heater what-if, timeline scrubber. A4 screenshot 3840 × 2160; `assets/README.md` manifest. Extra web data: cards/tubing timelines.
+- **Part 6 (26 Sep):** flowback note (timeline, A1 axis, manifest). `twin/gibbs.py` (T08, round trip ≤ 3.7 %), `figures/make_sectional_speed.py` (T10), `ml/features.py` + `ml/train_classifier.py` (T11, macro-F1 0.80 on the held-out range), dashboard demo tour, S2 figure; A4 re-shot; 74 tests.

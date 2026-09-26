@@ -1,5 +1,5 @@
 // Scene layout: y up, ground at y = 0, well axis at x = z = 0. Surface equipment is at
-// true scale (m). Underground depth is compressed in three sections (brief T13):
+// true scale (m). Underground depth is compressed in three sections (spec T13):
 //   0 .. 30 m        to scale x SCALE_A
 //   30 .. 1,090 m    compressed into GAP units (break symbols at both ends)
 //   1,090 .. 1,175 m to scale x SCALE_A (pump at 1,100 m, pay 1,150-1,160 m, window pay +/- 15 m)

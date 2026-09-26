@@ -1,4 +1,4 @@
-"""One full CSS cycle on BGW-SYN-01: injection -> soak -> production (CLAUDE.md T04).
+"""One full CSS cycle on BGW-SYN-01: injection -> soak -> production (task T04).
 
 Couples T1-A (thermal_rz) with T1-C lite (inflow) at a one-step lag and writes
   out/thermal.npz     all series + 6-hourly T[t, z, r] snapshots

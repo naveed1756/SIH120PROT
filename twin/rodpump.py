@@ -1,4 +1,4 @@
-"""T2-B rod string and pump, predictive mode (CLAUDE.md T06; Layer 2 section 4).
+"""T2-B rod string and pump, predictive mode (task T06; Layer 2 section 4).
 
 Damped wave equation for the rod string, x downward from the polished rod,
 u = downward displacement:

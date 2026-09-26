@@ -4,7 +4,7 @@ Needs out/cycle.parquet + out/thermal.npz (python -m twin.scenario_cycle) and
 out/float_glide.parquet + notes + crosscheck_cards.npz (python -m twin.float_glide).
 Writes assets/A1_coupling.png/.svg and assets/A1_coupling_notes.md.
 
-Strip 1 deviation (recorded in PROGRESS.md): the brief's r_h (T - T_R >= 5 K) keeps growing
+Strip 1 deviation (recorded in DEVINSTRUCT.md): the spec's r_h (T - T_R >= 5 K) keeps growing
 during production because conduction carries the 5 K front outward, so it cannot show the
 halo cooling. The strip plots the hot-zone radius at T >= T_NN_C (70 C, the Newtonian
 threshold of the rheology) instead, and the text box states the r_h values."""
@@ -219,7 +219,7 @@ Synthetic reference well BGW-SYN-01 · OIL published parameters (Jul 2025) + lit
 - Water cut: FW0 = {n['FW0']}, FW_INF = {n['FW_INF']}, TAU_W_D = {n['TAU_W_D']} d (scanned, unchanged)
 - F_INV = {n['F_INV']} (scanned 0.5–0.8: no effect on onset, unchanged)
 - Heater baseline: 0 kW (a heater only delays onset)
-- K_MD = {P.K_MD:.0f} mD (DEMO, see PROGRESS.md)
+- K_MD = {P.K_MD:.0f} mD (DEMO, see DEVINSTRUCT.md)
 - **The 30–80 day onset target is not reached with the listed knobs.** Onset stays inside days
   10–150, so this is recorded, not blocked. Reason: the DEMO K_MD gives high liquid rates that
   keep the tubing warm for most of the cycle.
@@ -234,7 +234,7 @@ Synthetic reference well BGW-SYN-01 · OIL published parameters (Jul 2025) + lit
 |---|---|
 | Baseline, analytic float margin | {n['onset_day_analytic']:.2f} |
 | Baseline, wave equation (min polished-rod load < 0) | {n['onset_day_wave_equation']:.2f} |
-| Disagreement | {n['onset_disagreement_days']:+.1f} d (**> 3 d, reported per brief**) |
+| Disagreement | {n['onset_disagreement_days']:+.1f} d (**> 3 d, reported per spec**) |
 | 6 kW heater | {'none in cycle' if n['onset_day_heater_6kW'] is None else '%.2f' % n['onset_day_heater_6kW']} |
 | Hydraulic S = 6 m, down_fraction 0.6, N = {n['hydraulic_N_spm']:.2f} SPM (v_down {n['hydraulic_v_down_mps']:.3f} m/s) | {'none in cycle' if n['onset_day_hydraulic_S6_df0.6'] is None else '%.2f' % n['onset_day_hydraulic_S6_df0.6']} |
 | AI glide path | none (minimum margin {n['glide_margin_min']:.2f}) |
@@ -252,7 +252,7 @@ the pump's fluid load, whose downstroke overshoot unloads the polished rod a few
 {cc}
 
 ## Strip 1 deviation
-The brief asks for r_h (T − T_R ≥ 5 K). That front keeps moving outward during production by
+The spec asks for r_h (T − T_R ≥ 5 K). That front keeps moving outward during production by
 conduction, so it cannot show the halo cooling. Strip 1 shows the hot-zone radius at
 T ≥ T_NN = {P.T_NN_C:.0f} °C per layer (end of production: {', '.join(f'L{k + 1} {r_hot[-1, k]:.1f} m' for k in range(3))});
 the r_h values are stated in the strip text.

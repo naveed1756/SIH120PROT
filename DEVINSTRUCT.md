@@ -6,9 +6,7 @@ It is updated at the end of every build part.
 
 | File | Role |
 |---|---|
-| `CLAUDE.md` | The build brief. Task list T00–T16, done-when tests, rules. **Wins over everything else.** |
-| `PROGRESS.md` | Machine-resumable log: task status, tuned knobs, decisions, deferred items, blockers. |
-| `DEVINSTRUCT.md` | This file: human guide + repo map + tracker. |
+| `DEVINSTRUCT.md` | This file: guide, repo map, tracker and design decisions. |
 | `README.md` | One-screen summary and setup. |
 
 ---
@@ -75,11 +73,10 @@ URL options: `?present=1` (no cursor, pixel ratio 2), `?shot=1` (frozen stroke),
 
 ## 3. How code gets into this folder (sync)
 
-The build runs in a cloud workspace (the shell on this Windows machine does not start),
-so commits are moved here as a **git bundle**, one file per build part:
+Commits can be moved between machines as a **git bundle** (useful offline or behind a firewall):
 
 ```powershell
-# first time only (the folder already has Part 1 files; this adopts the history)
+# first time only (adopts the history into an existing folder)
 git init -b main
 git fetch .sync\poc.bundle main
 git reset --hard FETCH_HEAD
@@ -90,8 +87,7 @@ git pull --ff-only .sync\poc.bundle main
 
 `reset --hard` only touches tracked files; your own untracked files are left alone.
 If you edit files locally, commit them before pulling. `.sync/` is git-ignored.
-From Part 7 on, bundles may be **incremental** (only new commits, to stay under the 20 MB transfer limit): they need the previous part pulled first; `git pull` says which commit is missing otherwise.
-Planned upgrade: a GitHub repo (push from the workspace, `git pull` here). See PROGRESS.md.
+Bundles may be **incremental** (only new commits): they need the previous commits pulled first; `git pull` says which commit is missing otherwise.
 
 Commit style: `T0x: short summary`, one commit per task or per part.
 
@@ -99,7 +95,7 @@ Commit style: `T0x: short summary`, one commit per task or per part.
 
 ## 4. Repository map
 
-Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6.
+Status: ✅ done · 🟡 in progress · ⬜ not started. Tiers: Must, Should, Could.
 
 ### Root
 | Path | What it is |
@@ -110,13 +106,13 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 | `tools/sync.ps1` | Windows helper: adopts/pulls the `.sync\poc.bundle` commits (first run inits git) |
 | `.gitignore`, `.gitattributes` | Ignores venv, caches, `out/`, node, sync bundles, OS/editor files; line-ending and binary rules |
 
-### `docs/` (provided, read-only)
+### `docs/` (architecture research, kept locally, not in git)
 | Path | What it is |
 |---|---|
 | `solution-architecture-layer2.html` | Whole architecture: modules, phases, innovations I1–I16 |
 | `solution-architecture-layer3a.html` | T1-A thermal (A.x), T1-B rheology (B.x), T1-C inflow (C.x, FC-1), BGW-SYN-01 card §9, registry §14 |
 | `solution-architecture-layer3b.html` | T2-A wellbore (W.x), O3 designer, reference-well additions §6 |
-| `plan.md` | Human plan for the 4-day PoC (CLAUDE.md wins where they differ) |
+| `plan.md` | Team plan for the 4-day PoC: asset list, team split, slide mapping |
 
 ### `twin/` (physics)
 | Path | Task | Status | What it does |
@@ -150,7 +146,7 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 |---|---|
 | `figures/make_*.py` | One script per asset; deterministic; reads `params.py` and module outputs. `make_thermal_cycle.py` renders 592 frames in parallel + ffmpeg (~75 s); `--stills-only` for the 3 stills |
 | `tests/test_card_library.py` | Reads `out/cards.parquet`; skipped if the library has not been generated |
-| `tests/test_*.py` | Done-when checks from CLAUDE.md §5, one file per module. `tests/conftest.py` runs the full cycle once per session (shared fixture `cycle`) |
+| `tests/test_*.py` | Done-when checks per task, one file per module. `tests/conftest.py` runs the full cycle once per session (shared fixture `cycle`) |
 | `out/` | Intermediate data (npz, parquet, raw frames). **Git-ignored**, regenerate with scripts |
 | `assets/` | Final PPT assets (PNG + SVG, MP4) + `assets/README.md` manifest (T16) |
 | `web/` | Vite + React + three.js dashboard (T13); `web/public/data/` holds T12 exports (**tracked in git** so the dashboard runs without the Python pipeline; regenerate with `tools/export_web.py`) |
@@ -164,13 +160,13 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 
 ---
 
-## 5. Conventions (short form of CLAUDE.md §3)
+## 5. Conventions
 
 - SI units inside code; convert only when plotting/exporting (°C, cP, bbl/d, ksc, kN).
 - No magic numbers in modules: add a constant to `params.py` with registry ID + evidence label.
 - Every figure: `style.apply()` at the start, `style.save(fig, name)` at the end (adds the caption).
-- Never loosen a done-when threshold. Two honest failed attempts → stop, log in PROGRESS.md "Blocked".
-- Tuning knobs only where CLAUDE.md names them; record final values in PROGRESS.md and figure notes.
+- Never loosen a done-when threshold. If a check keeps failing, stop and record it under design decisions below.
+- Tune only the designated knobs (K_MD, T_PROD_D, water-cut constants, F_INV, heater); record final values below and in the figure notes.
 - Classifier split by operating range, never random.
 
 ---
@@ -190,9 +186,23 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 ## 7. Changelog
 - **Part 1 (26 Sep):** repo skeleton, params, style, rheology + tests (21 pass), S1 figure.
 - **Git (26 Sep):** repo initialised; `.gitignore`/`.gitattributes`; this file; docs committed.
-- **Part 2 (26 Sep):** `steam.py`, `thermal_rz.py`, `inflow.py`, `scenario_cycle.py`; 34 tests pass (~35 s); assets A6a, A2 (mp4 + 3 stills). K_MD = 6,600 mD DEMO (above the 5,000 mD guard; see PROGRESS.md Blocked). CSS average 53 bbl/d (outside 20–40 note band).
-- **Part 3 (26 Sep):** K_MD reverted to 6,600 mD (user). `wellbore.py`, `kinematics.py`, `pumpbc.py`, `rodpump.py`, `ml/card_library.py`; 53 tests pass; asset A3. Card library: 13,104 kept cards, every class ≥ 91.6 % valid.
+- **Part 2 (26 Sep):** `steam.py`, `thermal_rz.py`, `inflow.py`, `scenario_cycle.py`; 34 tests pass (~35 s); assets A6a, A2 (mp4 + 3 stills). K_MD = 6,600 mD DEMO (above the 5,000 mD guard; see design decisions). CSS average 53 bbl/d (outside 20–40 note band).
+- **Part 3 (26 Sep):** K_MD kept at 6,600 mD (DEMO). `wellbore.py`, `kinematics.py`, `pumpbc.py`, `rodpump.py`, `ml/card_library.py`; 53 tests pass; asset A3. Card library: 13,104 kept cards, every class ≥ 91.6 % valid.
 - **Part 4 (26 Sep):** `float_glide.py`, `figures/make_coupling.py`, `tools/export_web.py`; plunger 2.25", T_PROD_D 150 d; onset day 125.2 (analytic) vs 121.2 (wave equation), both reported; 66 tests pass. Assets A1 + notes; web data (11 MB). Card library delivered to the folder as `out/cards_part1/2.parquet`.
 - **Part 5 (26 Sep):** `web/` dashboard (Vite + React + r3f): animated pump jack / hydraulic unit, compressed-depth cutaway well with rod stress wave and tubing temperature, reservoir cutaway from the thermal textures, live card, tubing profiles, float gauge, recommendation with Approve / heater what-if, timeline scrubber. A4 screenshot 3840 × 2160; `assets/README.md` manifest. Extra web data: cards/tubing timelines.
 - **Part 6 (26 Sep):** flowback note (timeline, A1 axis, manifest). `twin/gibbs.py` (T08, round trip ≤ 3.7 %), `figures/make_sectional_speed.py` (T10), `ml/features.py` + `ml/train_classifier.py` (T11, macro-F1 0.80 on the held-out range), dashboard demo tour, S2 figure; A4 re-shot; 74 tests.
-- **Part 7 (26 Sep):** `twin/injection.py` + A8 (T14, all VIT grades within ±0.06 after adding 3B W.1 annulus/cement resistances), `optim/l0_cycle.py` + `optim/pareto.py` + A9 (T15). pymoo added to requirements. 81 tests. All CLAUDE.md tasks done.
+- **Part 7 (26 Sep):** `twin/injection.py` + A8 (T14, all VIT grades within ±0.06 after adding 3B W.1 annulus/cement resistances), `optim/l0_cycle.py` + `optim/pareto.py` + A9 (T15). pymoo added to requirements. 81 tests. All tasks T00–T16 done.
+
+## 8. Design decisions (short)
+
+- **K_MD = 6,600 mD (DEMO).** Effective permeability tuned so the cold oil rate is 18 bbl/d (OIL's +39.5 % CSS uplift on a ~26 bbl/d field average, 3A FC-1). Above the 5,000 mD plausibility guard and 13× Layer 1's 500 mD; it lumps residual heat, heaters, diluent and shear-thinning. Consequence: production averages ~52 bbl/d, above the field's ~26.
+- **Emulsion viscosity.** Pal–Rhodes (3A B.7) makes a water-in-oil emulsion thicker than dead oil as water rises toward inversion, so the mixture is not monotone below inversion; the regime blend (B.8) is done in log space so the inversion acts as a switch.
+- **Thermal solver.** Latent heat of the injected steam is handled by a condensation-front march (operator split); the implicit solve uses regime Picard with a Jäger–Kačur fallback. Energy closure ≤ 1e-13; Marx–Langenheim within 1 %.
+- **No flowback phase.** Layer 2 has a natural-flow phase between soak and pumping; the prototype goes straight to pumping (marked on the dashboard and on A1).
+- **Rod-float onset.** T_PROD_D extended to 150 d; onset at production day 125.2 (analytic) vs 121.2 (wave equation). The 30–80 d target is not reachable with the listed knobs because the DEMO rates keep the tubing warm. Plunger 2.25" (largest standard size).
+- **A1 strip 1** plots the radius where T ≥ 70 °C, because the 5 K heated radius keeps growing by conduction.
+- **Timeline cards** carry a `settled` flag: near-water viscosity leaves the rod string almost undamped and early cards ring; those are labelled, not reported as float.
+- **Classifier fill feature** is computed with Gibbs from the noisy surface card (as in the field), not from the simulated pump card.
+- **Injection model (T14)** adds the Layer 3B W.1 annulus (N₂ conduction + radiation) and cement resistances to the two-term VIT + formation model; the two-term version under-predicted grades C and B.
+- **L0 cycle proxy (T15)** applies the 8 bbl/d cut-off to the CSS uplift (the DEMO cold rate is already 18 bbl/d); only relative gains are meaningful.
+- **Dashboard** uses a light theme and plain-language labels.

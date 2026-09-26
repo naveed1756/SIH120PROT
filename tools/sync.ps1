@@ -1,4 +1,4 @@
-# Pull the latest build-workspace commits from .sync\poc.bundle into this repo.
+# Pull the latest commits from .sync\poc.bundle into this repo.
 # Run from the repo root:  powershell -ExecutionPolicy Bypass -File tools\sync.ps1
 $ErrorActionPreference = "Stop"
 $bundle = ".sync\poc.bundle"

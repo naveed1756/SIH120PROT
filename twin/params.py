@@ -10,7 +10,7 @@ evidence label:
   Literature published correlation / typical value from other fields (a prior)
   Assumed    placeholder chosen to make the prototype run
   Derived    computed from the values above
-  DEMO       tuned knob for the PoC demo (see PROGRESS.md), not a prediction
+  DEMO       tuned knob for the PoC demo (see DEVINSTRUCT.md), not a prediction
 Units are SI unless the name says otherwise (_M, _C, _KSC, _D, _MD, ...).
 """
 
@@ -32,8 +32,8 @@ KH_CONTRAST = [1.0, 0.6, 1.4]  # P-03 Assumed (kh multipliers, top -> bottom)
 PHI = 0.19                   # P-04 Layer1 (18-20 %)
 K_MD_LAYER1 = 500.0          # P-05 Layer1 (<1,000 mD); gives a cold rate of only ~1.4 bbl/d (3A FC-1)
 K_MD = 6600.0                # DEMO: tuned to OIL field-level figures (FC-1), not a Baghewala prediction.
-                             # Effective kh: cold rate 18 bbl/d. EXCEEDS the CLAUDE.md 8 guard of 5,000 mD;
-                             # lumps residual heat / heaters / diluent / shear-thinning (3A FC-1). See PROGRESS.md
+                             # Effective kh: cold rate 18 bbl/d. EXCEEDS the 5,000 mD plausibility guard;
+                             # lumps residual heat / heaters / diluent / shear-thinning (3A FC-1). See DEVINSTRUCT.md
 T_R_C = 50.0                 # P-06 OIL
 P_INIT_KSC = 116.0           # P-07 OIL (initial reservoir pressure)
 P_NEARWELL_KSC = 75.0        # P-08 Assumed (depleted near-well pressure, to calibrate)
@@ -77,8 +77,8 @@ M_PAPANASTASIOU = 1.0e3      # s, regularisation constant (3A B.5, numerical dev
 F_INV = 0.60                 # P-24 Assumed, inversion water fraction (emulsion)
 F_INV_W = 0.05               # P-24 Assumed, inversion transition width
 PHI100 = 0.75                # P-24 Assumed, Pal-Rhodes dispersed fraction at which mu_r = 100
-PAL_RHODES_CAP = 1.1         # numerical cap on phi/PHI100 (brief T02)
-P_WATER_VISC_PA = 1.0e6      # pressure for water viscosity when none is given (brief T02)
+PAL_RHODES_CAP = 1.1         # numerical cap on phi/PHI100 (spec T02)
+P_WATER_VISC_PA = 1.0e6      # pressure for water viscosity when none is given (spec T02)
 
 # ------------------------------------------------------------- steam / cycle
 STEAM_KGS = 3100.0 / 3600.0  # P-34 OIL (~3.1 t/h)
@@ -101,7 +101,7 @@ R_H_DT_K = 5.0               # 3A 5.4 definition of heated radius: T - T_R >= 5 
 VIT_R_INS_I_M = 0.04445      # 3B 6 Assumed: inner tube OD 3 1/2" (insulation inner radius)
 VIT_R_INS_O_M = 0.0503       # 3B 6 Assumed: outer tube ID of 4 1/2" VIT (insulation outer radius)
 K_VIT_GRADES = {"E": 0.004, "D": 0.01, "C": 0.03, "B": 0.05}  # 3B Fig. 3, apparent vacuum-layer k (W/mK)
-C_CPL = 1.3                  # 3B 4.2 joint coupling factor (prior 1.2-1.4), brief T14
+C_CPL = 1.3                  # 3B 4.2 joint coupling factor (prior 1.2-1.4), spec T14
 K_E_FORM = 2.0               # 3B Fig. 3 formation conductivity (W/mK)
 CASING_RI_M = 0.0797         # Assumed: 7" 26 lb/ft casing, ID 6.276"
 CASING_RO_M = 0.0889         # Assumed: 7" casing OD
@@ -109,12 +109,12 @@ VIT_R_TO_M = 0.05715         # Assumed: VIT outer tube OD 4 1/2" (annulus inner 
 K_CEM = 0.7                  # Literature, thermal cement conductivity (W/mK), 3B W.1 cement term
 EPS_STEEL = 0.9              # 3B 4.2 emissivity of oxidised steel
 K_N2 = 0.04                  # Literature, N2 conductivity at ~150 C (W/mK), bare-tubing annulus
-DZ_INJ_M = 10.0              # brief T14: 10 m segments
-T_FORM_DAYS = 1.0            # brief T14: R_form at t = 1 day
+DZ_INJ_M = 10.0              # spec T14: 10 m segments
+T_FORM_DAYS = 1.0            # spec T14: R_form at t = 1 day
 
 # ------------------------------------------------ O3 L0 cycle proxy (T15, 3B 5.2-5.5)
-Q_CUT_BPD = 8.0              # brief T15 Assumed economic cut-off (applied to the CSS uplift, see PROGRESS.md)
-T_MOB_D = 5.0                # brief T15: mobilisation / downtime days per cycle
+Q_CUT_BPD = 8.0              # spec T15 Assumed economic cut-off (applied to the CSS uplift, see DEVINSTRUCT.md)
+T_MOB_D = 5.0                # spec T15: mobilisation / downtime days per cycle
 L_MAX_D = 730.0              # L0 integration cap (days of production)
 M_OIL_VOL = 959.0 * 2000.0   # Derived: produced-oil volumetric heat capacity (rho15 x cp ~ 2 kJ/kgK), J/m3K
 M_WATER_VOL = 4.1e6          # Literature, produced-water volumetric heat capacity near 100 C, J/m3K
@@ -136,14 +136,14 @@ RHO_STEEL = 7850.0           # Literature, kg/m3
 K_C_DRAG = 1.5               # Assumed coupling/guide drag multiplier
 PLUNGER_D_M = 2.25 * IN_M     # T09: largest standard plunger; N_inflow at the production peak = 6.9 SPM (closest to the 5-6 band)
 STROKE_M = 3.0               # Assumed beam-unit stroke length
-PLUNGER_SIZES_IN = [1.25, 1.5, 1.75, 2.0, 2.25]  # standard API plunger sizes (brief T09)
+PLUNGER_SIZES_IN = [1.25, 1.5, 1.75, 2.0, 2.25]  # standard API plunger sizes (spec T09)
 T06_TEST_PLUNGER_IN = 1.75   # Assumed plunger for the T06 checks and the A1 cross-check until T09 sizes it
 RHO_FLUID_ROD = 950.0        # Assumed oil/water mixture density around the rods (kg/m3) -> 26.2 N/m buoyant rod weight
 P_THP_KSC = 5.0              # Assumed tubing-head pressure (ksc g) added to the fluid column for p_dis
-DX_ROD_M = 10.0              # rod-string grid spacing (brief T06)
-DT_ROD_S = 1.5e-3            # rod-string time step (brief T06); a*dt/dx = 0.77
+DX_ROD_M = 10.0              # rod-string grid spacing (spec T06)
+DT_ROD_S = 1.5e-3            # rod-string time step (spec T06); a*dt/dx = 0.77
 N_STROKES_SIM = 3            # simulate 3 strokes, keep the 3rd
-RAMP_FRAC = 0.03             # fluid-load transfer over 3 % of plunger stroke (brief T07)
+RAMP_FRAC = 0.03             # fluid-load transfer over 3 % of plunger stroke (spec T07)
 POUND_DROP_FRAC = 0.01       # fluid-pound load release over 1 % of plunger stroke
 GAS_N = 1.2                  # polytropic exponent, steam/gas interference
 TAG_FRAC = -0.3              # plunger-tagging impulse, fraction of F_fl (compression)

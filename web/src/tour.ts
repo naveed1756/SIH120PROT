@@ -1,4 +1,4 @@
-// Demo tour: the CLAUDE.md section 7 storyboard (75 s) as keyframes over tour seconds.
+// Demo tour: the demo storyboard (75 s) as keyframes over tour seconds.
 import { phaseBounds, type Cycle, type Scenario } from "./data";
 
 export type Cam = "surface" | "reservoir" | "overview";

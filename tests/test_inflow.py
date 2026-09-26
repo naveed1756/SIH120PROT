@@ -1,4 +1,4 @@
-"""T04 done-when checks (CLAUDE.md T04)."""
+"""T04 done-when checks (task T04)."""
 import numpy as np
 import pytest
 
@@ -29,7 +29,7 @@ def test_production_average_is_reported(cycle, capsys):
     assert np.isfinite(s["prod_avg_oil_bpd"]) and s["prod_avg_oil_bpd"] > 0
     with capsys.disabled():
         print(f"\n[T04] production-average oil rate = {s['prod_avg_oil_bpd']:.1f} bbl/d "
-              f"(brief target ~25-26; note band 20-40)")
+              f"(spec target ~25-26; note band 20-40)")
 
 
 def test_j_ratio_limits():

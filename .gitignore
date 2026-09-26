@@ -25,7 +25,7 @@ web/playwright-report/
 npm-debug.log*
 
 # ---------------------------------------------------------------- sync
-# git bundle used to move commits from the build workspace to this folder
+# git bundles used for offline sync
 .sync/
 *.bundle
 
@@ -39,3 +39,6 @@ desktop.ini
 *.log
 .env
 .env.*
+
+# --------------------------------------------------- local-only research docs
+docs/

@@ -1,4 +1,4 @@
-"""T1-C thermal inflow, PoC lite (Layer 3A section 7; CLAUDE.md T04).
+"""T1-C thermal inflow, PoC lite (Layer 3A section 7; task T04).
 
 Cold IPR (C.2c, no TPG), Boberg-Lantz step-profile productivity ratio per layer
 (the 3A 7.6 check form) and the fitted condensate-return water-cut curve (the
@@ -14,7 +14,7 @@ LN_RE_RW = np.log(P.RE_M / P.RW_M)
 
 def kh_layers():
     """Layer kh (m3). KH_CONTRAST is read as the kh ratio between layers; total
-    kh = K_MD * total pay (PROGRESS.md, Decisions)."""
+    kh = K_MD * total pay (DEVINSTRUCT.md, design decisions)."""
     c = np.asarray(P.KH_CONTRAST, dtype=float)
     return P.K_MD * P.MD_M2 * sum(P.H_LAYERS_M) * c / c.sum()
 

@@ -1,4 +1,4 @@
-"""F / O2 lite: rod-float margin, float-onset forecast and SPM glide path (CLAUDE.md T09).
+"""F / O2 lite: rod-float margin, float-onset forecast and SPM glide path (task T09).
 
 Float margin (analytic): terminal rod-fall speed through the tubing fluid,
     v_fall(z) = (rho_s - rho_f) g A_r ln(r_ti/r_r) / (K_C 2 pi mu_mix(z)),
@@ -28,7 +28,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "out"
 W_FALL = (P.RHO_STEEL - P.RHO_FLUID_ROD) * P.G * RP.A_ROD * RP.LN_GAP / (P.K_C_DRAG * 2.0 * np.pi)
 VOL_EFF = 0.8
-LEAD_H = 14.0                         # demo "now" = onset - 14 h (brief)
+LEAD_H = 14.0                         # demo "now" = onset - 14 h (spec)
 HEATER_WHATIF_KW = 6.0
 HYD_WHATIF = dict(S=6.0, down_fraction=0.6)
 

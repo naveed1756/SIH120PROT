@@ -1,4 +1,4 @@
-"""House figure style for every PoC asset (CLAUDE.md T01)."""
+"""House figure style for every PoC asset (task T01)."""
 from pathlib import Path
 
 import matplotlib
@@ -71,7 +71,7 @@ def apply():
 
 
 def add_caption(fig, text=CAPTION):
-    """Bottom-left, 8 pt, grey synthetic-data caption (CLAUDE.md 3.2)."""
+    """Bottom-left, 8 pt, grey synthetic-data caption ."""
     fig.text(0.006, 0.006, text, fontsize=8, color=GREY, ha="left", va="bottom")
 
 

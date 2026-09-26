@@ -81,7 +81,7 @@ def mu_mixture(T_C, f_w):
     O/W branch: mu_water * mu_r(phi = 1 - f_w)   (Pal-Rhodes, oil dispersed)
     Regime switch: logistic s(f_w) of B.8, applied in LOG space:
         ln mu = (1 - s) ln mu_WO + s ln mu_OW
-    Deviation from B.8's linear blend (see PROGRESS.md, Decisions): with the
+    Deviation from B.8's linear blend (see DEVINSTRUCT.md, design decisions): with the
     linear form the diverging W/O branch dominates past the inversion point and
     the mixture never becomes thin, which contradicts the regime the switch is
     meant to represent. f_w is used as holdup (no-slip default, 3B 4.5)."""

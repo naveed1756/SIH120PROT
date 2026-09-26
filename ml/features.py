@@ -1,9 +1,9 @@
-"""D1 card features (CLAUDE.md T11).
+"""D1 card features (task T11).
 
 Per surface card (as measured: noisy, clipped at zero):
   - position and load normalised to [0, 1];
   - closed contour z = x + i y resampled to 128 points by arc length; |FFT coefficients 1..12|
-    normalised by |c1| (so f_fd01 = 1 by construction; kept for the brief's feature list);
+    normalised by |c1| (so f_fd01 = 1 by construction; kept for the spec's feature list);
   - min, max, mean load normalised by the card's peak load (load / max load; on the [0, 1]
     normalised card min and max would be 0 and 1 by construction);
   - enclosed area / bounding-box area (on the normalised card);

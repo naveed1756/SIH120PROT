@@ -79,7 +79,7 @@ def knee(F):
 
 def main():
     t0 = time.time()
-    with warnings.catch_warnings():               # 20k is not a power of 2 (brief's count kept)
+    with warnings.catch_warnings():               # 20k is not a power of 2 (spec's count kept)
         warnings.simplefilter("ignore", UserWarning)
         U = qmc.Sobol(4, scramble=True, seed=SEED).random(N_SOBOL)
     X = to_design(U)

@@ -68,7 +68,7 @@ function Dashboard({ d }: { d: Data }) {
     };
   }, [playing, speed, end]);
 
-  // demo tour (storyboard, CLAUDE.md section 7)
+  // demo tour (storyboard)
   const touring = tourSec !== null;
   useEffect(() => {
     if (!touring || tourFrozen) return;

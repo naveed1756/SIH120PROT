@@ -1,4 +1,4 @@
-"""O3 stage-v0 L0 cycle model (CLAUDE.md T15), vectorised over designs.
+"""O3 stage-v0 L0 cycle model (task T15), vectorised over designs.
 
 Design d = (M_s [t], rate [t/h], x_surf, soak ratio):
   1. injection: t_inj = M_s / rate; sandface quality x_sf = x_surf - Q_loss / (w L_v), with Q_loss

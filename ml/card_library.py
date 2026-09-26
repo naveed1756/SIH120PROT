@@ -1,6 +1,6 @@
-"""Synthetic dynamometer-card library, 9 classes (CLAUDE.md T07; innovation I6).
+"""Synthetic dynamometer-card library, 9 classes (task T07; innovation I6).
 
-Samples operating conditions per the brief, simulates every card with the T06
+Samples operating conditions per the spec, simulates every card with the T06
 rod-string model and the T07 pump boundary condition, adds measurement noise to
 the surface card, checks validity and label consistency, and saves
 out/cards.parquet. Run: python -m ml.card_library [n_per_class]
@@ -21,8 +21,8 @@ from twin import rodpump as RP
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "out"
 SEED = 42
-MU_NONFLOAT_CAP = 3.0         # brief: non-float classes capped at ~3 Pa.s
-MU_FLOAT = (5.0, 40.0)        # brief: rod_float effective 5-40 Pa.s
+MU_NONFLOAT_CAP = 3.0         # spec: non-float classes capped at ~3 Pa.s
+MU_FLOAT = (5.0, 40.0)        # spec: rod_float effective 5-40 Pa.s
 CLOSURE_MAX = 0.05            # validity: |F(3T) - F(2T)| <= 5 % of the load range (periodic, closed)
 
 

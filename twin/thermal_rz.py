@@ -1,15 +1,15 @@
-"""T1-A thermal field, simplified for the PoC (Layer 3A section 5; CLAUDE.md T03).
+"""T1-A thermal field, simplified for the PoC (Layer 3A section 5; task T03).
 
 2-D axisymmetric r-z finite-volume energy balance in volumetric-enthalpy form,
 fully implicit (backward Euler) with upwind radial advection in the pay and
 Picard iteration on the piecewise-linear H -> T map.
 
-Simplifications (deliberate, from the brief):
+Simplifications (deliberate, from the spec):
   * one pressure per phase, so T_sat is constant within a phase;
   * energy equation only (no water-mass equation A.3);
   * vertical transport by conduction only; override enters only through the
     injection allocation (A.4) with the closure parameter beta.
-Closure added here (PROGRESS.md, Decisions): with the water-mass equation
+Closure added here (DEVINSTRUCT.md, design decisions): with the water-mass equation
 removed, nothing moves the LATENT heat of the injected steam away from the well.
 Each step it is distributed by an explicit, energy-exact condensation-front
 march per z-row (operator split): starting at the well, each cell is filled up

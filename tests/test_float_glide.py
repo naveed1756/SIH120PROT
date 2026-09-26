@@ -8,7 +8,7 @@ from twin import rodpump as RP
 
 
 def test_v_fall_constant_matches_brief():
-    # brief: v_fall ~= 5.13 / (K_C_DRAG mu) m/s for these rods
+    # spec: v_fall ~= 5.13 / (K_C_DRAG mu) m/s for these rods
     assert FG.W_FALL * P.K_C_DRAG == pytest.approx(5.13, rel=0.03)
 
 

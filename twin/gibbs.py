@@ -1,4 +1,4 @@
-"""T2-B diagnostic mode: surface card -> downhole (pump) card (CLAUDE.md T08).
+"""T2-B diagnostic mode: surface card -> downhole (pump) card (task T08).
 
 The same damped wave equation as twin.rodpump,
     a^2 u_xx = u_tt + c(x) u_t - g_b,

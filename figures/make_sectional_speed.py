@@ -27,7 +27,7 @@ from twin import wellbore as W  # noqa: E402
 HYD_S_M = 4.0          # lower end of the library's hydraulic stroke range (T07: 4-7 m)
 HYD_N_SPM = 4.5        # same stroke volume per minute as 6 SPM on the 3 m beam unit
 DAYS_AFTER = 2.0
-MIN_FRAC = 0.05        # brief: min load > 5 % of peak
+MIN_FRAC = 0.05        # spec: min load > 5 % of peak
 OUT = ROOT / "out"
 
 

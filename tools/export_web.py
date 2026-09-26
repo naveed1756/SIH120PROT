@@ -3,7 +3,7 @@
 Run after python -m twin.scenario_cycle, python -m twin.float_glide and the card library:
     python tools/export_web.py [--no-frames]
 
-Contracts are those of CLAUDE.md T12. Additive extras (documented in DEVINSTRUCT.md):
+Contracts are those of task T12. Additive extras (documented in DEVINSTRUCT.md):
 - cycle_timeseries.json: T_wh_C, mu_tubing_eff_Pas and water_cut are null outside production (pump off);
   spm_* = 0 and float_margin* = 1 outside production. Extra keys: "day", "prod_start_h", and the
   6 kW heater what-if traces float_margin_heater, spm_float_heater, T_wh_heater_C, mu_tubing_eff_heater_Pas.

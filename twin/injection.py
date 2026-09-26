@@ -1,17 +1,17 @@
-"""T2-A injection mode, simplified (CLAUDE.md T14; 3B 4.2-4.4).
+"""T2-A injection mode, simplified (task T14; 3B 4.2-4.4).
 
 Wet steam marched down the tubing in 10 m segments (z downward):
     dx/dz = -q' / (w L_v(p)),   q' = (T_sat(p) - T_ei(z)) / R_w
     dp/dz = rho_m g,            1/rho_m = x/rho_v + (1 - x)/rho_l   (homogeneous, no friction)
 Series resistances per metre (3B W.1, steel walls and the steam-side film neglected):
     R_w = R_VIT + R_ann + R_cem + R_form
-    R_VIT  = ln(r_ins,o / r_ins,i) / (2 pi k_VIT C_CPL)          (brief T14; 0 for bare tubing)
+    R_VIT  = ln(r_ins,o / r_ins,i) / (2 pi k_VIT C_CPL)          (spec T14; 0 for bare tubing)
     R_ann  = 1 / (2 pi r_to (h_r + h_c))                          N2 annulus, h_r from W.2 radiation,
              h_c = k_N2 / (r_to ln(r_ci/r_to)) (conduction only, no convective enhancement)
     R_cem  = ln(r_wb / r_co) / (2 pi k_cem)
     R_form = T_D / (2 pi k_e), Hasan-Kabir W.5 at t = 1 day
-The annulus surface temperatures are iterated (4 passes). The brief's two-term q' (R_VIT + R_form
-only) was tried first and under-predicts grades C and B (PROGRESS.md, Decisions).
+The annulus surface temperatures are iterated (4 passes). The spec's two-term q' (R_VIT + R_form
+only) was tried first and under-predicts grades C and B (DEVINSTRUCT.md, design decisions).
 Once x reaches 0 the column is hot water; the march stops (condensation depth).
 """
 import numpy as np

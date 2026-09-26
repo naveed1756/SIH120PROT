@@ -1,4 +1,4 @@
-"""D1 card classifier (CLAUDE.md T11). XGBoost on ml.features, split by OPERATING RANGE:
+"""D1 card classifier (task T11). XGBoost on ml.features, split by OPERATING RANGE:
 train = mu <= 10 Pa.s and pump depth <= 1,050 m; test = every other card (extrapolation in
 viscosity or depth). 5-fold stratified CV inside the training range is a secondary number.
 Run: python -m ml.train_classifier   -> out/features.parquet, out/classifier_report.json

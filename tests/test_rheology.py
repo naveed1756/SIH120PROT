@@ -5,7 +5,7 @@ from twin import params as P
 from twin import rheology as R
 
 
-# ---- CLAUDE.md T02 done-when --------------------------------------------------
+# ---- T02 done-when --------------------------------------------------------
 def test_mu_oil_anchor_points():
     assert R.mu_oil(50.0) == pytest.approx(11.5, abs=0.5)     # Pa.s (OIL anchor)
     assert R.mu_oil(100.0) == pytest.approx(0.30, abs=0.05)
@@ -26,11 +26,11 @@ def test_mixture_drops_10x_across_inversion_at_50C():
 
 
 def test_mixture_monotone_decreasing_through_and_above_inversion():
-    # Brief T02 asks for monotone decreasing over all f_w. Pal-Rhodes (3A B.7),
-    # which the brief itself specifies, makes a water-in-oil emulsion thicker
+    # Spec T02 asks for monotone decreasing over all f_w. Pal-Rhodes (3A B.7),
+    # which the spec itself specifies, makes a water-in-oil emulsion thicker
     # than the oil as water rises toward inversion, so the literal test
     # contradicts the doc model. Monotonicity is asserted from the inversion
-    # band upward (see PROGRESS.md, Decisions).
+    # band upward (see DEVINSTRUCT.md, design decisions).
     fw = np.linspace(P.F_INV - 2 * P.F_INV_W, 1.0, 400)
     for T in (40.0, 50.0, 80.0, 150.0):
         mu = R.mu_mixture(T, fw)

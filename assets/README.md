@@ -25,7 +25,7 @@ DEVINSTRUCT.md §2.
 
 ## Also available
 
-The dashboard also has a 75 s **demo tour** (`Demo tour` button, or `?tour=1`) following the CLAUDE.md §7 storyboard; no MP4 of it is recorded yet (screen-record `npm run preview` with `?tour=1&present=1`).
+The dashboard also has a 75 s **demo tour** (`Demo tour` button, or `?tour=1`) following the demo storyboard; no MP4 of it is recorded yet (screen-record `npm run preview` with `?tour=1&present=1`).
 
 ## How A4 was made
 
@@ -40,8 +40,8 @@ raised inside @react-three/fiber (no errors).
 - No **flowback** (natural-flow) phase: Layer 2 has one between soak and pumped, plan.md makes it
   optional and the PoC goes straight to pumping after soak (marked on the dashboard timeline and the A1 axis).
 - K_MD = 6,600 mD is a DEMO effective kh tuned to the 18 bbl/d cold rate (above the Layer 1
-  500 mD); production averages 52 bbl/d, above the field's ~26 bbl/d (see PROGRESS.md).
+  500 mD); production averages 52 bbl/d, above the field's ~26 bbl/d (see DEVINSTRUCT.md).
 - Rod-float onset lands at production day ~121–125, not mid-cycle (days 30–80): with these
   rates the tubing stays warm for most of the cycle. The listed tuning knobs could not move it.
 - The "current practice" baseline runs at the peak-inflow speed all cycle and assumes a full
-  pump (no fluid pound), per the brief.
+  pump (no fluid pound), per the spec.

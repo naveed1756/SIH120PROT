@@ -1,4 +1,4 @@
-"""T06 done-when checks (CLAUDE.md T06) plus kinematics sanity."""
+"""T06 done-when checks (task T06) plus kinematics sanity."""
 import numpy as np
 import pytest
 

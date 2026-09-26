@@ -5,9 +5,8 @@ on the synthetic reference well **BGW-SYN-01**, built only to produce visual ass
 the idea PPT. All data is synthetic, generated from OIL's published field-level figures
 and literature priors. Not field data.
 
-- Build brief: `CLAUDE.md` (wins over `plan.md`)
-- Progress, decisions, tuned knobs: `PROGRESS.md`
-- Architecture: `docs/` (Layer 2, Layer 3A, Layer 3B HTML)
+- Developer guide, repo map and design decisions: `DEVINSTRUCT.md`
+- Asset list and what each one shows: `assets/README.md`
 
 ## Setup (Windows PowerShell)
 

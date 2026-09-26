@@ -1,4 +1,4 @@
-"""Downhole pump boundary condition by failure class (CLAUDE.md T07).
+"""Downhole pump boundary condition by failure class (task T07).
 
 A vectorised state machine over cards. Each step it reads the plunger position
 (up positive), tracks the half-stroke (up / down) with a small hysteresis so

@@ -1,4 +1,4 @@
-"""T03 done-when checks (CLAUDE.md T03)."""
+"""T03 done-when checks (task T03)."""
 import numpy as np
 import pytest
 from scipy.special import erfc

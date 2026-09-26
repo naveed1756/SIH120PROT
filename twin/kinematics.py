@@ -1,4 +1,4 @@
-"""Polished-rod kinematics (CLAUDE.md T06). y = position, positive up, 0 at the bottom.
+"""Polished-rod kinematics (task T06). y = position, positive up, 0 at the bottom.
 
 Beam unit: sinusoid y = S/2 (1 - cos(2 pi N t / 60)).
 Hydraulic long-stroke unit: trapezoidal velocity, acceleration HYD_ACCEL, separate

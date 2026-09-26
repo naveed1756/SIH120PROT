@@ -1,4 +1,4 @@
-"""T2-A production profile, PoC subset (Layer 3B 4.5 W.13; CLAUDE.md T05).
+"""T2-A production profile, PoC subset (Layer 3B 4.5 W.13; task T05).
 
 Ramey closed form for upward flow in the VIT tubing, with the relaxation length
 L_R scaled per m3/d from the 3B 4.5 table (72 m per m3/d for VIT grade D), and the

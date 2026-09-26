@@ -44,6 +44,8 @@ pytest                                  # all done-when tests
 python figures\make_viscosity.py        # any figures\make_*.py writes to assets\
 python -m twin.scenario_cycle           # full CSS cycle -> out\ (needed by make_thermal_cycle.py)
 python figures\make_thermal_cycle.py    # A2 frames + mp4 (needs ffmpeg on PATH)
+python -m ml.card_library               # 13,500 synthetic cards -> out\cards.parquet (~5 min)
+python figures\make_card_library.py     # A3
 ```
 
 macOS / Linux: `python3 -m venv .venv && . .venv/bin/activate`, then the same.
@@ -105,17 +107,17 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 | `thermal_rz.py` | T03 | ✅ | 2-D r–z enthalpy grid (39 × 34 cells): implicit conduction + liquid advection, latent-heat condensation front, Jäger–Kačur fallback solver, heat budget, r_h / T_bar / T_in, Marx–Langenheim check (`marx_langenheim_check`) |
 | `inflow.py` | T04 | ✅ | Cold IPR, Boberg–Lantz step ratio per layer, water-cut curve, `k_md_for_cold_rate()` for the DEMO knob |
 | `scenario_cycle.py` | T04 | ✅ | `python -m twin.scenario_cycle`: one full cycle (~30 s) → `out/thermal.npz` + `out/cycle.parquet`; prints the checkpoint summary |
-| `wellbore.py` | T05 | ⬜ | Ramey tubing temperature + mixture viscosity profile |
-| `kinematics.py` | T06 | ⬜ | Polished-rod motion: beam (sinusoid) and hydraulic (trapezoid) |
-| `rodpump.py` | T06 | ⬜ | Damped wave equation for the rod string → surface/downhole cards |
-| `pumpbc.py` | T07 | ⬜ | Pump boundary condition per failure class (9 classes) |
+| `wellbore.py` | T05 | ✅ | Ramey tubing temperature (W.13) + mixture viscosity profile; `profile_at_day(cycle_df, day)`; heater rule of thumb |
+| `kinematics.py` | T06 | ✅ | Polished-rod motion: beam sinusoid, hydraulic trapezoid (separate up/down speeds); `Kin` = precomputed fast version |
+| `rodpump.py` | T06 | ✅ | Damped wave equation, explicit FD, **batched over cards**; `simulate()` returns the 3rd stroke (200 pts), float flag, closure, plunger stroke; `record_rod=True` for stress along the rod |
+| `pumpbc.py` | T07 | ✅ | Pump tension per class (9 classes) as a vectorised state machine; `CLASSES`, `CAUSES`, `fluid_load()` |
 | `gibbs.py` | T08 | ⬜ | Surface → downhole card inversion (Should) |
 | `float_glide.py` | T09 | ⬜ | Rod-fall float margin, float-onset forecast, SPM glide path |
 
 ### `ml/`, `optim/`
 | Path | Task | Status | What it does |
 |---|---|---|---|
-| `ml/card_library.py` | T07 | ⬜ | Generates 9 × 1,500 synthetic dynamometer cards |
+| `ml/card_library.py` | T07 | ✅ | `python -m ml.card_library [n]`: samples 9 × 1,500 cards, simulates (2 processes, ~4.5 min), noise, validity + label checks → `out/cards.parquet` |
 | `ml/features.py` | T11 | ⬜ | Fourier descriptors + geometric card features |
 | `ml/train_classifier.py` | T11 | ⬜ | XGBoost card classifier, split by operating range |
 | `optim/l0_cycle.py`, `optim/pareto.py` | T15 | ⬜ | Analytical cycle model + NSGA-II Pareto (Could) |
@@ -124,6 +126,7 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 | Path | What it is |
 |---|---|
 | `figures/make_*.py` | One script per asset; deterministic; reads `params.py` and module outputs. `make_thermal_cycle.py` renders 592 frames in parallel + ffmpeg (~75 s); `--stills-only` for the 3 stills |
+| `tests/test_card_library.py` | Reads `out/cards.parquet`; skipped if the library has not been generated |
 | `tests/test_*.py` | Done-when checks from CLAUDE.md §5, one file per module. `tests/conftest.py` runs the full cycle once per session (shared fixture `cycle`) |
 | `out/` | Intermediate data (npz, parquet, raw frames). **Git-ignored**, regenerate with scripts |
 | `assets/` | Final PPT assets (PNG + SVG, MP4) + `assets/README.md` manifest (T16) |
@@ -148,7 +151,7 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 |---|---|---|---|
 | 1 | T00 setup · T01 params/style · T02 rheology | ✅ | `S1_viscosity` |
 | 2 | T03 thermal grid · T04 inflow + cycle | ✅ (K_MD awaits confirmation) | `A6a_marx_langenheim`, `A2_thermal_cycle.mp4`, A2 stills |
-| 3 | T05 wellbore · T06 rod string · T07 pump BCs + card library | ⬜ | `S2_tubing_profiles`, `A3_card_library` |
+| 3 | T05 wellbore · T06 rod string · T07 pump BCs + card library | ✅ | `S2_tubing_profiles`, `A3_card_library` |
 | 4 | T09 float + glide path · T12 web exports | ⬜ | `A1_coupling` (+ notes) |
 | 5 | T13 dashboard · T16 manifest | ⬜ | `A4_dashboard` |
 | 6 | T08 · T10 · T11 · T14 · T15 (Should/Could) | ⬜ | `A6b`, `A7`, `A5`, `A8`, `A9` |
@@ -157,3 +160,4 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 - **Part 1 (26 Sep):** repo skeleton, params, style, rheology + tests (21 pass), S1 figure.
 - **Git (26 Sep):** repo initialised; `.gitignore`/`.gitattributes`; this file; docs committed.
 - **Part 2 (26 Sep):** `steam.py`, `thermal_rz.py`, `inflow.py`, `scenario_cycle.py`; 34 tests pass (~35 s); assets A6a, A2 (mp4 + 3 stills). K_MD = 6,600 mD DEMO (above the 5,000 mD guard; see PROGRESS.md Blocked). CSS average 53 bbl/d (outside 20–40 note band).
+- **Part 3 (26 Sep):** K_MD reverted to 6,600 mD (user). `wellbore.py`, `kinematics.py`, `pumpbc.py`, `rodpump.py`, `ml/card_library.py`; 53 tests pass; asset A3. Card library: 13,104 kept cards, every class ≥ 91.6 % valid.

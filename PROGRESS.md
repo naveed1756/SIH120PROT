@@ -12,9 +12,9 @@ folder as a git bundle (`.sync/poc.bundle`, see DEVINSTRUCT.md §3).
 | T02 | done | μ_oil 50/100/200 °C = 11.69 / 0.302 / 0.0109 Pa·s; HB = Walther at 50 s⁻¹ to 2e-16; mixture ratio μ(0.50)/μ(0.70) at 50 °C = 3,975 | 18 tests pass. Two deviations from the brief, see Decisions (monotone test, log-space blend). Asset S1 done |
 | T03 | done | Marx–Langenheim: grid 275 / 402 m² vs 276 / 403 m² at 14 / 21 d (−1 %); energy closure ≤ 1e-13 every step; 1-D slab vs erf < 3 %; r_h end of injection L1/L2/L3 = 18.6 / 15.5 / 13.5 m (override: top > bottom) | Solver: regime Picard + Jäger–Kačur fallback (18 steps used it, 0 halvings). Latent-heat condensation-front closure (Decisions). Assets A6a, A2 mp4 + 3 stills |
 | T04 | done | K_MD = 6,600 mD (DEMO) → cold 18.0 bbl/d; CSS production avg **53.1 bbl/d** (peak 58.0 at day 0, monotone decline to 47.6 at day 120); cycle runtime 26 s | **Average is outside the 20–40 note band; see Checkpoint.** K_MD exceeds the §8 5,000 mD guard: needs human confirmation (Blocked) |
-| T05 | todo | | |
-| T06 | todo | | |
-| T07 | todo | | |
+| T05 | done | Wellhead T at T_in 150 °C: 40.7 / 61.7 / 90.4 °C for 5 / 10 / 20 m³/d (3B: 41 / 62 / 91) | Ramey W.13 with L_R = 72 m per m³/d; heater rule of thumb 10 °C/kW at 5 m³/d. S2 figure deferred (Should tier) |
+| T06 | done | Static F_pr = 42.43 kN = 28.81 (buoyant rods, 26.19 N/m) + 13.62 (F_fl, 1.75", p_int 20 ksc) kN; normal card N 5, S 3 m, μ 0.5: closure 0.6 %, area > 0, **plunger stroke 2.834 m** | a·Δt/Δx = 0.77; 3 strokes, 3rd kept; ~2.4 s per card single, batched over cards |
+| T07 | done | 9 × 1,500 cards in 264 s (2 processes); valid (closed ≤ 5 %, finite): normal 99.1, pound 91.6, gas 98.6, float 100, tv 99.6, sv 99.4, unseated 95.3, parted 97.5, tagging 95.9 %; 13,104 kept after label-consistency drop | `out/cards.parquet` (git-ignored; regenerate `python -m ml.card_library`). Asset A3 |
 | T08 | todo | | Should |
 | T09 | todo | | |
 | T10 | todo | | Should |
@@ -57,7 +57,14 @@ folder as a git bundle (`.sync/poc.bundle`, see DEVINSTRUCT.md §3).
 
 - 2026-09-26 11:30 · K_MD: user briefly chose the Layer-1 500 mD (commit bd2d810, rate 4.2 → 4.6 bbl/d, T04 decline check failed), then reverted to the 6,600 mD DEMO value (this state) and accepted it. The 5,000 mD guard exceedance is accepted by the user; A2 assets were rendered with 6,600 mD and stay.
 
+- 2026-09-26 12:00 · T06/T07 fixed constants added to params: RHO_FLUID_ROD 950 kg/m³ (Assumed; gives the brief's 26.2 N/m), P_THP 5 ksc (Assumed), T06_TEST_PLUNGER 1.75" (until T09 sizes the plunger), HYST_FRAC 0.5 %, MIN_DWELL_FRAC 0.3.
+- 2026-09-26 12:05 · Pump state machine: reversal needs 0.5 % S_p of travel AND 30 % of the half-stroke elapsed (without the dwell, stress-wave ringing at low viscosity flipped the state and the tagging impulse re-triggered itself: −146 kN cards). Each half-stroke starts from the load at the reversal (removed a jump on tv_leak). Tagging impulse fires once per stroke at the bottom reversal.
+- 2026-09-26 12:05 · Steam/gas interference = polytropic compression (n 1.2) of the gas gap (1−f)·S_p from p_int until p = p_dis, where the travelling valve opens; R = p_dis/p_int per card. tv_leak τ = time since the up-reversal / upstroke duration.
+- 2026-09-26 12:10 · Card validity ("closed") = |F_pr(3T) − F_pr(2T)| ≤ 5 % of the load range, on the clean simulated card before noise. The first version compared the first and last recorded samples (one sample apart) on the noisy card, which failed periodic cards with a sharp load change at the stroke boundary and any card with 2–5 % noise. T06's own 1 % test uses the same periodicity metric.
+- 2026-09-26 12:10 · Library sampling: non-float classes draw μ ≤ min(3 Pa·s, 0.8 × the float-onset viscosity for that N, S); rod_float draws μ in 5–40 Pa·s and N ≥ 1.15 × the float-onset speed, so the label is physically plausible before simulation; the simulated float flag must still agree or the card is dropped (label_ok). Hydraulic N capped at the feasible maximum for S and down_fraction 0.5–0.65. Noise and ±1 % position jitter applied to the surface card only (the downhole card is computed, not measured). rod_parted cards are batched by length so node spacing stays ~10 m.
+
 ## Deferred
+- S2 tubing-profile figure (Should tier; after all Musts).
 - Live-oil (GOR) correction, Refutas diluent blending (B.9), aquathermolysis multiplier: not needed for the PoC assets.
 
 ## Blocked
@@ -68,3 +75,4 @@ folder as a git bundle (`.sync/poc.bundle`, see DEVINSTRUCT.md §3).
 - `assets/A6a_marx_langenheim.png/.svg` — grid vs analytical heated area, −1 % at 14 and 21 d (T03)
 - `assets/A2_thermal_cycle.mp4` — 592 frames (6-hourly) of the r–z temperature field, 49 s at 12 fps (T03/T04)
 - `assets/A2_end_injection|A2_end_soak|A2_day60.png/.svg` — stills (T03/T04)
+- `assets/A3_card_library.png/.svg` — medoid card per class from 13,104 kept synthetic cards (T07)

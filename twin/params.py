@@ -30,7 +30,10 @@ TOP_PAY_M = 1150.0           # P-01 OIL (field level ~1,150 m)
 H_LAYERS_M = [4.0, 3.0, 3.0] # P-02 Layer1 (10 m total, range 5-23) / P-03 Assumed split; top -> bottom
 KH_CONTRAST = [1.0, 0.6, 1.4]  # P-03 Assumed (kh multipliers, top -> bottom)
 PHI = 0.19                   # P-04 Layer1 (18-20 %)
-K_MD = 500.0                 # P-05 Layer1 (<1,000 mD). NOTE: overwritten by DEMO tuning in T04
+K_MD_LAYER1 = 500.0          # P-05 Layer1 (<1,000 mD); gives a cold rate of only ~1.4 bbl/d (3A FC-1)
+K_MD = 6600.0                # DEMO: tuned to OIL field-level figures (FC-1), not a Baghewala prediction.
+                             # Effective kh: cold rate 18 bbl/d. EXCEEDS the CLAUDE.md 8 guard of 5,000 mD;
+                             # lumps residual heat / heaters / diluent / shear-thinning (3A FC-1). See PROGRESS.md
 T_R_C = 50.0                 # P-06 OIL
 P_INIT_KSC = 116.0           # P-07 OIL (initial reservoir pressure)
 P_NEARWELL_KSC = 75.0        # P-08 Assumed (depleted near-well pressure, to calibrate)
@@ -41,6 +44,21 @@ LAM_R = 2.5                  # P-11 Literature, reservoir conductivity (W/mK)
 M_OB = 2.3e6                 # P-12 Literature, cap/base volumetric heat capacity (J/m3K)
 LAM_OB = 1.7                 # P-12 Literature, cap/base conductivity (W/mK)
 BETA_OVERRIDE = 2.0          # P-13 Assumed closure (prior U(0,4)); makes override visible
+S_OI = 0.75                  # P-09 Assumed initial oil saturation (pore-fluid conductivity mix)
+LAM_W = 0.64                 # Literature, liquid water conductivity near 50 C (W/mK, IAPWS)
+RHO_W = 988.0                # Derived, liquid water density at 50 C (kg/m3, IAPWS) - heat-carrier mass
+
+# ------------------------------------------- thermal grid numerics (T03, 3A 5.1)
+NR_EDGES = 40                # radial cell edges, geometric RW -> RE (39 cells, ratio ~1.20)
+N_CAP = 12                   # cap (and base) cells, geometric from the pay outward
+CAP_DZ0_M = 0.25             # first cap/base cell thickness next to the pay
+CAP_EXTENT_M = 60.0          # cap/base total thickness
+PAY_DZ_M = 1.0               # pay cell thickness (layers 4/3/3 -> 10 cells)
+DT_S = 3600.0                # nominal step
+DT_FINE_S = 300.0            # step for the first FINE_WINDOW_S after each phase change
+FINE_WINDOW_S = 6 * 3600.0
+SNAP_EVERY_S = 6 * 3600.0    # T[t,z,r] snapshot interval (animation frames)
+ML_T_S_C = 303.0             # Marx-Langenheim check: steam T (dT = 253 K, 3A 5.6 worked example)
 
 # ---------------------------------------------------------------------- fluid
 API = 16.0                   # P-19 OIL (14-17 deg API)

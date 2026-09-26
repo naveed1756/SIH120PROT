@@ -1,7 +1,8 @@
 # PROGRESS
 
 Repo root = `D:\naveed\others\SIH2026\PS26120\prototype` (the folder holding CLAUDE.md).
-Built and tested in the cloud workspace (Python 3.11.15, venv), then synced to the folder.
+Built and tested in the cloud workspace (Python 3.11.15, venv), committed to git there, and moved to the
+folder as a git bundle (`.sync/poc.bundle`, see DEVINSTRUCT.md §3).
 
 ## Status
 | Task | Status | Key numbers | Notes |
@@ -9,8 +10,8 @@ Built and tested in the cloud workspace (Python 3.11.15, venv), then synced to t
 | T00 | done | pytest: 0 collected, no import errors | layout per CLAUDE.md 3.4; `conftest.py` puts root on sys.path |
 | T01 | done | 3 tests pass | IBM Plex Sans bundled in `twin/fonts/` (OFL) so figures look the same on any machine |
 | T02 | done | μ_oil 50/100/200 °C = 11.69 / 0.302 / 0.0109 Pa·s; HB = Walther at 50 s⁻¹ to 2e-16; mixture ratio μ(0.50)/μ(0.70) at 50 °C = 3,975 | 18 tests pass. Two deviations from the brief, see Decisions (monotone test, log-space blend). Asset S1 done |
-| T03 | todo | | |
-| T04 | todo | | |
+| T03 | done | Marx–Langenheim: grid 275 / 402 m² vs 276 / 403 m² at 14 / 21 d (−1 %); energy closure ≤ 1e-13 every step; 1-D slab vs erf < 3 %; r_h end of injection L1/L2/L3 = 18.6 / 15.5 / 13.5 m (override: top > bottom) | Solver: regime Picard + Jäger–Kačur fallback (18 steps used it, 0 halvings). Latent-heat condensation-front closure (Decisions). Assets A6a, A2 mp4 + 3 stills |
+| T04 | done | K_MD = 6,600 mD (DEMO) → cold 18.0 bbl/d; CSS production avg **53.1 bbl/d** (peak 58.0 at day 0, monotone decline to 47.6 at day 120); cycle runtime 26 s | **Average is outside the 20–40 note band; see Checkpoint.** K_MD exceeds the §8 5,000 mD guard: needs human confirmation (Blocked) |
 | T05 | todo | | |
 | T06 | todo | | |
 | T07 | todo | | |
@@ -25,7 +26,7 @@ Built and tested in the cloud workspace (Python 3.11.15, venv), then synced to t
 | T16 | todo | | |
 
 ## Tuned knobs
-- K_MD = … mD (cold rate … bbl/d) — T04
+- K_MD = 6,600 mD (cold rate 18.0 bbl/d) — T04. Layer-1 value 500 mD kept as `K_MD_LAYER1` (gives 1.4 bbl/d)
 - PLUNGER_D_M = … ; float onset day (baseline) = … ; with heater = … ; hydraulic = … — T09
 
 ## Decisions
@@ -38,11 +39,30 @@ Built and tested in the cloud workspace (Python 3.11.15, venv), then synced to t
 - 2026-09-26 10:05 · Water viscosity is tabulated once from IAPWS-97 (1–370 °C, 0.5 °C step, at 1 MPa or 1.05·Psat to stay liquid) and interpolated · iapws is scalar-only and slow; the brief's "1 MPa" would be steam above ~180 °C.
 - 2026-09-26 10:05 · Rheology envelope (T_pp+3 … 320 °C) is exposed as `in_envelope()` rather than raising · functions must stay vectorised for the thermal and rod solvers; callers flag out-of-envelope use.
 
+- 2026-09-26 10:30 · `docs/` now provided by the user (plan.md is at `docs/plan.md`, not the root); docs are committed to git.
+- 2026-09-26 10:30 · Git: repo initialised in the workspace (branch `main`); commits moved to the user's folder as a git bundle because the local shell does not start. `.gitignore` covers venv/caches, `out/`, node, `.sync/`, OS/editor files; `.gitattributes` normalises line endings.
+- 2026-09-26 10:45 · T03 phase lengths rounded to whole hours (soak 0.55 × 18 d = 237.6 h → 238 h) · keeps hourly records and 6-hourly frames on the hour.
+- 2026-09-26 10:50 · **T03 latent-heat closure (operator split).** Without the water-mass equation nothing carries the latent part of the injected steam (≈ 36 % of the 1.63 MW) away from the first cell. Each step, the latent power of each z-row is walked outward from the well, filling every cell up to its saturated-liquid enthalpy H_l (the steam zone) and passing the rest on (the condensation front). The implicit solve carries only sensible heat: conduction + upwind liquid advection at h_w(T). Energy-exact. A first attempt (flowing quality x = X_SF·S_s) was abandoned: latent storage per cell (~14 MJ/m³) is tiny against the latent throughput, which made it stiff and produced negative temperatures.
+- 2026-09-26 10:55 · **T03 nonlinear solver.** Regime-based Picard first; if a cell sits on the saturation kink and regimes do not settle, Jäger–Kačur relaxation (slope 1/M everywhere, matrix factorised once, monotone and convergent); step-halving as the last fallback. The energy budget uses the linearisation of the final solve, so closure is exact; the linearisation error in T is < 1e-3 K.
+- 2026-09-26 11:00 · Grid heated area for the Marx–Langenheim check = per-row interpolated radius where T − T_R = ½ΔT, π(r² − r_w²) averaged over the pay · counting whole cells gave a ±15 % staircase on the log grid; the interpolated radius is the sub-cell equivalent (same interpolation as r_h).
+- 2026-09-26 11:00 · T03 pay conductivity = λ_R^(1−φ)·λ_f^φ with λ_f = λ_oil(T_R)^S_oi · λ_w^(1−S_oi) = 1.52 W/mK (brief: "geometric mean of rock and fluid"). KH_CONTRAST read as the kh ratio between layers (total kh = K_MD × 10 m).
+- 2026-09-26 11:05 · T04 per-layer ratio: J_k/J_c from each layer's r_h and μ_oil(T_bar_k); total q_o = q_c × kh-weighted mean ratio; layer split ∝ kh_k·J_k (reconciles "kh-weighted mean" and "split by kh_k·J_k" in the brief). Production liquid is advected as water (brief), ρ_w = 988 kg/m³.
+- 2026-09-26 11:05 · Checked the brief's step-profile ratio against 3A C.4's cell-by-cell resistance on the same temperature field: both give ≈ 3.3× cold on day 0 and stay flat (step formula 58 → 48 bbl/d; C.4 56 → 55 bbl/d). The high average is therefore not an artefact of the simplification; brief formula kept.
+
+## Checkpoint after T04 (for the human)
+- **Tuned K_MD = 6,600 mD** (effective kh 66 D·m over 10 m) gives the 18.0 bbl/d cold rate. This is **above the CLAUDE.md §8 guard of 5,000 mD** and 13× Layer 1's 500 mD. 3A FC-1 predicted exactly this gap (Layer 1 rock + 11,500 cP oil give only ~1.4 bbl/d) and lists the likely reasons: residual heat from earlier cycles, heaters, diluent, shear-thinning near the well, or higher real kh. The value is kept as an explicitly labelled DEMO "effective kh" because it only scales rates (heat transport in T1-A does not depend on it). **Needs your confirmation** (options below).
+- Cold rate 18.0 bbl/d · CSS production average **53.1 bbl/d** · peak 58.0 bbl/d at production day 0 · 47.6 bbl/d at day 120 · liquid 382 → 64 bbl/d as water cut falls 0.85 → 0.25.
+- r_h (T − T_R ≥ 5 K) at end of injection: L1 18.6 m, L2 15.5 m, L3 13.5 m (β = 2 override). Mobile radius (T ≥ T_NN) is smaller and shrinks through production; r_h itself keeps growing slowly by conduction, so **A1 strip 1 should plot r_m (T ≥ 70 °C) or r_50**, which do shrink (Part 4 decision).
+- Average 53 bbl/d is **outside the 20–40 band** (target ~25–26). Cause: after 1,340 t of steam the 10 m pay stays hot (T_in 284 °C → 132 °C over 120 d), so the heated/cold productivity ratio stays near its geometric ceiling ln(r_e/r_w)/ln(r_e/r_h) ≈ 3.3. Not forced, as the brief asks. Levers if you want the field average: fewer days of production in the average, a lower β/thicker pay, or a larger r_e. None is a listed knob, so nothing was changed.
+
 ## Deferred
 - Live-oil (GOR) correction, Refutas diluent blending (B.9), aquathermolysis multiplier: not needed for the PoC assets.
 
 ## Blocked
-- (none) — see Decisions for `docs/`.
+- **K_MD above the 5,000 mD guard (CLAUDE.md §8).** Proceeding with 6,600 mD as a labelled DEMO effective kh; awaiting human confirmation. Alternatives: (a) keep 6,600 mD; (b) cap at 5,000 mD → cold rate 13.6 bbl/d (fails the 18 ± 1 test, would be reported); (c) 1,000 mD × 23 m (top of Layer 1) → ~6 bbl/d.
 
 ## Assets produced
 - `assets/S1_viscosity.png/.svg` — placeholder rheology prior (T02)
+- `assets/A6a_marx_langenheim.png/.svg` — grid vs analytical heated area, −1 % at 14 and 21 d (T03)
+- `assets/A2_thermal_cycle.mp4` — 592 frames (6-hourly) of the r–z temperature field, 49 s at 12 fps (T03/T04)
+- `assets/A2_end_injection|A2_end_soak|A2_day60.png/.svg` — stills (T03/T04)

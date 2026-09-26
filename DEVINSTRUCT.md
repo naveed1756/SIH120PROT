@@ -42,6 +42,8 @@ python -m venv .venv
 pip install -r requirements.txt
 pytest                                  # all done-when tests
 python figures\make_viscosity.py        # any figures\make_*.py writes to assets\
+python -m twin.scenario_cycle           # full CSS cycle -> out\ (needed by make_thermal_cycle.py)
+python figures\make_thermal_cycle.py    # A2 frames + mp4 (needs ffmpeg on PATH)
 ```
 
 macOS / Linux: `python3 -m venv .venv && . .venv/bin/activate`, then the same.
@@ -60,8 +62,8 @@ git init -b main
 git fetch .sync\poc.bundle main
 git reset --hard FETCH_HEAD
 
-# every later part
-git pull .sync\poc.bundle main
+# every later part (or simply: powershell -ExecutionPolicy Bypass -File tools\sync.ps1)
+git pull --ff-only .sync\poc.bundle main
 ```
 
 `reset --hard` only touches tracked files; your own untracked files are left alone.
@@ -81,6 +83,7 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 |---|---|
 | `requirements.txt` | Python deps (numpy, scipy, iapws, matplotlib, pandas, pyarrow, xgboost, scikit-learn, pytest; pymoo only for T15) |
 | `pytest.ini`, `conftest.py` | Test config; `conftest.py` puts the root on `sys.path` so `import twin` works |
+| `tools/sync.ps1` | Windows helper: adopts/pulls the `.sync\poc.bundle` commits (first run inits git) |
 | `.gitignore`, `.gitattributes` | Ignores venv, caches, `out/`, node, sync bundles, OS/editor files; line-ending and binary rules |
 
 ### `docs/` (provided, read-only)
@@ -98,9 +101,10 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 | `style.py` | T01 | ✅ | Figure style, domain colours, `CAPTION`, `save()` → `assets/*.png/.svg` |
 | `fonts/` | T01 | ✅ | IBM Plex Sans TTFs (OFL) so figures render identically everywhere |
 | `rheology.py` | T02 | ✅ | Walther viscosity, density, water viscosity (IAPWS), Pal–Rhodes mixture, Herschel–Bulkley, cp, λ |
-| `thermal_rz.py` | T03 | ⬜ | 2-D r–z enthalpy grid of the reservoir: injection, soak, production |
-| `inflow.py` | T04 | ⬜ | Cold IPR, heated/cold productivity ratio, water-cut curve |
-| `scenario_cycle.py` | T04 | ⬜ | Runs one full CSS cycle (inject → soak → produce), writes `out/cycle.parquet` |
+| `steam.py` | T03 | ✅ | IAPWS-97 saturation properties and liquid enthalpy, tabulated for vectorised use (pressures in Pa **absolute**) |
+| `thermal_rz.py` | T03 | ✅ | 2-D r–z enthalpy grid (39 × 34 cells): implicit conduction + liquid advection, latent-heat condensation front, Jäger–Kačur fallback solver, heat budget, r_h / T_bar / T_in, Marx–Langenheim check (`marx_langenheim_check`) |
+| `inflow.py` | T04 | ✅ | Cold IPR, Boberg–Lantz step ratio per layer, water-cut curve, `k_md_for_cold_rate()` for the DEMO knob |
+| `scenario_cycle.py` | T04 | ✅ | `python -m twin.scenario_cycle`: one full cycle (~30 s) → `out/thermal.npz` + `out/cycle.parquet`; prints the checkpoint summary |
 | `wellbore.py` | T05 | ⬜ | Ramey tubing temperature + mixture viscosity profile |
 | `kinematics.py` | T06 | ⬜ | Polished-rod motion: beam (sinusoid) and hydraulic (trapezoid) |
 | `rodpump.py` | T06 | ⬜ | Damped wave equation for the rod string → surface/downhole cards |
@@ -119,8 +123,8 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 ### `figures/`, `tests/`, outputs
 | Path | What it is |
 |---|---|
-| `figures/make_*.py` | One script per asset; deterministic; reads `params.py` and module outputs |
-| `tests/test_*.py` | Done-when checks from CLAUDE.md §5, one file per module |
+| `figures/make_*.py` | One script per asset; deterministic; reads `params.py` and module outputs. `make_thermal_cycle.py` renders 592 frames in parallel + ffmpeg (~75 s); `--stills-only` for the 3 stills |
+| `tests/test_*.py` | Done-when checks from CLAUDE.md §5, one file per module. `tests/conftest.py` runs the full cycle once per session (shared fixture `cycle`) |
 | `out/` | Intermediate data (npz, parquet, raw frames). **Git-ignored**, regenerate with scripts |
 | `assets/` | Final PPT assets (PNG + SVG, MP4) + `assets/README.md` manifest (T16) |
 | `web/` | Vite + React + three.js dashboard (T13); `web/public/data/` holds T12 exports |
@@ -143,7 +147,7 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 | Part | Tasks | Status | Outputs |
 |---|---|---|---|
 | 1 | T00 setup · T01 params/style · T02 rheology | ✅ | `S1_viscosity` |
-| 2 | T03 thermal grid · T04 inflow + cycle | ⬜ | `A6a_marx_langenheim`, `A2_thermal_cycle.mp4`, A2 stills |
+| 2 | T03 thermal grid · T04 inflow + cycle | ✅ (K_MD awaits confirmation) | `A6a_marx_langenheim`, `A2_thermal_cycle.mp4`, A2 stills |
 | 3 | T05 wellbore · T06 rod string · T07 pump BCs + card library | ⬜ | `S2_tubing_profiles`, `A3_card_library` |
 | 4 | T09 float + glide path · T12 web exports | ⬜ | `A1_coupling` (+ notes) |
 | 5 | T13 dashboard · T16 manifest | ⬜ | `A4_dashboard` |
@@ -152,3 +156,4 @@ Status: ✅ done · 🟡 in progress · ⬜ not started. Tier from CLAUDE.md §6
 ## 7. Changelog
 - **Part 1 (26 Sep):** repo skeleton, params, style, rheology + tests (21 pass), S1 figure.
 - **Git (26 Sep):** repo initialised; `.gitignore`/`.gitattributes`; this file; docs committed.
+- **Part 2 (26 Sep):** `steam.py`, `thermal_rz.py`, `inflow.py`, `scenario_cycle.py`; 34 tests pass (~35 s); assets A6a, A2 (mp4 + 3 stills). K_MD = 6,600 mD DEMO (above the 5,000 mD guard; see PROGRESS.md Blocked). CSS average 53 bbl/d (outside 20–40 note band).

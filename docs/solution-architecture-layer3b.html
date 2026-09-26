@@ -1,0 +1,1010 @@
+<title>Baghewala Twin Layer 3B</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root{
+  --bg:#F2F4F1; --surface:#FFFFFF; --ink:#18201C; --ink2:#2E3732; --muted:#58625C; --rule:#D3D9D4; --rule2:#B8C1BA;
+  --accent:#24588A;
+  --th:#A8561A; --th-t:#F8E9DB;
+  --me:#24588A; --me-t:#E2EBF5;
+  --el:#546B1C; --el-t:#EAF0DA;
+  --ai:#5A4A8C; --ai-t:#ECE8F6;
+  --warn:#A3321F; --warn-t:#F8E2DD;
+  --inno:#8A5A00; --inno-t:#FBF0D6;
+  --n-t:#E8ECE8;
+  --f-disp:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#111513; --surface:#181D1B; --ink:#E3E8E4; --ink2:#C8D0CA; --muted:#98A29C; --rule:#2C3430; --rule2:#3C4641;
+    --accent:#8DB6DF;
+    --th:#E59C60; --th-t:#35271B;
+    --me:#8DB6DF; --me-t:#1A2939;
+    --el:#B1C671; --el-t:#252D16;
+    --ai:#B6A8E2; --ai-t:#29243F;
+    --warn:#EF8B77; --warn-t:#3B1F1A;
+    --inno:#E8C063; --inno-t:#33290F;
+    --n-t:#1F2522;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#111513; --surface:#181D1B; --ink:#E3E8E4; --ink2:#C8D0CA; --muted:#98A29C; --rule:#2C3430; --rule2:#3C4641;
+  --accent:#8DB6DF;
+  --th:#E59C60; --th-t:#35271B;
+  --me:#8DB6DF; --me-t:#1A2939;
+  --el:#B1C671; --el-t:#252D16;
+  --ai:#B6A8E2; --ai-t:#29243F;
+  --warn:#EF8B77; --warn-t:#3B1F1A;
+  --inno:#E8C063; --inno-t:#33290F;
+  --n-t:#1F2522;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.62 var(--f-body);padding-inline:16px;margin:0}
+a{color:var(--accent);text-underline-offset:2px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+.wrap{max-width:1260px;margin:0 auto;padding-block:36px 96px;display:grid;grid-template-columns:minmax(0,1fr);gap:28px}
+@media (min-width:1120px){.wrap{grid-template-columns:220px minmax(0,1fr);gap:48px}}
+.doc-head{grid-column:1/-1;border-bottom:1px solid var(--rule2);padding-bottom:26px;display:grid;gap:14px}
+.eyebrow{font:500 12px/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--f-disp);font-stretch:80%;font-weight:760;font-size:clamp(34px,5.4vw,58px);line-height:1.02;letter-spacing:-.01em;margin:0;text-wrap:balance}
+.lede{font-size:18px;color:var(--ink2);max-width:66ch;margin:0}
+.meta{display:flex;flex-wrap:wrap;gap:8px 28px;margin:4px 0 0;font-size:13px}
+.meta div{display:flex;gap:8px}
+.meta dt{color:var(--muted)} .meta dd{margin:0;font-weight:500}
+nav.toc{font-size:13.5px}
+nav.toc .toc-in{display:grid;gap:2px}
+@media (min-width:1120px){nav.toc .toc-in{position:sticky;top:calc(env(safe-area-inset-top,0px) + 24px);max-height:calc(100vh - 48px);overflow:auto;padding-right:6px}}
+@media (max-width:1119px){nav.toc .toc-in{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:12px 14px}}
+nav.toc .lab{font:600 11px/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;grid-column:1/-1}
+nav.toc a{color:var(--ink2);text-decoration:none;padding:3px 0;display:flex;gap:8px}
+nav.toc a span{font-family:var(--f-mono);color:var(--muted);min-width:2.2em;font-size:12px;padding-top:1px}
+nav.toc a:hover{color:var(--accent)}
+nav.toc a.sub{padding-left:14px;font-size:12.5px;color:var(--muted)}
+main{min-width:0}
+main section{scroll-margin-top:20px}
+h2{font-family:var(--f-disp);font-stretch:85%;font-weight:720;font-size:30px;line-height:1.1;margin:64px 0 14px;text-wrap:balance;display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}
+h2 .n{font:500 14px/1 var(--f-mono);color:var(--muted);letter-spacing:.04em}
+h2 .tag{font:600 13px/1 var(--f-mono);padding:5px 8px;border-radius:4px;border:1px solid var(--th);color:var(--th);background:var(--th-t)}
+h2 .tag.nt{border-color:var(--rule2);color:var(--ink2);background:var(--n-t)}
+h3{font-family:var(--f-disp);font-stretch:90%;font-weight:680;font-size:21px;line-height:1.2;margin:40px 0 10px;text-wrap:balance;scroll-margin-top:20px}
+h3 .n{font:500 13px/1 var(--f-mono);color:var(--muted);margin-right:8px}
+h4{font:600 12px/1.3 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:22px 0 8px}
+main p,main li{max-width:76ch}
+main p{margin:0 0 12px}
+ul,ol{padding-left:22px;margin:0 0 14px}
+li{margin-bottom:5px}
+strong{font-weight:600}
+.muted{color:var(--muted)}
+.first h2{margin-top:0}
+.q{font-style:italic;color:var(--ink2);font-size:16px;max-width:70ch}
+.note{border-left:3px solid var(--accent);background:var(--surface);padding:12px 16px;margin:16px 0;max-width:82ch;border-radius:0 6px 6px 0}
+.note p:last-child{margin-bottom:0}
+.note .t{font:600 11.5px/1.2 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:4px}
+.note.warn{border-left-color:var(--warn)}
+.note.inno{border-left-color:var(--inno)}
+.tw{overflow-x:auto;margin:10px 0 18px;border:1px solid var(--rule);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;line-height:1.45}
+th,td{text-align:left;vertical-align:top;padding:8px 12px;border-bottom:1px solid var(--rule)}
+thead th{font:600 11.5px/1.3 var(--f-mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);background:var(--n-t)}
+tbody tr:last-child td{border-bottom:0}
+td.k{font-weight:600}
+td.id{font:600 12px/1.4 var(--f-mono);white-space:nowrap;color:var(--ink2)}
+td.mono,.mono{font-family:var(--f-mono);font-size:12.5px;overflow-wrap:anywhere}
+tr.grp td{background:var(--n-t);font:600 12px/1.3 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink2)}
+.num,td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.w-wide table{min-width:900px}
+.w-mid table{min-width:680px}
+.chip{display:inline-block;font:500 11px/1.5 var(--f-mono);padding:1px 7px;border-radius:4px;border:1px solid var(--rule2);color:var(--ink2);background:var(--n-t);white-space:nowrap}
+.c-oil{background:var(--el-t);border-color:var(--el);color:var(--ink)}
+.c-l1{background:var(--me-t);border-color:var(--me);color:var(--ink)}
+.c-lit{background:var(--ai-t);border-color:var(--ai);color:var(--ink)}
+.c-as{background:var(--warn-t);border-color:var(--warn);color:var(--ink)}
+.c-der{background:var(--th-t);border-color:var(--th);color:var(--ink)}
+.c-new{background:var(--inno-t);border-color:var(--inno);color:var(--ink)}
+.mod{background:var(--surface);border:1px solid var(--rule);border-radius:8px;margin:18px 0 22px;overflow:hidden}
+.mod-h{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;padding:12px 16px;border-bottom:1px solid var(--rule)}
+.mod-h .id{font:600 13px/1 var(--f-mono);padding:5px 8px;border-radius:4px;border:1px solid}
+.mod-h b{font-family:var(--f-disp);font-stretch:90%;font-weight:680;font-size:18px}
+.mod-h .where{margin-left:auto;font:500 12px/1.3 var(--f-mono);color:var(--muted)}
+.mod.th .mod-h{background:var(--th-t)} .mod.th .id{border-color:var(--th);color:var(--th)}
+.mod.nt .mod-h{background:var(--n-t)} .mod.nt .id{border-color:var(--rule2);color:var(--ink2)}
+.mod.me .mod-h{background:var(--me-t)} .mod.me .id{border-color:var(--me);color:var(--me)}
+.mod.ai .mod-h{background:var(--ai-t)} .mod.ai .id{border-color:var(--ai);color:var(--ai)}
+h2 .tag.me{border-color:var(--me);color:var(--me);background:var(--me-t)}
+h2 .tag.ai{border-color:var(--ai);color:var(--ai);background:var(--ai-t)}
+.eq.me{border-left-color:var(--me)} .eq.ai{border-left-color:var(--ai)}
+.s-bar{fill:var(--me);fill-opacity:.8}
+.s-bar2{fill:var(--warn);fill-opacity:.8}
+.mod-b{padding:14px 16px 12px}
+.io{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;margin:6px 0 4px}
+@media (min-width:880px){.io{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+.io .tw{margin:0}
+.io table{font-size:13px}
+.io td:first-child{width:60%}
+.c-lab{background:var(--surface);border:1px dashed var(--el);color:var(--ink)}
+.c-cal{background:var(--surface);border:1px dashed var(--ai);color:var(--ink)}
+.st{display:inline-block;font:600 10.5px/1.5 var(--f-mono);letter-spacing:.03em;padding:0 6px;border-radius:3px;white-space:nowrap}
+.st-ok{background:var(--el-t);color:var(--ink);border:1px solid var(--el)}
+.st-mid{background:var(--inno-t);color:var(--ink);border:1px solid var(--inno)}
+.st-no{background:var(--warn-t);color:var(--ink);border:1px solid var(--warn)}
+.rev{border:1px solid var(--inno);background:var(--inno-t);border-radius:8px;padding:12px 16px;margin:0 0 20px;max-width:88ch}
+.rev .t{font:600 11.5px/1.2 var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--inno);display:block;margin-bottom:6px}
+.rev ul{margin:0}
+.w-xwide table{min-width:1100px}
+/* components grid */
+.comp{display:grid;grid-template-columns:minmax(0,1fr);gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:8px;overflow:hidden;margin:14px 0 20px}
+@media (min-width:760px){.comp{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (min-width:1180px){.comp.c3{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.comp div{background:var(--surface);padding:12px 14px}
+.comp .cid{font:600 11.5px/1 var(--f-mono);color:var(--muted);letter-spacing:.04em}
+.comp b{display:block;font-family:var(--f-disp);font-stretch:90%;font-weight:680;font-size:16px;margin:4px 0 3px}
+.comp p{font-size:13.5px;margin:0;color:var(--ink2)}
+/* equations */
+.eq{background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--th);border-radius:0 6px 6px 0;padding:10px 14px;margin:10px 0 14px;overflow-x:auto;max-width:92ch}
+.eq .row{display:flex;gap:18px;align-items:baseline;justify-content:space-between;white-space:nowrap;font-size:15.5px;line-height:1.9}
+.eq .row + .row{border-top:1px dashed var(--rule)}
+.eq .lbl{font:500 11px var(--f-mono);color:var(--muted);flex:none}
+.eq var{font-family:"IBM Plex Sans",serif;font-style:italic}
+.eq sub,.eq sup{font-size:.72em}
+.eq .w{font-size:13px;color:var(--muted);white-space:normal;line-height:1.5;padding:4px 0 2px}
+.where-list{font-size:13.5px;color:var(--ink2);margin:-4px 0 14px;max-width:88ch}
+.where-list var{font-style:italic}
+pre.code{font:12.5px/1.55 var(--f-mono);background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:12px 14px;overflow-x:auto;margin:10px 0 16px;color:var(--ink2)}
+pre.code .c{color:var(--muted)}
+/* figures */
+figure{margin:20px 0 26px;background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:14px 14px 10px}
+figure .sv{overflow-x:auto}
+figure svg{display:block;width:100%;height:auto;min-width:760px;color:var(--muted)}
+figure svg.narrow{min-width:620px}
+figcaption{font-size:13px;color:var(--muted);margin-top:10px;max-width:92ch}
+figcaption b{color:var(--ink2);font-weight:600}
+svg text{font-family:var(--f-body)}
+.s-band{fill:var(--n-t);stroke:var(--rule)}
+.s-box{fill:var(--surface);stroke:var(--rule2)}
+.s-th{fill:var(--th-t);stroke:var(--th)}
+.s-me{fill:var(--me-t);stroke:var(--me)}
+.s-el{fill:var(--el-t);stroke:var(--el)}
+.s-ai{fill:var(--ai-t);stroke:var(--ai)}
+.s-wa{fill:var(--warn-t);stroke:var(--warn)}
+.s-in{fill:var(--inno-t);stroke:var(--inno)}
+.s-t{fill:var(--ink);font-size:13px;font-weight:600}
+.s-s{fill:var(--ink2);font-size:11.5px}
+.s-l{fill:var(--muted);font-size:11.5px}
+.s-cap{fill:var(--muted);font-size:11px;font-family:var(--f-mono);letter-spacing:.06em}
+.s-line{stroke:currentColor;fill:none;stroke-width:1.4}
+.s-dash{stroke:currentColor;fill:none;stroke-width:1.3;stroke-dasharray:4 4}
+.s-arrow{fill:currentColor}
+.s-grid{stroke:var(--rule);stroke-width:1;fill:none}
+.s-curve{stroke:var(--th);stroke-width:2.2;fill:none}
+.s-pt{fill:var(--th);stroke:var(--surface);stroke-width:1.5}
+.s-pt2{fill:var(--surface);stroke:var(--th);stroke-width:1.8}
+.s-heat{fill:var(--th);fill-opacity:.28;stroke:var(--th);stroke-width:1.2}
+.s-heat2{fill:var(--th);fill-opacity:.14;stroke:none}
+.s-rock{fill:var(--n-t);stroke:var(--rule2)}
+.s-pay{fill:var(--surface);stroke:var(--rule2)}
+.s-band2{fill:var(--ai);fill-opacity:.12;stroke:none}
+.flow{counter-reset:s;list-style:none;padding:0;display:grid;gap:8px;max-width:86ch}
+.flow li{counter-increment:s;position:relative;display:block;padding-left:42px;min-height:26px;margin:0;max-width:none}
+.flow li::before{position:absolute;left:0;top:-1px;content:counter(s);font:600 12px/1 var(--f-mono);color:var(--muted);border:1px solid var(--rule2);border-radius:50%;width:26px;height:26px;display:grid;place-items:center;background:var(--surface)}
+.two{display:grid;grid-template-columns:minmax(0,1fr);gap:18px}
+@media (min-width:900px){.two{grid-template-columns:1fr 1fr}}
+.two > div{min-width:0}
+.sources li{font-size:13.5px}
+.legend{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:12.5px;color:var(--muted);margin:6px 0 10px;align-items:center}
+footer{grid-column:1/-1;border-top:1px solid var(--rule);padding-top:18px;font-size:13px;color:var(--muted)}
+</style>
+
+<div class="wrap">
+<header class="doc-head">
+  <div class="eyebrow">SIH 2026 · PS 26120 · Oil India Limited · Research layer 3 · Part B</div>
+  <h1>Wellbore thermal-hydraulics and CSS cycle designer</h1>
+  <p class="lede">Part B of the third research layer. It takes T2-A, the model of heat and pressure along the well, and O3, the optimiser that designs each steam cycle, down to working level. It keeps the Part A format: components, equations, parameters, data contracts, workflow and acceptance tests, built on Layer 2 and on Part A's reservoir twin. Revision 1 applies the design review: measured and inferred quantities are separated, completion values are marked as unconfirmed, O3's constraints carry their status, placeholder economics give way to normalised objectives, and the optimisation stack is cut back to what the SIH prototype needs.</p>
+  <dl class="meta">
+    <div><dt>Status</dt><dd>Layer 3 draft, part B · revision 2</dd></div>
+    <div><dt>Date</dt><dd>24 Sep 2026 (rev 2: 25 Sep 2026)</dd></div>
+    <div><dt>Baseline</dt><dd>Layer 2 v3 + Layer 3 Part A rev 2</dd></div>
+    <div><dt>Modules</dt><dd>T2-A · O3</dd></div>
+  </dl>
+</header>
+
+<nav class="toc" aria-label="Contents"><div class="toc-in">
+  <div class="lab">Contents</div>
+  <a href="#scope"><span>1</span>Scope</a>
+  <a href="#facts"><span>2</span>What the numbers show</a>
+  <a href="#fit"><span>3</span>Where these modules sit</a>
+  <a href="#t2a"><span>4</span>T2-A Wellbore</a>
+  <a class="sub" href="#t2a-comp">Components</a>
+  <a class="sub" href="#t2a-res">Heat-loss path</a>
+  <a class="sub" href="#t2a-form">Formation memory</a>
+  <a class="sub" href="#t2a-inj">Injection mode</a>
+  <a class="sub" href="#t2a-prod">Production mode</a>
+  <a class="sub" href="#t2a-flow">Flowback mode</a>
+  <a class="sub" href="#t2a-shut">Shut-in and restart risk</a>
+  <a class="sub" href="#t2a-int">Well integrity</a>
+  <a class="sub" href="#t2a-cal">Calibration</a>
+  <a class="sub" href="#t2a-wf">Contract and workflow</a>
+  <a class="sub" href="#t2a-mi">Measured vs inferred</a>
+  <a class="sub" href="#t2a-cad">Cadence and coupling</a>
+  <a class="sub" href="#t2a-val">Validation plan</a>
+  <a href="#o3"><span>5</span>O3 CSS designer</a>
+  <a class="sub" href="#o3-comp">Components</a>
+  <a class="sub" href="#o3-prob">The design problem</a>
+  <a class="sub" href="#o3-econ">Objectives</a>
+  <a class="sub" href="#o3-cons">Constraints</a>
+  <a class="sub" href="#o3-search">Search method</a>
+  <a class="sub" href="#o3-replan">Injection re-plan</a>
+  <a class="sub" href="#o3-soak">Soak-end advisor</a>
+  <a class="sub" href="#o3-o5">Steam request</a>
+  <a class="sub" href="#o3-wf">Contract and workflow</a>
+  <a class="sub" href="#o3-stage">Prototype vs final</a>
+  <a class="sub" href="#o3-why">Why each component</a>
+  <a href="#syn"><span>6</span>Reference well additions</a>
+  <a href="#build"><span>7</span>Build order</a>
+  <a href="#open"><span>8</span>Changes and open questions</a>
+  <a href="#sources"><span>9</span>Sources</a>
+</div></nav>
+
+<main>
+
+<!-- 1 -->
+<section id="scope" class="first">
+<h2><span class="n">1</span>Scope</h2>
+<p>Layer 2 is still the source of truth, and every input, output and consumer it lists for T2-A and O3 stays. Anything new is marked <span class="chip c-new">New</span> and collected in <a href="#open">section 8</a>. Evidence and maturity labels are the ones defined in Part A (section 1), and every parameter used here comes from Part A's shared registry (section 14) by its P-number.</p>
+<div class="rev"><span class="t">Revision 2: cross-layer consistency review (25 Sep 2026)</span>
+<ul>
+<li>The tubing-sets-viscosity result (section 2) now drives Layer 2's re-scoping of I1: rod-drag viscosity checks T2-A's tubing profile, not T1's reservoir temperature.</li>
+<li>Verification statistics made honest for 16 members: stratified member selection, all-16 pass rule, re-run on 64 before approval, tail CVaR over the worst 2 (5.4, 5.5, 5.7, 5.9).</li>
+<li>T2-A: oil–water holdup model in the rod annulus specified (4.5); T1-B gel regime used below the pour-point envelope (4.7); N<sub>2</sub>-annulus pressure tied to Layer 2 data item 29 (4.11); measured steam temperature below T<sub>sat</sub> flagged (4.4); end-of-natural-flow belongs to F (outputs).</li>
+<li>O3 v0 verification no longer lists T1-D inside the model that checks it (5.10); rod-model cadence at v1–v2 (5.5); qNEHVI marked deferred in the change log; "flowing" wells caveated (section 2); T2-A's fourth mode logged.</li>
+</ul></div>
+<div class="rev"><span class="t">Revision 1: what changed after review</span>
+<ul>
+<li>Every T2-A output is labelled measured, calculated, inferred or assumed, and inferred values carry a band (4.11).</li>
+<li>VIT, N<sub>2</sub>-annulus and completion values are calibration and confirmation items (registry P-26 to P-33). The worked numbers are a sensitivity study on an assumed completion, not predictions.</li>
+<li>T2-A validation starts with an audit of which measurements exist; acceptance thresholds come after it (4.13).</li>
+<li>"Time to gel" is replaced by a below-pour-point interval and a restart-risk category, with pour point, wax, viscosity rise and gelation kept apart (4.7).</li>
+<li>Cadence, lags and coupling rules, including what happens after a phase change, are explicit (4.12).</li>
+<li>O3 separates what the prototype can do today from the final architecture (5.10); every constraint carries its status (5.4); objectives are normalised until OIL economics exist, with price-sensitivity checks (5.3).</li>
+<li>Each optimisation component states its purpose. Bayesian refinement and the O5 MILP are deferred for SIH (5.11).</li>
+</ul></div>
+<div class="legend">
+  <span class="chip c-oil">OIL</span> Oil India's figures
+  <span class="chip c-lab">Lab</span> Baghewala lab data (none yet)
+  <span class="chip c-l1">Layer 1–3A</span> earlier project work
+  <span class="chip c-lit">Literature</span> published value, a prior
+  <span class="chip c-cal">Calibrated</span> fitted to Baghewala data (none yet)
+  <span class="chip c-der">Derived</span> computed here
+  <span class="chip c-as">Assumed</span> placeholder
+</div>
+<p><strong>Status of this part:</strong> T2-A and O3 are at <strong>Formulation</strong>. The T2-A code used for the numbers below is a first prototype on a synthetic well; it is not calibrated or field-validated.</p>
+<p>Symbols follow Part A. New ones: <var>z</var> measured depth along the hole, <var>θ</var> inclination from vertical, <var>w</var> mass rate, <var>x</var> steam quality, <var>U</var> overall heat-transfer coefficient, <var>q′</var> heat loss per metre of well, <var>R</var> thermal resistance per metre (K·m/W).</p>
+</section>
+
+<!-- 2 -->
+<section id="facts">
+<h2><span class="n">2</span>What the numbers show</h2>
+<p>A first version of T2-A was run on the reference well BGW-SYN-01 (Part A, section 9), with OIL's steam conditions and an assumed thermal completion (details in <a href="#syn">section 6</a>). These are <strong>sensitivity results for an assumed completion</strong> (registry P-26 to P-29), not predictions for any Baghewala well. They still change how both modules are designed, because they show which unknowns matter most.</p>
+<div class="tw w-wide"><table>
+<thead><tr><th>Result</th><th>Basis</th><th>Consequence</th><th>Module</th></tr></thead>
+<tbody>
+<tr><td class="k">Without insulated tubing, all the steam condenses before reaching the pay: at 445 m after 1 h of injection, and 915 m after 18 days</td><td><span class="chip c-der">Derived</span> T2-A injection mode</td><td>In this study, insulation is what lets steam reach the pay at all. That fits OIL's choice of VIT, and is consistent with (though not evidence about) the 2006 first injection, which failed within 30 min through wellhead elongation: bare tubing heats the upper casing to ~170 °C within an hour here.</td><td>T2-A</td></tr>
+<tr><td class="k">The VIT's insulation grade moves bottomhole steam quality from ~0.25 (grade B) to ~0.60 (grade E), from 0.65 at the wellhead</td><td><span class="chip c-der">Derived</span>; grades from vendor data (0.06 → 0.002 W/m·K)</td><td>VIT conductivity is the most important unknown in the heat sent to the reservoir. VIT loses vacuum with age, so conductivity is calibrated every cycle and tracked as a <strong>VIT health index</strong> <span class="chip c-new">New</span>.</td><td>T2-A, T1-A, O3</td></tr>
+<tr><td class="k">The sealed N<sub>2</sub> annulus warms from ~40 °C to ~60–150 °C during injection, depending on VIT grade: a 6–36% rise in annulus pressure</td><td><span class="chip c-der">Derived</span> ideal gas, fixed volume</td><td><em>If</em> the annulus is sealed and its pressure is recorded (both to confirm), annulus pressure works as a thermometer for heat leaking through the VIT and as a leak detector (the 2006 annulus leakage). Both become T2-A outputs <span class="chip c-new">New</span>.</td><td>T2-A</td></tr>
+<tr><td class="k">Average production is ~26 bbl/d per well listed as "flowing" (655 bbl/d from 25 wells, Jul 2025; whether "flowing" means natural flow or simply producing is to confirm). At ~5 m³/d, oil entering at 150 °C reaches the wellhead at ~40 °C even through VIT, with ~28,000 cP and 16–39 ksc of friction in the tubing</td><td><span class="chip c-oil">OIL</span> rates; <span class="chip c-der">Derived</span> Ramey + Walther prior</td><td>At this field's rates the tubing, not the reservoir, sets the viscosity the rods see. That is why heaters and diluent are used, and why O3 must score steam designs with lift in the loop. It also means rod-drag viscosity (I1) checks T2-A's tubing profile, not T1's reservoir temperature (Layer 2 v3).</td><td>T2-A, O2, O3</td></tr>
+<tr><td class="k">Each tonne of steam costs ~71 kg of diesel (HSD) and ~1.8 t of water, and emits ~225 kg CO<sub>2</sub>. The implied generator efficiency is ~70%</td><td><span class="chip c-oil">OIL</span> 220 kg/h HSD, 5,500 kg/h water, 3,100 kg/h steam; <span class="chip c-der">Derived</span></td><td>Gives O3's steam cost and emissions per tonne. The water figure (1.8 t per t of steam) needs explaining by OIL, e.g. treatment reject or blowdown.</td><td>O3</td></tr>
+<tr><td class="k">Bottomhole injection pressure ~99–104 ksc at 91 ksc surface; the steam column adds more than friction takes away</td><td><span class="chip c-der">Derived</span> calculated, not measured</td><td>Supports Part A's injectivity constraint. O3 must respect both the wellhead limit and the reservoir-side limit.</td><td>O3, T1-C</td></tr>
+</tbody></table></div>
+</section>
+
+<!-- 3 -->
+<section id="fit">
+<h2><span class="n">3</span>Where these modules sit</h2>
+<p>T2-A is the only path between the steam generator and the reservoir, and between the reservoir and the pump. In injection it tells T1-A how much heat actually arrived. In production it tells T2-B how thick the oil is along the rods. O3 sits above everything: it asks T1-D thousands of "what if" questions, checks the best answers on the full twin with O2 running the pump, and hands one steam request to O5.</p>
+<figure>
+<div class="sv">
+<svg viewBox="0 0 1000 330" role="img" aria-label="Context of T2-A and O3. Steam generator feeds T2-A injection mode, which sends heat at the sandface to T1-A. T1 sends inflow temperature and inflow curve to T2-A production mode, which sends viscosity and density profiles and intake conditions to T2-B and the coupling solve. O3 sits above: queries T1-D, verifies on the full twin with O2 in the loop, sends steam requests to O5 and receives slots, and is approved in H.">
+<defs><marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="s-arrow"/></marker></defs>
+<rect class="s-th" x="20" y="200" width="150" height="56" rx="6"/><text class="s-t" x="95" y="224" text-anchor="middle">Steam generator</text><text class="s-s" x="95" y="243" text-anchor="middle">3.1 t/h · x 0.6–0.7</text>
+<rect class="s-me" x="230" y="170" width="220" height="120" rx="6"/><text class="s-t" x="340" y="196" text-anchor="middle">T2-A · Wellbore</text>
+<text class="s-s" x="340" y="218" text-anchor="middle">injection · soak · flowback · pumped</text>
+<text class="s-s" x="340" y="238" text-anchor="middle">heat loss · pressure · quality</text>
+<text class="s-s" x="340" y="258" text-anchor="middle">annulus p · casing T · growth</text>
+<rect class="s-th" x="520" y="250" width="150" height="56" rx="6"/><text class="s-t" x="595" y="274" text-anchor="middle">T1 reservoir</text><text class="s-s" x="595" y="293" text-anchor="middle">A · B · C · D</text>
+<rect class="s-me" x="520" y="170" width="150" height="56" rx="6"/><text class="s-t" x="595" y="194" text-anchor="middle">T2-B · coupling</text><text class="s-s" x="595" y="213" text-anchor="middle">rods, pump, nodal</text>
+<line class="s-line" x1="170" y1="228" x2="228" y2="228" marker-end="url(#m1)"/>
+<line class="s-line" x1="452" y1="262" x2="518" y2="274" marker-end="url(#m1)"/>
+<line class="s-line" x1="518" y1="290" x2="452" y2="280" marker-end="url(#m1)"/>
+<line class="s-line" x1="452" y1="198" x2="518" y2="198" marker-end="url(#m1)"/>
+<text class="s-l" x="485" y="310" text-anchor="middle">T<tspan baseline-shift="sub" font-size="9">in</tspan>, IPR</text>
+<text class="s-l" x="470" y="253">heat at sandface</text>
+<text class="s-l" x="485" y="188" text-anchor="middle">μ(z), p<tspan baseline-shift="sub" font-size="9">int</tspan></text>
+<rect class="s-ai" x="400" y="20" width="240" height="96" rx="6"/><text class="s-t" x="520" y="46" text-anchor="middle">O3 · CSS cycle designer</text>
+<text class="s-s" x="520" y="68" text-anchor="middle">screen on T1-D → verify on full twin</text>
+<text class="s-s" x="520" y="88" text-anchor="middle">re-plan injection · end soak</text>
+<text class="s-l" x="520" y="106" text-anchor="middle">human-approved, always</text>
+<path class="s-dash" d="M460,118 V168"/>
+<path class="s-dash" d="M600,118 V168"/>
+<text class="s-l" x="455" y="140" text-anchor="end">constraints, delivered heat</text>
+<text class="s-l" x="608" y="140">verify with O2</text>
+<rect class="s-ai" x="740" y="20" width="110" height="46" rx="6"/><text class="s-t" x="795" y="48" text-anchor="middle">O5 steam</text>
+<rect class="s-box" x="740" y="80" width="110" height="46" rx="6"/><text class="s-t" x="795" y="108" text-anchor="middle">H approval</text>
+<rect class="s-ai" x="740" y="150" width="110" height="46" rx="6"/><text class="s-t" x="795" y="178" text-anchor="middle">O4 cut-off</text>
+<line class="s-line" x1="640" y1="36" x2="738" y2="36" marker-end="url(#m1)"/>
+<line class="s-line" x1="738" y1="52" x2="640" y2="52" marker-end="url(#m1)"/>
+<line class="s-line" x1="640" y1="96" x2="738" y2="100" marker-end="url(#m1)"/>
+<line class="s-line" x1="738" y1="170" x2="642" y2="108" marker-end="url(#m1)"/>
+<text class="s-l" x="860" y="40">request, ΔV(delay)</text>
+<text class="s-l" x="860" y="56">← slot</text>
+<text class="s-l" x="860" y="176">triggers design</text>
+</svg>
+</div>
+<figcaption><b>Figure 1. Context.</b> Solid arrows run every step; dashed arrows are O3's calls into the twin. O3 never writes to equipment. Its output is a recommendation that an engineer approves in H.</figcaption>
+</figure>
+</section>
+
+<!-- ================= T2-A ================= -->
+<section id="t2a">
+<h2><span class="n">4</span><span class="tag me">T2-A</span>Wellbore thermal-hydraulics</h2>
+<p class="q">Job: for any phase of the cycle, say what happens to the fluid between the wellhead and the sandface: how hot it is, how wet or viscous, what pressure it is at, and what the heat is doing to the casing and annulus on the way.</p>
+
+<div class="mod me">
+<div class="mod-h"><span class="id">T2-A</span><b>Layer 2 contract, with additions</b><span class="where">Cloud · sub-hourly; four modes</span></div>
+<div class="mod-b">
+<div class="io">
+<div class="tw"><table><thead><tr><th>Input</th><th>Source</th></tr></thead><tbody>
+<tr><td>Trajectory, completion (VIT, N<sub>2</sub> annulus, casing, cement, packer, pump depth)</td><td>P1 master data</td></tr>
+<tr><td>Geothermal profile</td><td>P1</td></tr>
+<tr><td><em>Injection:</em> generator outlet rate, p, T, quality; surface line</td><td>Live; P1</td></tr>
+<tr><td><em>Production:</em> rates, water cut, T<sub>in</sub>, IPR</td><td>T1-A, T1-C, SE</td></tr>
+<tr><td>Rheology functions (mixture mode; gel regime below the envelope, Part A 6.4)</td><td>T1-B</td></tr>
+<tr><td>Heater power, diluent rate and injection depth</td><td>Live</td></tr>
+<tr><td>Pump motion per stroke; fluid load on plunger <span class="chip c-new">New</span></td><td>T2-B</td></tr>
+<tr><td>Measured THP, casing-head and annulus pressure, wellhead T, wellhead growth</td><td>Live</td></tr>
+</tbody></table></div>
+<div class="tw"><table><thead><tr><th>Output</th><th>Goes to</th></tr></thead><tbody>
+<tr><td>Bottomhole steam condition; heat at sandface; wellbore heat loss</td><td>T1-A, O3</td></tr>
+<tr><td>T, μ, ρ along the tubing</td><td>T2-B</td></tr>
+<tr><td>Pump intake p and T; flash margin</td><td>T2-B, coupling, O2, D1</td></tr>
+<tr><td>Predicted wellhead T</td><td>SE</td></tr>
+<tr><td>Below-pour-point interval during shut-in; restart risk</td><td>H restart</td></tr>
+<tr><td>TPR curve (natural-flow point solved with T1-C; the end-of-flow date is F's forecast)</td><td>T1-C, F, phase machine</td></tr>
+<tr><td><span class="chip c-new">New</span> Casing T profile, wellhead growth estimate</td><td>O3, H, D</td></tr>
+<tr><td><span class="chip c-new">New</span> Predicted annulus pressure, leak index</td><td>D4, H, O3</td></tr>
+<tr><td><span class="chip c-new">New</span> VIT health index (calibrated conductivity)</td><td>H, workover planning</td></tr>
+<tr><td><span class="chip c-new">New</span> Intake-pressure soft sensor (with T2-B)</td><td>SE, T1-C</td></tr>
+</tbody></table></div>
+</div>
+</div></div>
+
+<h3 id="t2a-comp"><span class="n">4.1</span>Components</h3>
+<div class="comp c3">
+<div><span class="cid">W1</span><b>Completion and resistance builder</b><p>Builds the depth segments and the radial heat-loss path for the string in use in each phase (VIT or bare tubing, N<sub>2</sub> annulus, casing, cement).</p></div>
+<div><span class="cid">W2</span><b>Formation memory</b><p>A small radial conduction model around each segment that keeps the rock's heat from one phase to the next. Hasan–Kabir is its fallback and check.</p></div>
+<div><span class="cid">W3</span><b>Injection solver</b><p>Marches steam down the well: energy, momentum and IAPWS-IF97 properties give quality, pressure and heat loss.</p></div>
+<div><span class="cid">W4</span><b>Production solver</b><p>Marches oil and water up the rod–tubing annulus: non-Newtonian friction averaged over the stroke, heater, diluent and viscous heating.</p></div>
+<div><span class="cid">W5 · W6</span><b>Flowback and shut-in</b><p>Flash-assisted natural flow with a TPR curve; cooling of a stagnant column, below-pour-point interval and restart risk.</p></div>
+<div><span class="cid">W7 · W8</span><b>Integrity and intake</b><p>Casing temperature, wellhead growth, N<sub>2</sub> annulus pressure; intake conditions, flash margin and the intake-pressure soft sensor.</p></div>
+</div>
+
+<h3 id="t2a-res"><span class="n">4.2</span>Heat-loss path from fluid to rock</h3>
+<figure>
+<div class="sv">
+<svg viewBox="0 0 1000 250" role="img" aria-label="Radial heat-loss path. From the fluid at the centre outwards: tubing film, inner tube wall, VIT vacuum insulation, outer tube wall, N2 annulus with convection and radiation in parallel, casing wall, cement, formation. Each layer is a resistance in series. The VIT insulation and the formation dominate.">
+<defs><marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="s-arrow"/></marker></defs>
+<rect class="s-th" x="20" y="40" width="90" height="120" rx="4"/><text class="s-t" x="65" y="96" text-anchor="middle">Fluid</text><text class="s-s" x="65" y="114" text-anchor="middle">T<tspan baseline-shift="sub" font-size="9">f</tspan></text>
+<rect class="s-box" x="110" y="40" width="70" height="120"/><text class="s-s" x="145" y="96" text-anchor="middle">film</text><text class="s-l" x="145" y="114" text-anchor="middle">h<tspan baseline-shift="sub" font-size="9">ti</tspan></text>
+<rect class="s-rock" x="180" y="40" width="30" height="120"/><text class="s-l" x="195" y="178" text-anchor="middle">steel</text>
+<rect class="s-in" x="210" y="40" width="120" height="120"/><text class="s-t" x="270" y="92" text-anchor="middle">VIT vacuum</text><text class="s-s" x="270" y="112" text-anchor="middle">k 0.002–0.06</text>
+<rect class="s-rock" x="330" y="40" width="30" height="120"/><text class="s-l" x="345" y="178" text-anchor="middle">steel</text>
+<rect class="s-me" x="360" y="40" width="150" height="120"/><text class="s-t" x="435" y="86" text-anchor="middle">N<tspan baseline-shift="sub" font-size="10">2</tspan> annulus</text><text class="s-s" x="435" y="106" text-anchor="middle">convection h<tspan baseline-shift="sub" font-size="9">c</tspan></text><text class="s-s" x="435" y="124" text-anchor="middle">+ radiation h<tspan baseline-shift="sub" font-size="9">r</tspan></text>
+<rect class="s-rock" x="510" y="40" width="30" height="120"/><text class="s-l" x="525" y="178" text-anchor="middle">casing</text>
+<rect class="s-box" x="540" y="40" width="80" height="120"/><text class="s-s" x="580" y="104" text-anchor="middle">cement</text>
+<rect class="s-rock" x="620" y="40" width="360" height="120"/><text class="s-t" x="800" y="92" text-anchor="middle">Formation</text><text class="s-s" x="800" y="112" text-anchor="middle">transient: remembers earlier phases</text>
+<line class="s-line" x1="40" y1="210" x2="960" y2="210" marker-end="url(#m2)"/>
+<text class="s-l" x="500" y="235" text-anchor="middle">heat flows outwards through resistances in series: R<tspan baseline-shift="sub" font-size="9">film</tspan> + R<tspan baseline-shift="sub" font-size="9">VIT</tspan> + R<tspan baseline-shift="sub" font-size="9">ann</tspan> + R<tspan baseline-shift="sub" font-size="9">cem</tspan> + R<tspan baseline-shift="sub" font-size="9">form</tspan> (steel walls small)</text>
+<text class="s-cap" x="20" y="28">CENTRE</text><text class="s-cap" x="980" y="28" text-anchor="end">FAR FIELD T<tspan baseline-shift="sub" font-size="9">ei</tspan>(z)</text>
+</svg>
+</div>
+<figcaption><b>Figure 2. The radial path heat takes out of the well</b>, not to scale. In injection the VIT dominates. In production at low rates the laminar oil film (h<sub>ti</sub> ≈ 10 W/m²·K) is also a major resistance, because heavy oil moves slowly and conducts poorly.</figcaption>
+</figure>
+<div class="eq me">
+<div class="row"><span><var>q′</var> = (<var>T<sub>f</sub></var> − <var>T<sub>h</sub></var>) / <var>R</var><sub>w</sub>,   <var>R</var><sub>w</sub> = 1/(2π<var>r<sub>ti</sub>h<sub>ti</sub></var>) + ln(<var>r</var><sub>ins,o</sub>/<var>r</var><sub>ins,i</sub>)/(2π<var>k</var><sub>VIT</sub><var>c</var><sub>cpl</sub>) + 1/(2π<var>r<sub>to</sub></var>(<var>h<sub>c</sub></var>+<var>h<sub>r</sub></var>)) + ln(<var>r<sub>wb</sub></var>/<var>r<sub>co</sub></var>)/(2π<var>k</var><sub>cem</sub>) + Σ<var>R</var><sub>steel</sub></span><span class="lbl">(W.1) wellbore resistance</span></div>
+<div class="row"><span><var>h<sub>r</sub></var> = <var>σ</var> (<var>T</var><sub>1</sub><sup>2</sup> + <var>T</var><sub>2</sub><sup>2</sup>)(<var>T</var><sub>1</sub> + <var>T</var><sub>2</sub>) / [ 1/<var>ε<sub>to</sub></var> + (<var>r<sub>to</sub></var>/<var>r<sub>ci</sub></var>)(1/<var>ε<sub>ci</sub></var> − 1) ]</span><span class="lbl">(W.2) annulus radiation, T in K</span></div>
+<div class="row"><span><var>k<sub>hc</sub></var>/<var>k<sub>ha</sub></var> = 0.049 (Gr·Pr)<sup>1/3</sup> Pr<sup>0.074</sup>,   <var>h<sub>c</sub></var> = <var>k<sub>hc</sub></var> / (<var>r<sub>to</sub></var> ln(<var>r<sub>ci</sub></var>/<var>r<sub>to</sub></var>)),   Gr = <var>g β</var> Δ<var>T δ</var><sup>3</sup><var>ρ</var><sup>2</sup>/<var>μ</var><sup>2</sup></span><span class="lbl">(W.3) Dropkin–Somerscales</span></div>
+</div>
+<p class="where-list">T<sub>h</sub>: temperature at the cement–formation boundary (from W2). k<sub>VIT</sub>: apparent conductivity of the vacuum layer. c<sub>cpl</sub> ≥ 1: coupling factor for the uninsulated joints every ~9.6 m, calibrated (prior 1.2–1.4). ε ≈ 0.9 for oxidised steel. N<sub>2</sub> properties at the annulus mean temperature and fill pressure; δ = r<sub>ci</sub> − r<sub>to</sub>. The two annulus terms depend on the surface temperatures T<sub>1</sub> (outer tube) and T<sub>2</sub> (casing), so each segment iterates the radial temperatures, typically in 5–10 passes.</p>
+
+<h3 id="t2a-form"><span class="n">4.3</span>Formation memory</h3>
+<p>Layer 2 names Hasan–Kabir's transient solution. It assumes constant conditions since the well started, which is never true across injection, soak, flowback and pumping. W2 therefore gives each depth segment its own small radial conduction model in the rock, carried across phases and cycles. The rock stays warm after 18 days of steam, and that warmth lowers heat loss early in production. The analytical form is kept for testing and as the fallback.</p>
+<div class="eq me">
+<div class="row"><span>(<var>ρc</var>)<sub>e</sub> ∂<var>T</var>/∂<var>t</var> = (1/<var>r</var>) ∂/∂<var>r</var> ( <var>k<sub>e</sub></var> <var>r</var> ∂<var>T</var>/∂<var>r</var> ),   −2π<var>r<sub>wb</sub>k<sub>e</sub></var> ∂<var>T</var>/∂<var>r</var>|<sub><var>r<sub>wb</sub></var></sub> = <var>q′</var>,   <var>T</var>(30 m) = <var>T<sub>ei</sub></var>(<var>z</var>)</span><span class="lbl">(W.4) per segment</span></div>
+<div class="row"><span><var>T<sub>D</sub></var> = ln[ e<sup>−0.2<var>t<sub>D</sub></var></sup> + (1.5 − 0.3719 e<sup>−<var>t<sub>D</sub></var></sup>) √<var>t<sub>D</sub></var> ],   <var>t<sub>D</sub></var> = <var>α<sub>e</sub>t</var>/<var>r<sub>wb</sub></var><sup>2</sup>,   <var>R</var><sub>form</sub> = <var>T<sub>D</sub></var>/(2π<var>k<sub>e</sub></var>)</span><span class="lbl">(W.5) Hasan–Kabir check</span></div>
+</div>
+<p class="where-list">Grid: 25 log-spaced cells from r<sub>wb</sub> to 30 m (penetration √(4αt) is ~10 m after a year); implicit in time. 115 segments × 25 cells ≈ 2,900 unknowns, solved as independent tridiagonal systems in well under a millisecond each. Test: with constant q′ from t = 0, W.4 must reproduce W.5 within 3%.</p>
+
+<h3 id="t2a-inj"><span class="n">4.4</span>Injection mode: steam down the well</h3>
+<div class="eq me">
+<div class="row"><span>d<var>h</var>/d<var>z</var> = <var>g</var> cos<var>θ</var> − <var>q′</var>/<var>w</var> − <var>v</var> d<var>v</var>/d<var>z</var></span><span class="lbl">(W.6) energy, z downward</span></div>
+<div class="row"><span>d<var>p</var>/d<var>z</var> = <var>ρ<sub>m</sub></var> <var>g</var> cos<var>θ</var> − <var>f ρ<sub>m</sub> v</var><sup>2</sup>/(2<var>D</var>) − <var>ρ<sub>m</sub> v</var> d<var>v</var>/d<var>z</var></span><span class="lbl">(W.7) momentum</span></div>
+<div class="row"><span><var>x</var> = (<var>h</var> − <var>h<sub>l</sub></var>(<var>p</var>)) / <var>L<sub>v</sub></var>(<var>p</var>),   <var>T<sub>f</sub></var> = <var>T</var><sub>sat</sub>(<var>p</var>) while 0 &lt; <var>x</var> &lt; 1</span><span class="lbl">(W.8) state, IAPWS-IF97</span></div>
+</div>
+<p class="where-list">h: mixture specific enthalpy. ρ<sub>m</sub> and f come from a two-phase correlation that handles downward flow: <strong>Beggs–Brill</strong> is primary; the homogeneous no-slip model is the check. The choice is settled against any bottomhole P/T survey OIL has. The same equations run first over the <strong>surface steam line</strong> from generator to wellhead (length and insulation are master data), so the model starts from the generator's measured outlet, not an assumed wellhead state. The boundary condition is measured pressure and quality; temperature is T<sub>sat</sub>(p). A measured steam temperature below T<sub>sat</sub> at its own pressure (as OIL's 280 °C is at 85 ksc(g)) is flagged as an instrument or location issue, not treated as subcooled steam (Part A §2). Segments are 10 m (finer in the top 50 m); each marches with Heun's method and iterates W.1–W.4.</p>
+
+<h4>Worked result: reference well, 3.1 t/h, 91 ksc, x = 0.65 at the wellhead</h4>
+<figure>
+<div class="sv">
+<svg class="narrow" viewBox="0 0 760 290" role="img" aria-label="Bottomhole steam quality after one day of injection by tubing type. VIT grade E 0.61, grade D 0.54, grade D with coupling losses 0.51, grade C 0.37, grade B 0.25, bare tubing 0 because all steam condenses by about 635 metres. Wellhead quality 0.65 is marked as a dashed line.">
+<g class="s-grid">
+<line x1="220" y1="30" x2="220" y2="250"/><line x1="291.4" y1="30" x2="291.4" y2="250"/><line x1="362.9" y1="30" x2="362.9" y2="250"/><line x1="434.3" y1="30" x2="434.3" y2="250"/><line x1="505.7" y1="30" x2="505.7" y2="250"/><line x1="577.1" y1="30" x2="577.1" y2="250"/><line x1="648.6" y1="30" x2="648.6" y2="250"/><line x1="720" y1="30" x2="720" y2="250"/>
+</g>
+<g class="s-l" text-anchor="middle"><text x="220" y="268">0</text><text x="291.4" y="268">0.1</text><text x="362.9" y="268">0.2</text><text x="434.3" y="268">0.3</text><text x="505.7" y="268">0.4</text><text x="577.1" y="268">0.5</text><text x="648.6" y="268">0.6</text><text x="720" y="268">0.7</text></g>
+<text class="s-l" x="470" y="286" text-anchor="middle">Steam quality at the sandface after 1 day</text>
+<g class="s-s" text-anchor="end">
+<text x="210" y="55">VIT grade E, k 0.004</text><text x="210" y="89">VIT grade D, k 0.01</text><text x="210" y="123">D + joint losses ×1.3</text><text x="210" y="157">VIT grade C, k 0.03</text><text x="210" y="191">VIT grade B, k 0.05</text><text x="210" y="225">Bare tubing + N₂</text>
+</g>
+<rect class="s-bar" x="220" y="40" width="432.1" height="22"/>
+<rect class="s-bar" x="220" y="74" width="385.0" height="22"/>
+<rect class="s-bar" x="220" y="108" width="363.6" height="22"/>
+<rect class="s-bar" x="220" y="142" width="265.0" height="22"/>
+<rect class="s-bar" x="220" y="176" width="180.0" height="22"/>
+<rect class="s-bar2" x="220" y="210" width="3" height="22"/>
+<g class="s-s"><text x="658" y="56">0.61</text><text x="611" y="90">0.54</text><text x="590" y="124">0.51</text><text x="491" y="158">0.37</text><text x="406" y="192">0.25</text><text x="230" y="226">0: all condensed by ~635 m</text></g>
+<line class="s-dash" x1="684.3" y1="30" x2="684.3" y2="250" style="color:var(--th)"/>
+<text class="s-l" x="684.3" y="24" text-anchor="middle">wellhead 0.65</text>
+</svg>
+</div>
+<figcaption><b>Figure 3. Bottomhole steam quality by tubing type: a sensitivity study on an assumed completion, not a prediction for any Baghewala well.</b> From the first T2-A prototype on BGW-SYN-01. The completion is assumed (4½" × 3½" VIT in 7" casing); formation k<sub>e</sub> = 2.0 W/m·K. Values change by less than 0.06 between 1 day and 18 days.</figcaption>
+</figure>
+<div class="tw w-wide"><table>
+<thead><tr><th>Tubing</th><th class="num">Heat loss, 1 h / 18 d</th><th class="num">Share of 1.76 MW</th><th class="num">BHP (ksc g)</th><th class="num">Casing T, top 100 m (1 h / 18 d)</th><th class="num">Mean N<sub>2</sub> T (18 d)</th></tr></thead>
+<tbody>
+<tr><td>VIT grade E</td><td class="num">59 / 57 kW</td><td class="num">3%</td><td class="num">99</td><td class="num">35 / 44 °C</td><td class="num">58 °C</td></tr>
+<tr><td>VIT grade D</td><td class="num">138 / 128 kW</td><td class="num">7–8%</td><td class="num">100</td><td class="num">41 / 61 °C</td><td class="num">80 °C</td></tr>
+<tr><td>VIT grade C</td><td class="num">347 / 290 kW</td><td class="num">16–20%</td><td class="num">101–102</td><td class="num">56 / 100 °C</td><td class="num">125 °C</td></tr>
+<tr><td>VIT grade B</td><td class="num">505 / 393 kW</td><td class="num">22–29%</td><td class="num">102–104</td><td class="num">67 / 124 °C</td><td class="num">152 °C</td></tr>
+<tr><td>Bare tubing, N<sub>2</sub> annulus</td><td class="num">754 / 724 kW before full condensation</td><td class="num">41–43%</td><td class="num">99–107</td><td class="num">171 / 246 °C</td><td class="num">279 °C</td></tr>
+</tbody></table></div>
+<p class="muted" style="font-size:13.5px">Heat rate 1.76 MW is relative to 50 °C at the wellhead. "BHP" is the pressure at the pay. For bare tubing the steam turns to hot water at 445 m (1 h), 635 m (1 d) and 915 m (18 d). Mean N<sub>2</sub> temperature before injection ≈ 40 °C.</p>
+
+<h3 id="t2a-prod"><span class="n">4.5</span>Production mode: oil up the rod annulus</h3>
+<p>In pumped production, fluid rises in the annulus between the rods and the tubing, pushed in pulses by the pump. Three things differ from injection: the flow is laminar and non-Newtonian; the inner film resistance is large; and heaters, diluent and viscous heating add or move heat.</p>
+<div class="eq me">
+<div class="row"><span><var>w c<sub>p</sub></var> d<var>T</var>/d<var>z</var><sub>↑</sub> = −<var>q′</var> + <var>q′</var><sub>heat</sub>(<var>z</var>) + <var>Q</var> |d<var>p</var>/d<var>z</var>|<sub>fric</sub></span><span class="lbl">(W.9) energy, upward; last term is viscous heating</span></div>
+<div class="row"><span>d<var>p</var>/d<var>z</var><sub>↑</sub> = −<var>ρ</var><sub>mix</sub> <var>g</var> cos<var>θ</var> − (1/<var>T<sub>s</sub></var>) ∫<sub>stroke</sub> <var>Φ</var>(<var>v</var>(<var>t</var>)) d<var>t</var></span><span class="lbl">(W.10) momentum, stroke-averaged friction</span></div>
+<div class="row"><span><var>Φ</var>(<var>v̄</var>) = <var>K</var> [ (2<var>n</var>+1)/<var>n</var> · <var>v̄</var> ]<sup><var>n</var></sup> (2/<var>δ</var>)<sup><var>n</var>+1</sup>,   Newtonian limit 12<var>μ v̄</var>/<var>δ</var><sup>2</sup></span><span class="lbl">(W.11) power-law slot, gap δ = r<sub>ti</sub> − r<sub>rod</sub></span></div>
+<div class="row"><span><var>h<sub>ti</sub></var> = Nu · <var>k<sub>o</sub></var>/<var>D<sub>h</sub></var> · (<var>μ<sub>b</sub></var>/<var>μ<sub>w</sub></var>)<sup>0.14</sup>,   Nu ≈ 4.36 (laminar),   <var>D<sub>h</sub></var> = 2(<var>r<sub>ti</sub></var> − <var>r</var><sub>rod</sub>)</span><span class="lbl">(W.12) film, Sieder–Tate correction</span></div>
+</div>
+<p class="where-list">v(t): annulus velocity through one stroke, from T2-B's pump discharge (fluid moves mostly on the upstroke). Averaging friction over the stroke, instead of using the daily mean rate, matters because friction is non-linear in v for shear-thinning oil. K, n and any yield stress come from T1-B in <span class="mono">mixture</span> mode, using water <em>holdup</em>, not water cut. The drag the moving rods feel is T2-B's; T2-A only uses the fluid pressure. <strong>Heater</strong>: q′<sub>heat</sub> = P/L over the heater interval (a cable heater) or a point source at the pump. <strong>Diluent</strong>: injected at depth z<sub>d</sub>; above it, enthalpy is mixed and viscosity blended by Refutas (T1-B B.9).</p>
+<p class="where-list"><strong>Water holdup in the rod annulus</strong> (the H<sub>w</sub> that T1-B's mixture mode needs). Default: <strong>no slip</strong>, H<sub>w</sub> = water cut. The pump shears oil and water into a water-in-oil dispersion, the density contrast is small (heavy oil ~940–960 kg/m³ against water ~990–1,000 kg/m³ at tubing temperatures), and the continuous oil phase is viscous, so drops barely slip. Above the inversion water fraction (T1-B B.8), or once the stroke-averaged velocity falls below a few mm/s during slow pumping or shut-in, the <strong>drift-flux</strong> form H<sub>w</sub> = f<sub>w</sub>/(C<sub>0</sub> + v<sub>d</sub>/v<sub>m</sub>) is used, with C<sub>0</sub> ≈ 1.0–1.2 and drift velocity v<sub>d</sub> from Stokes settling of water drops in the local oil viscosity. Both are closures: the friction multiplier (4.9) absorbs holdup error, and THP against the intake-pressure soft sensor is the calibration signal.</p>
+<h4>Closed-form check (Ramey, upward flow)</h4>
+<div class="eq me">
+<div class="row"><span><var>T<sub>f</sub></var>(<var>ℓ</var>) = <var>T<sub>ei</sub></var>(<var>ℓ</var>) + (<var>T</var><sub>in</sub> − <var>T</var><sub>bh</sub>) e<sup>−<var>ℓ</var>/<var>L<sub>R</sub></var></sup> + <var>g<sub>G</sub> L<sub>R</sub></var> (1 − e<sup>−<var>ℓ</var>/<var>L<sub>R</sub></var></sup>),   <var>L<sub>R</sub></var> = <var>w c<sub>p</sub></var> <var>R</var><sub>total</sub></span><span class="lbl">(W.13)</span></div>
+</div>
+<p class="where-list">ℓ: distance up from the pump; g<sub>G</sub>: geothermal gradient; L<sub>R</sub>: relaxation length, the distance over which the fluid "forgets" its inlet temperature. This is exact for constant properties and no heater, and is used as the unit test for W4.</p>
+<div class="tw w-wide"><table>
+<thead><tr><th>Rate</th><th>Tubing</th><th class="num">L<sub>R</sub></th><th class="num">Wellhead T for T<sub>in</sub> 150 / 100 / 70 °C</th><th class="num">Wellhead μ (T<sub>in</sub> 150 °C)</th><th class="num">Friction, pump → surface (T<sub>in</sub> 150 / 70 °C)</th></tr></thead>
+<tbody>
+<tr><td>5 m³/d</td><td>VIT D</td><td class="num">360 m</td><td class="num">42 / 39 / 38 °C</td><td class="num">~28,000 cP</td><td class="num">16 / 39 ksc</td></tr>
+<tr><td>10 m³/d</td><td>VIT D</td><td class="num">720 m</td><td class="num">62 / 52 / 45 °C</td><td class="num">~3,800 cP</td><td class="num">5 / 40 ksc</td></tr>
+<tr><td>20 m³/d</td><td>VIT D</td><td class="num">1,440 m</td><td class="num">91 / 68 / 54 °C</td><td class="num">~500 cP</td><td class="num">2 / 44 ksc</td></tr>
+<tr><td>10 m³/d</td><td>Bare + N<sub>2</sub></td><td class="num">270 m</td><td class="num">37 / 36 / 36 °C</td><td class="num">~46,000 cP</td><td class="num">59 / 100 ksc</td></tr>
+</tbody></table></div>
+<p class="muted" style="font-size:13.5px">Illustrative only: oil alone, Newtonian at the 50 s⁻¹ Walther prior, mean velocity, after 30 days of production. Water, the stroke averaging and yield stress will change these values. The trends are the point: at this field's rates the tubing sets the viscosity the rods see, and at 5 m³/d each ~1 kW of heater adds roughly 10 °C before losses.</p>
+<h4>Pump intake and flash margin</h4>
+<ul>
+<li><strong>Intake conditions</strong>: T<sub>int</sub> from the production march at pump depth; p<sub>int</sub> from the coupling solve (IPR meets pump delivery).</li>
+<li><strong>Intake-pressure soft sensor</strong> <span class="chip c-new">New</span>: p<sub>int</sub> = p<sub>dis</sub> − F<sub>fluid</sub>/A<sub>p</sub>. Here p<sub>dis</sub> comes from marching down from measured THP (W.10), and F<sub>fluid</sub> is the fluid load on the plunger from T2-B's downhole card. If the N<sub>2</sub> annulus is packed off in production, acoustic fluid levels are impossible, and this becomes the main intake-pressure measurement (question for OIL).</li>
+<li><strong>Flash margin</strong>: ΔT<sub>sub</sub> = T<sub>sat</sub>(p<sub>int</sub>) − T<sub>int</sub>. Below 10 °C is a warning; below 3 °C, D1 is told to expect steam interference rather than fluid pound, and O2 is told to raise intake pressure.</li>
+</ul>
+
+<h3 id="t2a-flow"><span class="n">4.6</span>Flowback mode: why wells flow after CSS</h3>
+<p>OIL reports wells flowing unaided for weeks after CSS. Two causes are modelled together. The heated zone is still above its original pressure (T1-C's p<sub>h</sub>). And as hot water rises and the pressure falls below T<sub>sat</sub>, part of it <strong>flashes to steam</strong>, which lightens the column like gas lift.</p>
+<div class="eq me">
+<div class="row"><span><var>x</var><sub>w</sub>(<var>z</var>) = max(0, (<var>h<sub>w</sub></var> − <var>h<sub>l</sub></var>(<var>p</var>)) / <var>L<sub>v</sub></var>(<var>p</var>) ),   <var>ρ</var><sub>mix</sub>, <var>f</var> from Beggs–Brill (oil + water + steam)</span><span class="lbl">(W.14) flashing</span></div>
+<div class="row"><span>TPR(<var>q</var>) = <var>p</var><sub>wf</sub> required to deliver <var>q</var> at flowline pressure <var>p</var><sub>fl</sub>;   natural-flow point: IPR(<var>p</var><sub>wf</sub>) = TPR<sup>−1</sup></span><span class="lbl">(W.15) nodal, with T1-C</span></div>
+</div>
+<p>T2-A publishes the TPR curve (20 rates) every hour; T1-C finds the intersection. <strong>End of natural flow</strong>: F rolls T1 forward (cooling, falling p<sub>h</sub>) and reports the first day the curves stop meeting. That date is when lift must be ready, and O2 plans initial settings for it.</p>
+
+<h3 id="t2a-shut"><span class="n">4.7</span>Soak and shut-in: cooling and restart risk</h3>
+<p>With no flow, each segment's fluid column cools into the casing and rock (W.1 inner resistances + W.4). T2-A calculates the temperature profile over time. What that temperature <em>means</em> for restarting depends on four different things, which are not interchangeable:</p>
+<div class="tw w-wide"><table>
+<thead><tr><th>Property</th><th>What it is</th><th>Data available</th><th>How T2-A uses it</th></tr></thead>
+<tbody>
+<tr><td class="k">Pour point</td><td>A standard test temperature below which the oil stops pouring under test conditions. Not a gelation time, not a restart pressure.</td><td><span class="chip c-l1">Layer 1</span> 21–27 °C (P-22), unconfirmed</td><td>Marks the <strong>below-pour-point interval</strong></td></tr>
+<tr><td class="k">Wax appearance and deposition</td><td>Wax crystals form below the wax appearance temperature and deposit on cold walls over time. A rate process, and it builds up over repeated cycles.</td><td>None (WAT requested, Part A 6.5)</td><td>Flag only; deposition trend comes from SE drag and friction drift (I10)</td></tr>
+<tr><td class="k">Viscosity increase</td><td>Continuous rise with cooling (T1-B)</td><td>One OIL point; the rest placeholder</td><td>Restart pump and rod loads (via T2-B)</td></tr>
+<tr><td class="k">Gel formation</td><td>A yield stress that builds while the oil sits still and cools. It sets the pressure needed to restart flow.</td><td>None (static gel-strength test requested, Part A 6.5)</td><td>Restart pressure only once gel-strength data exists</td></tr>
+</tbody></table></div>
+<p><strong>Outputs.</strong> The depth interval where the calculated T is below T<sub>pp</sub>, how long the pump depth has been below it, and a <strong>restart-risk category</strong>:</p>
+<ul>
+<li><strong>Low</strong>: the whole column stays above T<sub>pp</sub> + 10 °C.</li>
+<li><strong>Medium</strong>: part of the tubing is below T<sub>pp</sub> + 10 °C, but the pump depth is not below T<sub>pp</sub>.</li>
+<li><strong>High</strong>: the pump depth, or more than a set length of tubing (proposed 100 m), has been below T<sub>pp</sub> for longer than a set time (proposed 6 h).</li>
+</ul>
+<p>The +10 °C margin, the 100 m length and the 6 h duration are <strong>provisional engineering screening thresholds</strong>, not supported by Baghewala field or lab data. They will be replaced once gel-strength tests (Part A 6.5) and restart history are available. Until gel-strength data exists, T2-A does not predict a restart pressure or a time to gel. Below T1-B's validity envelope (T<sub>pp</sub> + 3 °C) T2-A calls T1-B with <span class="mono">allow_gel</span> and receives the capped, flagged gel regime (Part A 6.4). It uses only the temperature and the category from it, never a load. H's restart procedure uses the category: at high risk, heat first (heater or hot-oil circulation), then ramp SPM from the minimum with the most conservative float margin.</p>
+
+<h3 id="t2a-int"><span class="n">4.8</span>Well integrity: wellhead growth and annulus pressure</h3>
+<div class="eq me">
+<div class="row"><span>Δ<var>L</var><sub>wh</sub>(<var>t</var>) ≈ <var>α<sub>s</sub></var> ∫<sub>0</sub><sup><var>L</var><sub>free</sub></sup> [ <var>T</var><sub>cas</sub>(<var>z</var>,<var>t</var>) − <var>T</var><sub>cas,0</sub>(<var>z</var>) ] d<var>z</var>,   <var>α<sub>s</sub></var> ≈ 1.2×10<sup>−5</sup> K<sup>−1</sup></span><span class="lbl">(W.16) wellhead growth</span></div>
+<div class="row"><span><var>p</var><sub>ann</sub>(<var>t</var>) ≈ <var>p</var><sub>ann,0</sub> · <var>Z</var><var>T̄</var><sub>ann</sub>(<var>t</var>) / (<var>Z</var><sub>0</sub><var>T̄</var><sub>ann,0</sub>),   leak index = (<var>p</var><sub>meas</sub> − <var>p</var><sub>ann</sub>) / <var>p</var><sub>ann</sub></span><span class="lbl">(W.17) sealed N<sub>2</sub> annulus, T in K</span></div>
+</div>
+<p class="where-list">L<sub>free</sub>: effective length of casing free to expand (poor cement bond or uncemented section). It is unknown, so it is calibrated from measured wellhead growth (Layer 2 data item 33). With grade D VIT the top-100 m casing warms by only ~10–30 °C; with bare tubing it warms by ~200 °C. At 100 m of free casing that is ~25 cm of growth, the scale of the 2006 failure. W.17 ignores volume change from tubing and casing expansion, which is a small correction. A leak index below −10% that persists for 6 h raises an alarm. A rising k<sub>VIT</sub> together with higher annulus pressure points to VIT vacuum loss rather than a leak.</p>
+<p><strong>What O3 uses</strong>: the time history of growth and annulus pressure under a <em>candidate ramp-up</em>. The first hours of injection are when the casing heats fastest. This is why O3 treats the ramp-up profile as a design variable (5.3).</p>
+
+<h3 id="t2a-cal"><span class="n">4.9</span>Calibration</h3>
+<div class="tw w-wide"><table>
+<thead><tr><th>Parameter</th><th>Prior</th><th>Observed through</th><th>When</th></tr></thead>
+<tbody>
+<tr><td class="k">k<sub>VIT</sub> (VIT health)</td><td>Grade from vendor data; log-normal ×/÷2</td><td>Annulus pressure and temperature in injection; wellhead T in production</td><td>Every injection; trend across cycles</td></tr>
+<tr><td class="k">Joint factor c<sub>cpl</sub></td><td>1.3 ± 0.1</td><td>Jointly with k<sub>VIT</sub> (poorly separable; fixed unless a survey exists)</td><td>Onboarding</td></tr>
+<tr><td class="k">Formation k<sub>e</sub></td><td>2.0 ± 0.4 W/m·K</td><td>Wellhead T approach after rate changes</td><td>Onboarding</td></tr>
+<tr><td class="k">Film multiplier on h<sub>ti</sub></td><td>1 ×/÷ 1.5</td><td>Wellhead T in production</td><td>Hourly (SE fast loop)</td></tr>
+<tr><td class="k">Friction multiplier</td><td>1 ×/÷ 1.5</td><td>THP vs soft-sensor intake pressure; deposition (I10) shows as drift</td><td>Daily</td></tr>
+<tr><td class="k">L<sub>free</sub>, p<sub>ann,0</sub></td><td>0–150 m; fill record</td><td>Wellhead growth gauge; annulus pressure before injection</td><td>Each injection</td></tr>
+</tbody></table></div>
+<div class="note warn"><span class="t">Completion values are not confirmed</span><p>VIT grade and conductivity, joint losses, tubing and casing sizes, cement top, whether the N<sub>2</sub> annulus is sealed and at what fill pressure, the free casing length and the surface steam line are all <strong>calibration or confirmation items</strong> (registry P-26 to P-33). Until OIL confirms the completion, every T2-A result is labelled <span class="mono">assumed completion</span> and carries the prior ranges. The identifiability limits in Part A section 12.2 apply: k<sub>VIT</sub> and the joint factor are only identifiable together, and only if annulus data exists.</p></div>
+
+<h3 id="t2a-wf"><span class="n">4.10</span>Data contract, workflow and validation</h3>
+<pre class="code">WellboreState {                            <span class="c">// sub-hourly per well; mode = injection|soak|flowback|pumped</span>
+  well_id, t_utc, mode, member, completion_ver
+  profile: { z_m[], T_C[], p_Pa[], x_steam[], mu_Pa_s[], rho_kgm3[], T_casing_C[] }   <span class="c">// calculated, this member</span>
+  bands: { p10, p50, p90 } for every calculated or inferred scalar         <span class="c">// across members</span>
+  labels: { field: "measured"|"calculated"|"inferred"|"assumed" }
+  injection?: { w_sf_kgs, x_sf, p_bh_Pa, T_bh_C, q_sf_W, q_loss_W }
+  production?: { p_int_Pa, T_int_C, flash_margin_K, p_dis_Pa, p_int_soft_Pa }
+  flowback?:   { tpr: { q_m3s[20], p_wf_Pa[20] } }
+  shutin?:     { z_below_pp_m: [top, bottom], h_below_pp_at_pump, restart_risk: "low"|"medium"|"high" }
+  integrity:   { dL_wh_m, p_ann_pred_Pa, leak_index, k_vit_cal }   <span class="c">// New</span>
+  energy_closure_rel
+}</pre>
+<div class="two">
+<div>
+<h4>By phase</h4>
+<ol class="flow">
+<li><strong>Before injection</strong>: O3 calls T2-A on candidate ramp-ups to predict casing temperature, growth and annulus pressure.</li>
+<li><strong>Injection</strong> (every 15 min): read the generator outlet, march the surface line and the well, and send sandface heat to T1-A. Predict annulus pressure and growth and compare with measurements; the leak index goes to D4. Every 6 h, send the delivered-heat track to O3's re-planner.</li>
+<li><strong>Soak</strong> (hourly): cooling and below-pour-point interval; the wellhead pressure prediction for SE's fall-off assimilation.</li>
+<li><strong>Flowback</strong> (hourly): TPR to T1-C; natural-flow point; end-of-flow forecast via F.</li>
+<li><strong>Pumped</strong> (15 min, and on every coupling solve): T, μ, ρ profile to T2-B; intake conditions; soft-sensor intake pressure to SE; wellhead T to SE.</li>
+</ol>
+</div>
+<div>
+<h4>Validation</h4>
+<p>See <a href="#t2a-val">4.13</a>: code verification first, then a data audit, then field validation only against measurements confirmed to exist.</p>
+</div>
+</div>
+</section>
+
+<section id="t2a-rev">
+<h3 id="t2a-mi"><span class="n">4.11</span>Measured, calculated, inferred, assumed</h3>
+<p>Most of what T2-A reports is not measured downhole. Every output carries one of four labels. Anything that is not measured is shown with its ensemble band and an <span class="mono">est.</span> suffix. It is stored in P1 as a model output, never in the measurement table, so an estimate can never be mistaken for a gauge reading.</p>
+<div class="tw w-xwide"><table>
+<thead><tr><th>Quantity</th><th>Label</th><th>Obtained from</th><th>Uncertainty shown</th><th>Notes</th></tr></thead>
+<tbody>
+<tr class="grp"><td colspan="5">Surface</td></tr>
+<tr><td class="k">Generator rate, pressure, temperature</td><td><span class="st st-ok">Measured</span></td><td>Generator instruments</td><td>Instrument accuracy</td><td>Recording rate to confirm in the audit</td></tr>
+<tr><td class="k">Generator steam quality</td><td><span class="st st-mid">Measured or vendor-calculated</span></td><td>Generator</td><td>±0.05 until method known</td><td>How it is measured is a question for OIL (P-36)</td></tr>
+<tr><td class="k">Tubing-head and casing-head pressure</td><td><span class="st st-ok">Measured</span></td><td>Transmitters</td><td>Instrument accuracy</td><td></td></tr>
+<tr><td class="k">Wellhead temperature</td><td><span class="st st-ok">Measured</span></td><td>RTD</td><td>Instrument accuracy</td><td>Main calibration signal in production</td></tr>
+<tr><td class="k">Annulus N<sub>2</sub> pressure</td><td><span class="st st-mid">Measured if a gauge exists</span></td><td>Casing-head gauge (Layer 2 data item 29)</td><td>Instrument accuracy</td><td>Existence and recording rate to confirm (P-29)</td></tr>
+<tr><td class="k">Wellhead growth</td><td><span class="st st-mid">Measured if a gauge exists</span></td><td>Growth gauge or survey</td><td>Instrument accuracy</td><td>Existence to confirm</td></tr>
+<tr><td class="k">Fluid level (acoustic)</td><td><span class="st st-mid">Measured where possible</span></td><td>Acoustic survey</td><td>Survey accuracy</td><td>Impossible if the annulus is packed off</td></tr>
+<tr class="grp"><td colspan="5">Downhole and along the well</td></tr>
+<tr><td class="k">Bottomhole pressure and temperature (injection)</td><td><span class="st st-mid">Calculated</span></td><td>W.6–W.8 from surface measurements</td><td>P10–P90 band</td><td>Never displayed as BHP/BHT; always "BHP est."</td></tr>
+<tr><td class="k">Bottomhole steam quality; heat at sandface; heat loss</td><td><span class="st st-mid">Calculated</span></td><td>W.1–W.8</td><td>Band</td><td>Depends on assumed completion (P-26 to P-28)</td></tr>
+<tr><td class="k">T, μ, ρ along the tubing</td><td><span class="st st-mid">Calculated</span></td><td>W.9–W.12 with T1-B</td><td>Band</td><td>μ inherits T1-B's placeholder prior</td></tr>
+<tr><td class="k">Casing temperature profile</td><td><span class="st st-mid">Calculated</span></td><td>W.1 radial solution</td><td>Band</td><td></td></tr>
+<tr><td class="k">Wellhead growth prediction</td><td><span class="st st-mid">Calculated</span> with a closure</td><td>W.16 with L<sub>free</sub></td><td>Band</td><td>L<sub>free</sub> is a closure (P-32)</td></tr>
+<tr><td class="k">Predicted annulus pressure; leak index</td><td><span class="st st-mid">Calculated</span>; index needs a measurement</td><td>W.17</td><td>Band</td><td>No leak index without an annulus gauge</td></tr>
+<tr><td class="k">VIT health (k<sub>VIT</sub>)</td><td><span class="st st-no">Inferred</span></td><td>Calibration (SE)</td><td>Posterior</td><td>Reported only when identifiable (Part A 12.2)</td></tr>
+<tr><td class="k">Pump intake pressure</td><td><span class="st st-no">Inferred</span> (soft sensor)</td><td>THP + T2-A traverse + T2-B fluid load</td><td>Band from all three inputs</td><td>An acoustic level, where available, takes precedence</td></tr>
+<tr><td class="k">Pump intake temperature; flash margin</td><td><span class="st st-mid">Calculated</span> from inferred inputs</td><td>W.9; IAPWS</td><td>Band</td><td>Flash warning uses the conservative end of the band</td></tr>
+<tr><td class="k">TPR curve; natural-flow point</td><td><span class="st st-mid">Calculated</span></td><td>W.14–W.15 with T1-C</td><td>Band per member</td><td></td></tr>
+<tr><td class="k">Below-pour-point interval; restart risk</td><td><span class="st st-mid">Calculated</span>; risk is a category</td><td>4.7</td><td>Band on the interval</td><td>No restart pressure without gel-strength data</td></tr>
+<tr class="grp"><td colspan="5">Inputs</td></tr>
+<tr><td class="k">Completion geometry, VIT grade, N<sub>2</sub> fill, cement, surface line</td><td><span class="st st-no">Assumed</span></td><td>Registry P-26 to P-33</td><td>Prior ranges</td><td>Until OIL confirms</td></tr>
+</tbody></table></div>
+
+<h3 id="t2a-cad"><span class="n">4.12</span>Cadence, coupling and phase transitions</h3>
+<h4>What updates when</h4>
+<div class="tw w-wide"><table>
+<thead><tr><th>State</th><th>Injection</th><th>Soak / shut-in</th><th>Flowback</th><th>Pumped</th></tr></thead>
+<tbody>
+<tr><td class="k">T2-A wellbore profile</td><td>15 min</td><td>1 h</td><td>1 h</td><td>15 min, and inside every coupling solve</td></tr>
+<tr><td class="k">Formation memory (W2)</td><td colspan="4">With every T2-A step; never reset between phases</td></tr>
+<tr><td class="k">T1-A grid</td><td colspan="4">1 h (5 min for 6 h after a phase change)</td></tr>
+<tr><td class="k">T1-C pressure state p<sub>h</sub></td><td colspan="4">1 h, after T1-A</td></tr>
+<tr><td class="k">Coupling solve</td><td>—</td><td>—</td><td>1 h (TPR meets IPR)</td><td>15 min (IPR meets pump delivery)</td></tr>
+<tr><td class="k">Profile used by T2-B</td><td>—</td><td>—</td><td>—</td><td>Every stroke, holding the latest T2-A profile</td></tr>
+</tbody></table></div>
+<h4>Coupling rules</h4>
+<ul>
+<li><strong>Injection.</strong> The measured generator rate and pressure are T2-A's boundary conditions; it marches down and computes p<sub>bh</sub>. T1-C, using p<sub>h</sub> from the last hourly step (one-step lag), gives the rate the reservoir would accept at that p<sub>bh</sub>. The two are not forced to agree: the mismatch is passed to SE as an observation of injectivity and p<sub>h</sub>. Heat delivered in the 15-min T2-A steps is summed and handed to T1-A at its hourly step, so no energy is lost between cadences.</li>
+<li><strong>Pumped production.</strong> T<sub>in</sub> comes from T1-A and is held (lag ≤ 1 h). Within each coupling solve, T2-A and the solve iterate (intake pressure ↔ profile), up to three times. T2-B uses the latest profile until the next update.</li>
+<li><strong>Flowback.</strong> T2-A's TPR and T1-C's IPR are solved together each hour by Brent's method.</li>
+<li><strong>Soak and shut-in.</strong> No flow. T2-A cools the column; its wellhead-pressure prediction uses T1-C's hourly p<sub>h</sub>.</li>
+</ul>
+<h4>Immediately after a phase change</h4>
+<ol class="flow">
+<li>T2-A switches mode but keeps the formation memory: the rock around the well is never reset.</li>
+<li>For 6 h, T2-A runs 1-min substeps and T1 runs 5-min steps, because this is when the wellbore and casing heat up or cool fastest.</li>
+<li>O2 and O3 re-plans wait for 2 h of post-change data, unless an integrity trigger fires (growth or annulus pressure near a limit).</li>
+<li>SE pauses slow-parameter updates for 6 h (the transient is not yet informative for them); fast states keep updating.</li>
+</ol>
+<h4>What triggers a finer time step</h4>
+<p>A phase change; a measured rate change above 20% within 15 min; generator trip or start; heater or diluent switched on or off; a temperature change above 5 °C in one step at any segment; a wellhead-pressure change above 5 ksc in one step; energy closure above 0.5%. All thresholds are provisional.</p>
+
+<h3 id="t2a-val"><span class="n">4.13</span>Validation plan: audit the data first</h3>
+<p>Acceptance criteria are set only after confirming that a measurement exists and is reliable. Step 0 is a data audit with OIL.</p>
+<div class="tw w-xwide"><table>
+<thead><tr><th>Measurement</th><th>What it validates</th><th>Exists at Baghewala?</th><th>Reliability check</th><th>Acceptance (proposed, set after audit)</th></tr></thead>
+<tbody>
+<tr><td class="k">Wellhead temperature (production)</td><td>Production heat loss, film coefficient, formation k<sub>e</sub></td><td>To confirm</td><td>Calibration records; spot check with a portable probe</td><td>Within ±5 °C over 80% of hours on held-out cycles</td></tr>
+<tr><td class="k">Wellhead and generator pressure (injection)</td><td>Pressure traverse; injectivity</td><td>Reported (85–97 ksc); records to confirm</td><td>Wellhead vs generator consistency after line losses</td><td>THP within ±1 ksc</td></tr>
+<tr><td class="k">Injection rate</td><td>Mass balance</td><td>Reported (~3,100 kg/h)</td><td>Flow meter vs water use</td><td>Used as input, not validated against</td></tr>
+<tr><td class="k">Generator steam quality</td><td>Inlet condition</td><td>Reported range; method unknown</td><td>Method review</td><td>Used as input with its uncertainty</td></tr>
+<tr><td class="k">Annulus pressure</td><td>Heat leak through VIT; leak detection</td><td>To confirm</td><td>Gauge calibration; pre-injection baseline</td><td>Set after audit</td></tr>
+<tr><td class="k">Wellhead growth</td><td>Casing heating; L<sub>free</sub></td><td>To confirm</td><td>Survey method</td><td>Set after audit</td></tr>
+<tr><td class="k">Bottomhole P/T surveys</td><td>The whole traverse: the only direct downhole check</td><td>Unknown</td><td>Tool calibration</td><td>Set after audit</td></tr>
+<tr><td class="k">Acoustic fluid levels</td><td>Intake-pressure soft sensor</td><td>Only if the annulus is not packed off</td><td>Survey method; gas gradient</td><td>Set after audit</td></tr>
+</tbody></table></div>
+<h4>Ladder, with the maturity each rung earns</h4>
+<ol class="flow">
+<li><strong>Unit tests → Prototype.</strong> W.13 Ramey within 1% (constant properties); W.4 vs W.5 within 3%; energy closure along the string &lt; 0.5%.</li>
+<li><strong>Published examples → Prototype (code verification).</strong> Willhite's (1967) overall-U example; injection-well examples in Hasan &amp; Kabir. These check the code, not Baghewala.</li>
+<li><strong>Data audit.</strong> The table above, completed with OIL.</li>
+<li><strong>History replay → Calibrated.</strong> Fit the calibration items (4.9) on early cycles, using only measurements confirmed in the audit.</li>
+<li><strong>Held-out cycles and wells → Field-validated.</strong> Predict later cycles and wells not used in calibration, against the acceptance values agreed after the audit.</li>
+</ol>
+</section>
+
+<!-- ================= O3 ================= -->
+<section id="o3">
+<h2><span class="n">5</span><span class="tag ai">O3</span>CSS cycle designer</h2>
+<p class="q">Job: before each cycle, find the steam plan that earns the most over the whole cycle once lift is counted, prove it on the full twin, and keep it right while the steam is going in and the well is soaking.</p>
+
+<div class="mod ai">
+<div class="mod-h"><span class="id">O3</span><b>Layer 2 contract, with additions</b><span class="where">Cloud · before each cycle; re-plans during injection and soak</span></div>
+<div class="mod-b">
+<div class="io">
+<div class="tw"><table><thead><tr><th>Input</th><th>Source</th></tr></thead><tbody>
+<tr><td>Well state at cut-off (T1-A grid, p<sub>h</sub>, p<sub>c</sub>, E<sub>res</sub>)</td><td>T1, SE</td></tr>
+<tr><td>Cycle proxy and the full coupled twin</td><td>T1-D, T1–T3</td></tr>
+<tr><td>Steam generator availability; booked slot</td><td>O5</td></tr>
+<tr><td>Pressure and wellhead-growth limits</td><td>P1 master data (item 14)</td></tr>
+<tr><td>Live injection and soak data</td><td>T2-A, SE</td></tr>
+<tr><td><span class="chip c-new">New</span> Injectivity curve</td><td>T1-C</td></tr>
+<tr><td><span class="chip c-new">New</span> Growth and annulus predictions for a ramp-up</td><td>T2-A</td></tr>
+<tr><td>Economics</td><td>P1 (item 43)</td></tr>
+</tbody></table></div>
+<div class="tw"><table><thead><tr><th>Output</th><th>Goes to</th></tr></thead><tbody>
+<tr><td>Pareto set of designs (oil per cycle-day, SOR, lift risk; value once prices exist)</td><td>H</td></tr>
+<tr><td>Recommended design: steam mass, rate, pressure, quality, <span class="chip c-new">New</span> ramp-up, soak, cut-off rule</td><td>H → field</td></tr>
+<tr><td>Soak-end recommendation</td><td>H</td></tr>
+<tr><td>Steam request <span class="chip c-new">New</span> with value-of-delay curve</td><td>O5</td></tr>
+<tr><td>Mid-injection re-plans</td><td>H</td></tr>
+<tr><td>"Retire from CSS" flag</td><td>H, O4, O5</td></tr>
+</tbody></table></div>
+</div>
+</div></div>
+
+<h3 id="o3-comp"><span class="n">5.1</span>Components</h3>
+<div class="comp c3">
+<div><span class="cid">D1</span><b>Problem builder</b><p>Turns the well state, master data and generator slot into bounds, constraints and objective weights for this cycle.</p></div>
+<div><span class="cid">D2</span><b>Value model</b><p>Cycle value, SOR, lift risk and CO<sub>2</sub> from twin or proxy outputs, with the same economics O4 uses.</p></div>
+<div><span class="cid">D3</span><b>Screening search</b><p>NSGA-II over T1-D: tens of thousands of designs in seconds, constraints on the conservative quantile. The only search algorithm in the SIH build.</p></div>
+<div><span class="cid">D4</span><b>Robust verification</b><p>A dozen diverse candidates run on the twin across the SE ensemble. The pump model depends on the build stage (5.10).</p></div>
+<div><span class="cid">D5</span><b>Decision support</b><p>Pareto view, knee point, baseline comparison, drivers and physics reasons, for the engineer to choose.</p></div>
+<div><span class="cid">D6 · D7 · D8</span><b>In-cycle and fleet</b><p>Injection re-planner, soak-end advisor, and the steam request to O5.</p></div>
+</div>
+
+<h3 id="o3-prob"><span class="n">5.2</span>The design problem</h3>
+<div class="tw w-wide"><table>
+<thead><tr><th>Variable</th><th>Symbol</th><th>Bounds (advisory season 1)</th><th>Basis</th></tr></thead>
+<tbody>
+<tr><td class="k">Steam mass</td><td>M<sub>s</sub></td><td class="num">600–2,500 t</td><td><span class="chip c-oil">OIL</span> 1,040–1,560 t per cycle; widened</td></tr>
+<tr><td class="k">Plateau rate</td><td>ṁ<sub>s</sub></td><td class="num">2.5–3.3 t/h and ≤ injectivity</td><td><span class="chip c-oil">OIL</span> ~3.1 t/h; T1-C</td></tr>
+<tr><td class="k">Ramp-up <span class="chip c-new">New</span></td><td>3 steps: rate fractions r<sub>1</sub>, r<sub>2</sub> and step length τ</td><td class="num">r ∈ [0.3, 1]; τ ∈ [0.5, 4] h</td><td>Wellhead growth in the first 30 min (2006)</td></tr>
+<tr><td class="k">Surface pressure path</td><td>p<sub>start</sub>, p<sub>end</sub></td><td class="num">85–97 ksc(g)</td><td><span class="chip c-oil">OIL</span></td></tr>
+<tr><td class="k">Quality target</td><td>x<sub>surf</sub></td><td class="num">0.60–0.70 (0.80 if generator allows)</td><td><span class="chip c-oil">OIL</span></td></tr>
+<tr><td class="k">Soak ratio</td><td>t<sub>soak</sub>/t<sub>inj</sub></td><td class="num">0.3–0.8 (0.2–1.0 later)</td><td><span class="chip c-oil">OIL</span> 0.5–0.6; narrowed until trusted</td></tr>
+<tr><td class="k">Cut-off rule</td><td>q<sub>cut</sub></td><td class="num">From O4 economics</td><td>Layer 2 O4</td></tr>
+<tr><td class="k">Start date</td><td>t<sub>0</sub></td><td class="num">Within the O5 slot window</td><td>O5</td></tr>
+</tbody></table></div>
+<p>Injection length follows from M<sub>s</sub> and the rate path: t<sub>inj</sub> = M<sub>s</sub>/ṁ<sub>s</sub> + ramp correction, which is 14–21 days at OIL's rates. Continuous variables are scaled to [0, 1] for the search; the start date is discrete (days).</p>
+
+<h3 id="o3-econ"><span class="n">5.3</span>Objectives</h3>
+<p>OIL's prices and costs are not available yet (registry P-41). O3 therefore <strong>does not claim an economic optimum</strong>. It works in two phases.</p>
+<h4>Now: normalised physical objectives</h4>
+<div class="eq ai">
+<div class="row"><span><var>J</var><sub>1</sub> = max  <var>N<sub>p</sub></var> / (<var>t</var><sub>inj</sub> + <var>t</var><sub>soak</sub> + <var>L</var> + <var>t</var><sub>mob</sub>)   [bbl per cycle-day]</span><span class="lbl">(O.0a) oil per day of the well's time</span></div>
+<div class="row"><span><var>J</var><sub>2</sub> = min SOR = <var>M<sub>s</sub></var>/<var>N<sub>p</sub></var>;   <var>J</var><sub>3</sub> = min lift risk (float days + D3 failure risk);   <var>J</var><sub>4</sub> (optional) = min lift energy per bbl</span><span class="lbl">(O.0b)</span></div>
+</div>
+<p class="where-list">Diesel, water and CO<sub>2</sub> per barrel are fixed multiples of SOR (0.071 t diesel, 1.77 t water, 0.225 t CO<sub>2</sub> per tonne of steam, registry P-40), so minimising SOR already minimises them. That keeps the objective count at three.</p>
+<h4>When OIL economics arrive: value per cycle-day</h4>
+<div class="eq ai">
+<div class="row"><span><var>J</var><sub>1</sub> = max  <var>V</var> / (<var>t</var><sub>inj</sub> + <var>t</var><sub>soak</sub> + <var>L</var> + <var>t</var><sub>mob</sub>)</span><span class="lbl">(O.1) value per cycle-day</span></div>
+<div class="row"><span><var>V</var> = Σ<sub><var>t</var></sub> [ <var>P<sub>o</sub> q<sub>o</sub></var>(<var>t</var>) − <var>c<sub>e</sub> E</var><sub>lift</sub>(<var>t</var>) − <var>C</var><sub>heat,dil</sub>(<var>t</var>) − <var>C</var><sub>fix</sub> ] − <var>C</var><sub>steam</sub> − <var>C</var><sub>risk</sub></span><span class="lbl">(O.2) cycle value</span></div>
+<div class="row"><span><var>C</var><sub>steam</sub> = <var>M<sub>s</sub></var> ( 0.071 <var>c</var><sub>HSD</sub> + 1.77 <var>c</var><sub>water</sub> + <var>c</var><sub>gen</sub> ) + <var>C</var><sub>mob</sub>,   <var>C</var><sub>risk</sub> = Σ <var>p</var><sub>fail</sub> · <var>C</var><sub>workover</sub></span><span class="lbl">(O.3) costs per tonne of steam</span></div>
+<div class="row"><span><var>J</var><sub>2</sub> = min SOR = <var>M<sub>s</sub></var>/<var>N<sub>p</sub></var>;   <var>J</var><sub>3</sub> = min lift risk (float days + D3 failure risk);   <var>J</var><sub>4</sub> = min CO<sub>2</sub>/bbl = (0.225 <var>M<sub>s</sub></var> + <var>e</var><sub>grid</sub><var>E</var><sub>lift</sub>)/<var>N<sub>p</sub></var></span><span class="lbl">(O.4) other objectives</span></div>
+</div>
+<p class="where-list">Dividing by the whole cycle length (downtime included) keeps O3 consistent with O4's cut-off rule: both maximise value per day of the well's time, so a longer cycle has to earn its extra days. q<sub>o</sub>(t) and E<sub>lift</sub>(t) come from runs <strong>with O2 operating the pump</strong>, so a design that floats rods early or needs high lift energy is scored for it (Layer 2 I3). 0.071 t HSD, 1.77 t water and 0.225 t CO<sub>2</sub> per tonne of steam are derived from OIL's generator figures (section 2). Prices are symbols filled from OIL's economics (item 43, registry P-41). Until then O.1–O.3 are used only for the sensitivity check below.</p>
+<h4>Price sensitivity in the meantime</h4>
+<p>For the verified candidates, V/day is computed under clearly labelled <strong>assumed price scenarios</strong>: a base vector, then oil ±30%, diesel ±30%, electricity ±30% and water ×0.5 and ×2. O3 reports two things: whether the knee design stays in the top 3 in every scenario, and the rank agreement across scenarios (Kendall τ). The recommendation is tagged <span class="mono">price-robust</span> or <span class="mono">price-sensitive</span>. A price-sensitive recommendation names which price decides it.</p>
+
+<h3 id="o3-cons"><span class="n">5.4</span>Constraints</h3>
+<div class="tw w-wide"><table>
+<thead><tr><th>#</th><th>Constraint</th><th>Value used now</th><th>Status</th><th>Evaluated by</th><th>Handling</th></tr></thead>
+<tbody>
+<tr><td class="id">g1</td><td>Wellhead pressure ≤ equipment rating (wellhead, tubing, VIT)</td><td class="num">97 ksc(g), top of OIL's operating range</td><td><span class="st st-no">Provisional limit</span>; rating to confirm (P-35)</td><td>T2-A</td><td>Hard at the historical value</td></tr>
+<tr><td class="id">g2a</td><td>Bottomhole pressure within historical operating experience</td><td>Highest bottomhole injection pressure estimated for past cycles (calculated by T2-A, not measured)</td><td><span class="st st-no">Provisional operating envelope</span>. This is <strong>not</strong> a fracture pressure (P-38a)</td><td>T2-A</td><td>Hard at the historical value, as an operating limit only</td></tr>
+<tr><td class="id">g2b</td><td>Bottomhole pressure ≤ safety factor × formation fracture pressure</td><td><strong>Unknown</strong>: no value used</td><td><span class="st st-no">Provisional; to confirm by OIL / geomechanics</span> (P-38b)</td><td>T2-A</td><td>Inactive until a confirmed fracture pressure exists; every design is flagged "fracture margin not checked"</td></tr>
+<tr><td class="id">g3</td><td>Rate ≤ injectivity q<sub>inj,max</sub>(p<sub>h</sub>(t))</td><td>T1-C model, P90 margin</td><td><span class="st st-mid">Engineering (model-derived)</span></td><td>T1-C</td><td>Constraint on the plan; real injectivity is observed live and re-plans if different</td></tr>
+<tr><td class="id">g4</td><td>Wellhead growth ≤ allowance; growth rate in first 2 h ≤ limit</td><td>Largest growth recorded in past cycles, if recorded; otherwise no ramp faster than current practice</td><td><span class="st st-no">To confirm</span> (P-39)</td><td>T2-A W.16</td><td>Hard at the historical envelope; sets the ramp-up</td></tr>
+<tr><td class="id">g5</td><td>Annulus pressure ≤ rating</td><td>Highest annulus pressure recorded, if recorded</td><td><span class="st st-no">To confirm</span> (P-39)</td><td>T2-A W.17</td><td>Hard at the historical envelope</td></tr>
+<tr><td class="id">g6</td><td>Steam only within the slot; rate ≤ generator capacity</td><td class="num">3.3 t/h</td><td><span class="st st-mid">Confirmed typical rate</span>; maximum to confirm (P-34)</td><td>O5 / manual booking</td><td>Hard</td></tr>
+<tr><td class="id">g7</td><td>Daily water and diesel ≤ supply</td><td>Current practice (5,500 kg/h water, 220 kg/h diesel)</td><td><span class="st st-mid">Engineering assumption</span></td><td>D2</td><td>Hard at current supply</td></tr>
+<tr><td class="id">g8</td><td>P(first rod float before day d<sub>min</sub>) ≤ ε</td><td>ε = 0.1, d<sub>min</sub> = 30 d (proposed)</td><td><span class="st st-mid">Design choice</span> for OIL to set</td><td>Twin with pump model (5.10)</td><td>Chance constraint; inactive at stage v0</td></tr>
+<tr><td class="id">g9</td><td>Design inside T1-D's validity envelope</td><td>—</td><td><span class="st st-ok">Model governance</span></td><td>T1-D</td><td>Outside: must be verified on the full twin</td></tr>
+</tbody></table></div>
+<div class="note warn"><span class="t">How provisional limits are treated</span><p>Three different pressures are kept apart: the <strong>equipment rating</strong> (wellhead and tubulars; g1), the <strong>historical operating pressure</strong> (what OIL has already run; the value g1 uses now, and g2a), and the <strong>formation fracture pressure</strong> (a rock property; g2b). The historical maximum is never described as, or used as a stand-in for, fracture pressure. A provisional value comes from what OIL has already done safely: its historical operating envelope. It is enforced as a hard limit, because that is the conservative choice, but it is <strong>labelled provisional wherever it appears</strong>. A design within 5% of a provisional limit is flagged. The optimiser can never relax a provisional limit; only an OIL-confirmed value in the registry can move it. None of these limits replaces the field's own safety systems (relief valves, interlocks).</p></div>
+<p><strong>Robust handling.</strong> In screening, objectives use the proxy median and constraints use the conservative quantile (q90 for "≤" limits), so a design passes only if it passes with margin. In verification, each candidate runs on a <strong>16-member subset</strong> of the 64-member SE ensemble. The subset is chosen by k-medoids on the standardised values of the upstream parameters that most affect O3's choice (the top-ranked Sobol indices, Part A §13), and each member is weighted by its cluster's share of the 64. With 16 members, "≥ 95%" cannot be resolved, so <strong>hard constraints must hold in all 16</strong>. The design finally recommended is then re-run on all 64 members and must hold in ≥ 61 of them (95%). The tail metric is the weighted mean of the worst 2 of 16 members (≈ 12.5%), reported as <span class="mono">cvar_tail</span> with its tail fraction.</p>
+
+<h3 id="o3-search"><span class="n">5.5</span>Search method: screen, verify, refine</h3>
+<figure>
+<div class="sv">
+<svg viewBox="0 0 1000 300" role="img" aria-label="O3 search pipeline. Problem builder, then stage A screening with NSGA-II on the T1-D proxy, about 30,000 evaluations in seconds. The proxy Pareto front is thinned to 12 diverse candidates plus the baseline by k-medoids. Stage B runs them on the twin, with the pump model of the current build stage, across 16 ensemble members. If proxy and twin disagree, stage C updates the proxy correction with the verified points and re-runs stage A. Stage D shows Pareto, knee point and drivers to the engineer. Approval then sends a steam request to O5, and a returned slot loops back to the problem builder.">
+<defs><marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="s-arrow"/></marker></defs>
+<rect class="s-box" x="20" y="60" width="140" height="80" rx="6"/><text class="s-t" x="90" y="92" text-anchor="middle">D1 Problem</text><text class="s-s" x="90" y="112" text-anchor="middle">bounds, limits,</text><text class="s-s" x="90" y="128" text-anchor="middle">state, slot</text>
+<rect class="s-ai" x="200" y="60" width="170" height="80" rx="6"/><text class="s-t" x="285" y="86" text-anchor="middle">A · Screen</text><text class="s-s" x="285" y="106" text-anchor="middle">NSGA-II on T1-D</text><text class="s-s" x="285" y="124" text-anchor="middle">~30k designs · seconds</text>
+<rect class="s-ai" x="410" y="60" width="170" height="80" rx="6"/><text class="s-t" x="495" y="86" text-anchor="middle">Thin</text><text class="s-s" x="495" y="106" text-anchor="middle">k-medoids on front</text><text class="s-s" x="495" y="124" text-anchor="middle">12 + baseline</text>
+<rect class="s-me" x="620" y="60" width="170" height="80" rx="6"/><text class="s-t" x="705" y="86" text-anchor="middle">B · Verify</text><text class="s-s" x="705" y="106" text-anchor="middle">twin + pump model</text><text class="s-s" x="705" y="124" text-anchor="middle">16 ensemble members</text>
+<rect class="s-in" x="830" y="60" width="150" height="80" rx="6"/><text class="s-t" x="905" y="86" text-anchor="middle">D · Decide</text><text class="s-s" x="905" y="106" text-anchor="middle">Pareto · knee</text><text class="s-s" x="905" y="124" text-anchor="middle">engineer approves</text>
+<line class="s-line" x1="160" y1="100" x2="198" y2="100" marker-end="url(#m3)"/>
+<line class="s-line" x1="370" y1="100" x2="408" y2="100" marker-end="url(#m3)"/>
+<line class="s-line" x1="580" y1="100" x2="618" y2="100" marker-end="url(#m3)"/>
+<line class="s-line" x1="790" y1="100" x2="828" y2="100" marker-end="url(#m3)"/>
+<rect class="s-me" x="620" y="190" width="170" height="64" rx="6"/><text class="s-t" x="705" y="216" text-anchor="middle">C · Re-screen</text><text class="s-s" x="705" y="236" text-anchor="middle">update δ, re-run A</text>
+<path class="s-dash" d="M680,142 V188"/><path class="s-dash" d="M730,188 V142"/>
+<rect class="s-ai" x="830" y="190" width="150" height="64" rx="6"/><text class="s-t" x="905" y="216" text-anchor="middle">D8 → O5</text><text class="s-s" x="905" y="236" text-anchor="middle">request + ΔV(delay)</text>
+<line class="s-line" x1="905" y1="142" x2="905" y2="188" marker-end="url(#m3)"/>
+<path class="s-line" d="M905,256 V282 H90 V142" marker-end="url(#m3)"/>
+<text class="s-l" x="500" y="276" text-anchor="middle">slot differs from assumed start → rebuild with the state at the slot date and re-run</text>
+<text class="s-cap" x="20" y="36">BEFORE EACH CYCLE · ~15–30 MIN ON 32 CORES</text>
+</svg>
+</div>
+<figcaption><b>Figure 4. O3 pipeline.</b> The cheap proxy explores; the expensive twin decides. No design reaches an engineer without passing stage B.</figcaption>
+</figure>
+<div class="tw w-wide"><table>
+<thead><tr><th>Stage</th><th>Method and settings</th><th>Cost</th></tr></thead>
+<tbody>
+<tr><td class="k">A · Screen</td><td><strong>NSGA-II</strong> (pymoo): population 200, 150 generations, SBX crossover η = 15, polynomial mutation η = 20; Deb's constraint-domination rule. Integer start date by rounding. Objectives J1–J3 of 5.3 (normalised).</td><td class="num">~30,000 proxy calls; seconds</td></tr>
+<tr><td class="k">Thin</td><td>k-medoids (k = 12) in normalised objective space on the proxy front, plus the <strong>baseline</strong> (repeat last cycle's design) and <strong>OIL practice</strong> (median historical design)</td><td class="num">Negligible</td></tr>
+<tr><td class="k">B · Verify</td><td>Each candidate: the coupled twin at the current build stage (5.10), from the current state, across the 16-member subset (5.4). Record weighted mean, P10, P90 and tail CVaR (worst 2 of 16) of oil per cycle-day (V/day once prices exist); constraint pass count. At v1–v2 the rod model runs quasi-steadily (one representative stroke per hour per member, Part A 8.2); per-stroke simulation over a whole cycle would be one to two orders of magnitude slower.</td><td class="num">14 × 16 × ~1 CPU-min ≈ 4 CPU-h → ~8 min on 32 cores (v0); plus 64-member re-run of the chosen design</td></tr>
+<tr><td class="k">C · Re-screen</td><td>If the proxy and twin disagree in ranking (Spearman &lt; 0.8 among the 14), add the verified points to T1-D's real-data correction δ and re-run stage A, then verify the new candidates. This reuses existing parts. Bayesian optimisation on the full twin (qNEHVI) is <strong>deferred</strong>; it is added only if re-screening repeatedly fails this check (5.11).</td><td class="num">~10 min extra</td></tr>
+<tr><td class="k">D · Decide</td><td>Pareto chart from verified points only. <strong>Knee point</strong>: the design farthest from the line joining the extremes in normalised (J1, J2). Shown next to baseline and OIL practice, with SHAP drivers from T1-D and physics reasons from the twin (heat efficiency, mobile radius, float day).</td><td class="num">—</td></tr>
+</tbody></table></div>
+
+<h3 id="o3-replan"><span class="n">5.6</span>Re-planning during injection</h3>
+<p>Plans break: generators trip, injectivity falls, VIT underperforms. D6 is a <strong>shrinking-horizon</strong> re-optimiser: it keeps what has already been injected and re-decides only what remains.</p>
+<div class="two">
+<div>
+<h4>Triggers</h4>
+<ul>
+<li>Delivered sandface heat (T2-A) off plan by &gt; 5% for &gt; 6 h</li>
+<li>Generator trip or planned stop</li>
+<li>Wellhead pressure at the limit while the rate is below plan (injectivity falling)</li>
+<li>Growth or annulus pressure within 10% of a limit</li>
+<li>Fixed check every 24 h</li>
+</ul>
+</div>
+<div>
+<h4>What it re-decides</h4>
+<ul>
+<li>Remaining steam mass and rate (extend, shorten or hold)</li>
+<li>Soak ratio for the new injected heat</li>
+<li>Rate reduction if integrity limits are close</li>
+</ul>
+<p>Method: stage A with the current T1-A state as initial condition and the done part fixed, then 4 verification runs. Result in ~2 min, shown as "continue plan" vs "change": expected value either way.</p>
+</div>
+</div>
+
+<h3 id="o3-soak"><span class="n">5.7</span>Soak-end advisor</h3>
+<p>OIL soaks for 50–60% of injection time as a rule. D7 turns soak end into a <strong>choice among six opening times</strong>, re-made every 6 h with the twin and the pressure fall-off SE is assimilating. It is a plain enumeration: with six options, no optimiser is needed.</p>
+<div class="eq ai">
+<div class="row"><span>End soak now if  E[<var>V</var>/day | open now] ≥ E[<var>V</var>/day | open at now + Δ] for all Δ ∈ {6 h, 12 h, 1 d, 2 d, 3 d, 5 d}</span><span class="lbl">(O.5) stopping rule</span></div>
+</div>
+<ul>
+<li>Each option is a rollout of the twin at the current build stage over 8 ensemble members, chosen and weighted like the 16-member subset in 5.4 (k = 8): ~6 × 8 short runs every 6 h. O.5 compares weighted means.</li>
+<li>Soft checks before recommending: the fall-off rate has flattened (most steam condensed, T1-C dV<sub>s</sub>/dt ≈ 0), and p<sub>h</sub> is high enough for the flowback O3 assumed (T2-A/T1-C natural-flow check).</li>
+<li>Season 1 stays within 0.3–0.8 × injection time. Output: "open at [date, time]; +x% value vs the 55% rule; confidence band".</li>
+</ul>
+
+<h3 id="o3-o5"><span class="n">5.8</span>Steam request to O5 and retiring a well</h3>
+<p>Generators are shared, so O5 needs each well's value <em>and</em> what waiting costs. D8 sends:</p>
+<pre class="code">SteamRequest { well_id, cycle_no, earliest_start, design_id,
+  M_s_t, rate_tph, duration_h, x_target, generator_reqs,
+  value_per_day, dV_delay: [ {delay_d: 0, dV: 0}, {7, ...}, {14, ...}, {21, ...}, {30, ...} ] }</pre>
+<p>ΔV(delay) comes from re-running stage A with the state rolled forward by each delay: T1-A cooling while the current cycle's production (per O4) continues. In the final architecture, O5's MILP uses these curves to decide which well waits. <strong>For the SIH prototype O5 is not built:</strong> ΔV(delay) is shown to the engineer for information, and generator booking stays manual. If O5 returns a different start, O3 rebuilds the problem at that date's state (Figure 4 loop).</p>
+<p><strong>Retire from CSS</strong>: flagged when the best verified design's P50 value per day falls below the value per day of simply continuing the current production without new steam, for two consecutive design runs. It goes to H, O4 and O5.</p>
+
+<h3 id="o3-wf"><span class="n">5.9</span>Data contract, workflow and acceptance</h3>
+<pre class="code">CycleDesignProposal {
+  well_id, cycle_no, created_utc, state_ref (P1 as-of id), models { t1d_ver, twin_ver }
+  designs: [ { id, role: "knee"|"max_value"|"min_sor"|"baseline"|"oil_practice"|"pareto",
+      vars { M_s_t, rate_tph, ramp {r1, r2, tau_h}, p_start, p_end, x_surf, soak_ratio, q_cut, t0 },
+      verified { oil_per_day {p10, p50, p90, cvar_tail, tail_frac}, sor {p10, p50, p90}, float_day_p10?, co2_per_bbl,
+                 value_day? (only with OIL prices), price_robust: bool, stage: "v0"|"v1"|"v2",
+                 constraint_pass { n_pass, n_members }, members_ref, margins { p_wh, p_bh, q_inj, dL_wh, p_ann }, provisional_flags[] },
+      drivers [ {feature, shap} ], physics_note } ]
+  recommendation: design_id, status: "draft"|"approved"|"rejected", approver, approved_utc
+}</pre>
+<div class="two">
+<div>
+<h4>Workflow across a cycle</h4>
+<ol class="flow">
+<li><strong>Trigger</strong>: O4 forecasts cut-off within 21 days, or an engineer asks.</li>
+<li><strong>Build</strong>: D1 reads the as-of state, limits, economics and the tentative O5 window.</li>
+<li><strong>Screen, verify, decide</strong> (Figure 4). The engineer approves one design or edits and re-verifies it.</li>
+<li><strong>Book</strong>: D8 sends the request; O5 returns a slot; re-run if the start moved.</li>
+<li><strong>Prep</strong>: T2-A confirms the ramp-up against growth and annulus limits with the latest completion data.</li>
+<li><strong>Inject</strong>: D6 watches triggers and re-plans; every change is approved in H.</li>
+<li><strong>Soak</strong>: D7 recommends the opening time; the engineer confirms.</li>
+<li><strong>Learn</strong>: after cut-off, compare outcome with the verified bands; feed the cycle to T1-D retraining (Part A 8.4).</li>
+</ol>
+</div>
+<div>
+<h4>Acceptance (proposed; agree with OIL)</h4>
+<ul>
+<li>Every recommended design passes all hard constraints, confirmed and provisional, in all 16 verification members, and in ≥ 61 of 64 members on the final re-run.</li>
+<li>Each test is reported with the build stage it ran at (5.10). A pass at v0 is a prototype result, not O3 validation.</li>
+<li><strong>Retrospective</strong>: for each historical cycle, O3 is run from that cycle's as-of state. Its recommendation must beat the actual design on the twin by more than the verification P10–P90 spread in at least half the cycles, or O3 is not adding value.</li>
+<li>Realised cycle value falls inside the verified P10–P90 band in ≥ 70% of pilot cycles.</li>
+<li>Soak advice: the twin's value at the recommended opening time is higher than at the 55% rule in ≥ 60% of retrospective cycles, and never worse by more than the band.</li>
+<li>Field pilot: supervised wells vs matched controls on SOR and value per cycle-day (Layer 2 §10).</li>
+</ul>
+</div>
+</div>
+<div class="note warn"><span class="t">Guard-rails that do not change with trust</span><p>O3 never writes to equipment. Steam decisions always need human approval (Layer 2). Wellhead, annulus and growth limits are hard constraints at their confirmed or provisional value, never soft penalties, and never relaxed by the optimiser. A design outside T1-D's validity envelope cannot be recommended without full-twin verification. When Part A's trust gate is at caution, only designs within the historical operating envelope are shown; at hold, none.</p></div>
+</section>
+
+<section id="o3-rev">
+<h3 id="o3-stage"><span class="n">5.10</span>Prototype capability vs final architecture</h3>
+<p>O3's verification is designed to run the coupled twin with O2 operating the pump (Layer 2 I3). T2-B, T3 and O2 are not built yet, so O3 runs in stages. Every result is labelled with the stage that produced it, and nothing is called "O3 validated" before stage v2 has been checked against field data.</p>
+<div class="tw w-xwide"><table>
+<thead><tr><th>Stage</th><th>Verification model</th><th>Pump and lift</th><th>What O3 can claim</th><th>What it cannot claim</th></tr></thead>
+<tbody>
+<tr><td class="k">v0 · SIH prototype</td><td>T1-A, T1-B, T1-C + T2-A (T1-D is the screen being checked, so it is never part of the verification model)</td><td>Reduced pump model: delivery = min(IPR, plunger displacement × fixed SPM × fillage from intake pressure); lift energy = hydraulic power (weight of fluid column + T2-A friction) ÷ an assumed system efficiency of 0.4–0.6</td><td>Ranking of steam designs by reservoir response and approximate lift burden; SOR; integrity constraints on the assumed completion</td><td>Rod-float timing (g8 inactive), accurate lift energy, anything that depends on pump control. T1-D's float-day output is switched off.</td></tr>
+<tr><td class="k">v1</td><td>+ T2-B rod and pump, + T3 surface</td><td>Rule-based SPM: current OIL practice, or a fixed schedule</td><td>Float day, loads and energy under current practice; g8 active</td><td>What better pump control would change</td></tr>
+<tr><td class="k">v2 · final</td><td>+ O2 optimiser in the loop</td><td>Optimised SPM schedule (Layer 2 design)</td><td>Closed-loop CSS design with lift in the loop (I3)</td><td>Field performance, until the retrospective test and the pilot (5.9)</td></tr>
+</tbody></table></div>
+<p>T1-D is trained on runs of whichever stage exists. Its L1 data is regenerated when the stage advances, and the model version records the stage.</p>
+
+<h3 id="o3-why"><span class="n">5.11</span>Why each optimisation component exists</h3>
+<p>Each piece is kept only if it solves a problem a simpler method cannot. Where two pieces did the same job, one was removed.</p>
+<div class="tw w-xwide"><table>
+<thead><tr><th>Component</th><th>Problem it solves</th><th>Why something simpler is not enough</th><th>Input → output</th><th>Compute</th><th>SIH</th></tr></thead>
+<tbody>
+<tr><td class="k">NSGA-II screen (D3)</td><td>Constrained search with three objectives over ~9 design variables</td><td>A weighted sum hides trade-offs and needs weights nobody has agreed; a grid over 9 variables is ~10<sup>9</sup> points</td><td>Bounds, proxy → Pareto set</td><td>~30,000 proxy calls in seconds</td><td><span class="st st-ok">Core</span></td></tr>
+<tr><td class="k">Twin verification (D4)</td><td>The proxy is trained on few real cycles and can be confidently wrong</td><td>Not an optimiser; a physics check. Proxy-only would trust T1-D outside its evidence</td><td>~14 designs → verified distributions</td><td>~8 min on 32 cores (30,000 twin runs would take weeks)</td><td><span class="st st-ok">Core</span></td></tr>
+<tr><td class="k">k-medoids thinning</td><td>Picks diverse candidates to verify</td><td>Top-N by one objective gives near-duplicates</td><td>Proxy front → 12 designs</td><td>Negligible</td><td><span class="st st-ok">Core utility</span></td></tr>
+<tr><td class="k">Robust metrics (CVaR, P90 limits)</td><td>Designs that look good on average but fail in bad ensemble members</td><td>Mean-only ranking ignores the uncertainty chain (Part A 13)</td><td>Ensemble → risk metrics</td><td>None extra</td><td><span class="st st-ok">Core</span></td></tr>
+<tr><td class="k">Re-screen (C)</td><td>Proxy and twin disagree on ranking</td><td>Reuses NSGA-II and T1-D's correction; no new method</td><td>Verified points → updated front</td><td>~10 min</td><td><span class="st st-ok">Core</span></td></tr>
+<tr><td class="k">Injection re-plan (D6)</td><td>Plan breaks mid-injection</td><td>Not a new optimiser: the same screen and verification with the injected part fixed</td><td>Live state → revised remainder</td><td>~2 min</td><td><span class="st st-ok">Core (reuse)</span></td></tr>
+<tr><td class="k">Soak-end choice (D7)</td><td>When to open the well</td><td>Six options: enumeration is exact, so no optimiser is needed</td><td>State → best of 6 times</td><td>48 short runs every 6 h</td><td><span class="st st-ok">Core, as enumeration</span></td></tr>
+<tr><td class="k">Price sensitivity</td><td>Economics not yet known</td><td>A single assumed price would imply a false optimum</td><td>Verified designs → rank stability</td><td>Negligible</td><td><span class="st st-ok">Core</span></td></tr>
+<tr><td class="k">Bayesian optimisation on the twin (qNEHVI)</td><td>Sample-efficient search when the proxy is unreliable</td><td>Re-screening probably suffices; adds a GP twin and BoTorch</td><td>Verified points → new candidates</td><td>~20 min</td><td><span class="st st-no">Deferred</span>: add only if re-screening repeatedly fails</td></tr>
+<tr><td class="k">Value of delay (D8)</td><td>Tells O5 what waiting costs each well</td><td>Not an optimiser: proxy calls at five delays</td><td>State → ΔV curve</td><td>Seconds</td><td><span class="st st-mid">Display only</span></td></tr>
+<tr><td class="k">O5 steam MILP</td><td>Assigning shared generators across wells</td><td>Belongs to O5, outside this part</td><td>Requests → calendar</td><td>—</td><td><span class="st st-no">Out of SIH scope</span>; booking stays manual</td></tr>
+</tbody></table></div>
+<p><strong>For the SIH build this leaves one search algorithm (NSGA-II), one physics check (twin verification with robust metrics), and two enumerations (soak end, price scenarios).</strong> That is constrained multi-objective optimisation plus physics verification, as the review recommends.</p>
+</section>
+
+<!-- 6 -->
+<section id="syn">
+<h2><span class="n">6</span>Reference well additions</h2>
+<p>Additions to BGW-SYN-01 (Part A section 9) used in this part.</p>
+<div class="tw w-wide"><table>
+<thead><tr><th>Group</th><th>Parameter</th><th>Value</th><th>Source</th></tr></thead>
+<tbody>
+<tr><td>Tubing</td><td>VIT outer × inner tube</td><td class="num">4½" × 3½" (114.3 × 88.9 mm); inner ID 76.0 mm</td><td><span class="chip c-lit">Literature</span> vendor size; choice <span class="chip c-as">Assumed</span></td></tr>
+<tr><td>VIT</td><td>Grade; k<sub>VIT</sub>; joint factor</td><td class="num">D; 0.01 W/m·K; 1.3</td><td>Grades D: 0.02–0.006 <span class="chip c-lit">Literature</span>; grade <span class="chip c-as">Assumed</span></td></tr>
+<tr><td>Casing, hole</td><td>Casing OD / ID; bit</td><td class="num">7" (177.8 / 159.4 mm); 8½"</td><td><span class="chip c-as">Assumed</span></td></tr>
+<tr><td>Annulus</td><td>Gas; fill pressure; emissivity</td><td class="num">N<sub>2</sub>; 10 bar; 0.9</td><td><span class="chip c-oil">OIL</span> N<sub>2</sub> jacket; values <span class="chip c-as">Assumed</span></td></tr>
+<tr><td>Cement, rock</td><td>k<sub>cem</sub>; k<sub>e</sub>; (ρc)<sub>e</sub></td><td class="num">0.7; 2.0 W/m·K; 2.2 MJ/m³·K</td><td><span class="chip c-lit">Literature</span></td></tr>
+<tr><td>Geotherm</td><td>Surface; at pay</td><td class="num">30 °C; 50 °C at 1,150 m</td><td>Pay <span class="chip c-oil">OIL</span>; surface <span class="chip c-as">Assumed</span></td></tr>
+<tr><td>Rods</td><td>Top taper for annulus friction</td><td class="num">⅞" (r = 11.1 mm)</td><td><span class="chip c-as">Assumed</span></td></tr>
+<tr><td>Generator</td><td>Steam; diesel; water</td><td class="num">3,100 kg/h; 220 kg/h; 5,500 kg/h</td><td><span class="chip c-oil">OIL</span></td></tr>
+<tr><td>Per tonne steam</td><td>HSD; water; CO<sub>2</sub>; implied efficiency</td><td class="num">71 kg; 1.77 t; 225 kg; ~70%</td><td><span class="chip c-der">Derived</span> (3.17 kg CO<sub>2</sub>/kg diesel; LHV 42.8 MJ/kg)</td></tr>
+</tbody></table></div>
+</section>
+
+<!-- 7 -->
+<section id="build">
+<h2><span class="n">7</span>Build order</h2>
+<div class="tw w-wide"><table>
+<thead><tr><th>Step</th><th>Deliverable</th><th>Done when</th></tr></thead>
+<tbody>
+<tr><td class="k">1</td><td><span class="mono">twin/wellbore/resistance.py</span>: W.1–W.3 with radial iteration; <span class="mono">formation.py</span>: W.4, W.5</td><td>W.4 vs W.5 within 3%; Willhite U example reproduced</td></tr>
+<tr><td class="k">2</td><td><span class="mono">injection.py</span>: surface line + W.6–W.8, Beggs–Brill and homogeneous</td><td>Figure 3 reproduced; energy closure &lt; 0.5%</td></tr>
+<tr><td class="k">3</td><td><span class="mono">production.py</span>: W.9–W.12, heater, diluent; <span class="mono">intake.py</span></td><td>Ramey (W.13) within 1% in the constant-property limit</td></tr>
+<tr><td class="k">4</td><td><span class="mono">flowback.py</span> (W.14–W.15) and <span class="mono">shutin.py</span></td><td>TPR meets T1-C IPR for BGW-SYN-01 after soak; flow stops as p<sub>h</sub> falls</td></tr>
+<tr><td class="k">5</td><td><span class="mono">integrity.py</span>: W.16–W.17, leak index</td><td>Growth and annulus curves for the Figure 3 cases</td></tr>
+<tr><td class="k">6</td><td><span class="mono">optim/o3/</span>: normalised objectives, NSGA-II screen, verification runner at stage v0 (reduced pump model, 5.10), price-sensitivity check</td><td>Pareto front on BGW-SYN-01; knee design verified at v0 and labelled as such</td></tr>
+<tr><td class="k">7</td><td>Re-planner and soak-end enumeration; ΔV(delay) display only (O5 not built)</td><td>A generator-trip scenario re-plans in &lt; 5 min</td></tr>
+</tbody></table></div>
+<p class="muted" style="font-size:13.5px">Libraries: numpy, scipy, iapws, pymoo, scikit-learn-extra (k-medoids), shap. BoTorch is not needed for the SIH build. O3 verification is only fully meaningful at stage v2, once T2-B, T3 and O2 exist (5.10); until then results are labelled with their stage.</p>
+</section>
+
+<!-- 8 -->
+<section id="open">
+<h2><span class="n">8</span>Changes to Layer 2 and open questions</h2>
+<h4>Changes this part makes</h4>
+<div class="tw w-wide"><table>
+<thead><tr><th>Layer 2 item</th><th>Change</th><th>Reason</th></tr></thead>
+<tbody>
+<tr><td class="k">T2-A formation model: Hasan–Kabir</td><td>Radial conduction per segment carried across phases; Hasan–Kabir as check and fallback</td><td>Phases change constantly; rock keeps injection heat</td></tr>
+<tr><td class="k">T2-A outputs</td><td>+ casing T and wellhead growth; + annulus pressure and leak index; + VIT health; + intake-pressure soft sensor; + TPR curve</td><td>2006 failure modes; VIT dominates delivered heat; packed-off annulus blocks fluid levels</td></tr>
+<tr><td class="k">T2-A production friction</td><td>Averaged over the stroke using T2-B pump motion</td><td>Shear-thinning friction is non-linear in velocity</td></tr>
+<tr><td class="k">T2-A flowback</td><td>Explicit flashing of hot water as a lift mechanism</td><td>Explains natural flow after CSS</td></tr>
+<tr><td class="k">O3 variables</td><td>+ ramp-up profile; + start date within slot</td><td>Wellhead growth risk is highest in the first hours</td></tr>
+<tr><td class="k">O3 method</td><td>NSGA-II screen on proxy → twin verification on a 16-member subset → 64-member re-run of the chosen design; robust quantile constraints. qNEHVI deferred (5.11)</td><td>Proxy explores, twin decides</td></tr>
+<tr><td class="k">T2-A modes</td><td>Three → four: injection, soak/shut-in, flowback, pumped</td><td>Cooling of a stagnant column needs its own mode (4.7)</td></tr>
+<tr><td class="k">O3 ↔ O5</td><td>Request carries a value-of-delay curve</td><td>O5 needs the cost of waiting to share generators well</td></tr>
+<tr><td class="k">O3 soak end</td><td>Optimal-stopping rollouts every 6 h</td><td>Uses live fall-off; replaces the fixed 50–60% rule when trusted</td></tr>
+</tbody></table></div>
+<h4>New questions for OIL</h4>
+<ol>
+<li>VIT vendor, grade (apparent conductivity) and age per well? Is VIT also the production string, or is it replaced after injection?</li>
+<li>Is the N<sub>2</sub> annulus packed off during production? (If yes, acoustic fluid levels are impossible.) Is annulus pressure recorded during injection?</li>
+<li>Casing size, cement top and bond quality in the top 200 m; is wellhead growth measured, and what is the allowance?</li>
+<li>Wellhead and casing pressure ratings; any fracture-pressure estimate for the Jodhpur Sandstone?</li>
+<li>Current ramp-up practice at the start of injection, and any rules introduced after 2006.</li>
+<li>Generator specs: rate range, maximum quality, mobilisation time; length and insulation of the surface steam line.</li>
+<li>Why water use (5,500 kg/h) exceeds steam output (3,100 kg/h): treatment reject, blowdown, or tank heating?</li>
+<li>Heater type and placement, and diluent injection point and type, on wells that use them.</li>
+<li>Any bottomhole pressure or temperature surveys during injection or production?</li>
+<li>Diesel, water and electricity costs, and whether CO<sub>2</sub> should be an objective.</li>
+<li>For the data audit (4.13): which of these are recorded, at what rate and since when: wellhead temperature, annulus pressure, wellhead growth, generator quality, bottomhole surveys?</li>
+<li>How is generator steam quality measured (instrument, separator or calculation)?</li>
+<li>In the Jul 2025 figures (25 wells, 655 bbl/d), does "flowing" mean flowing without lift, or producing?</li>
+<li>What historical maximum wellhead pressure, annulus pressure and growth have been seen without incident? These become the provisional limits until ratings are confirmed.</li>
+</ol>
+<h4>Suggested next part</h4>
+<p>Part C: <strong>T2-B rod-string and pump dynamics with T3 surface and electrical</strong>. They are the last pieces O3's verification needs (O2 in the loop), and Layer 2 ranks T2-B's drag model as the item that unblocks the most.</p>
+</section>
+
+<!-- 9 -->
+<section id="sources">
+<h2><span class="n">9</span>Sources</h2>
+<h4>Project</h4>
+<ul class="sources">
+<li>Solution architecture layer 2 (v3) and Layer 3 Part A (rev 2) (P1, T1-A–D): baselines and reference well BGW-SYN-01</li>
+</ul>
+<h4>Field</h4>
+<ul class="sources">
+<li><a href="https://www.slideshare.net/slideshow/baghewala-ppt-oil-india-limited-12-07-2025-pptx/282258575">Oil India Ltd, Baghewala Heavy Oil Field presentation, 12 Jul 2025</a>: steam rate, pressure, quality, diesel and water use, production, well status</li>
+</ul>
+<h4>Methods</h4>
+<ul class="sources">
+<li><a href="https://www.octalsteel.com/product/vacuum-insulated-tubing/">Vacuum insulated tubing grades and sizes (vendor data)</a>: grade B–E conductivities, 4½" × 3½" dimensions</li>
+<li><a href="https://link.springer.com/article/10.1007/s13202-019-00763-w">Calculation of temperature profile in injection wells, JPEPT 2019</a>: resistance network, Hasan–Kabir formation function</li>
+<li><a href="https://www.researchgate.net/publication/257318882_Wellbore_heat-transfer_modeling_and_applications">Hasan &amp; Kabir, Wellbore heat-transfer modeling and applications</a>; <a href="https://www.semanticscholar.org/paper/Fluid-Flow-and-Heat-Transfers-in-Wellbores-Hasan-Kabir/e815324e7689b062b52ec142e30045eb47c4ad35">Fluid Flow and Heat Transfer in Wellbores</a></li>
+<li><a href="https://www.researchgate.net/publication/270441493_Over-all_Heat_Transfer_Coefficients_in_Steam_And_Hot_Water_Injection_Wells">Willhite, Over-all heat transfer coefficients in steam and hot water injection wells (1967)</a>: U build-up, annulus convection and radiation</li>
+<li><a href="https://www.researchgate.net/publication/297599588_Development_of_a_Thermal_Wellbore_Simulator_With_Focus_on_Improving_Heat-Loss_Calculations_for_Steam-Assisted-Gravity-Drainage_Steam_Injection">Thermal wellbore simulator with improved heat-loss calculations for steam injection (SPE-174408)</a></li>
+<li><a href="https://www.mdpi.com/2077-1312/13/3/597">Mechanical evaluation of casing in multiple thermal recovery cycles, JMSE 2025</a>: casing property loss over thermal cycles</li>
+<li><a href="https://www.sciencedirect.com/science/article/abs/pii/S2949891024004688">Modeling thermal-induced wellhead growth through the lifecycle of a well</a></li>
+<li><a href="https://www.sciencedirect.com/science/article/abs/pii/S0920410521009281">Thermal expansion pressure build-up in an annulus partly filled with nitrogen</a></li>
+<li><a href="https://arxiv.org/abs/2105.08195">Daulton et al., Parallel Bayesian optimization of multiple noisy objectives with expected hypervolume improvement (qNEHVI), NeurIPS 2021</a>; <a href="https://botorch.org/docs/v0.14.0/tutorials/constrained_multi_objective_bo">BoTorch constrained multi-objective tutorial</a></li>
+<li>Deb et al., NSGA-II (IEEE TEC 2002); Beggs &amp; Brill (1973); Ramey (1962); Dropkin &amp; Somerscales (1965); Sieder–Tate; IAPWS-IF97: standard references cited by name</li>
+</ul>
+</section>
+</main>
+
+<footer>Baghewala Well-to-Surface Twin · SIH26120 · Research layer 3, Part B (T2-A, O3) · draft, revision 2, 25 Sep 2026</footer>
+</div>

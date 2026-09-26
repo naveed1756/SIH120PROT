@@ -1,0 +1,15 @@
+# Normalise text line endings in the repo; check out native on each OS.
+* text=auto
+
+*.py   text diff=python
+*.md   text
+*.json text
+*.html text
+*.svg  text
+
+*.png  binary
+*.jpg  binary
+*.mp4  binary
+*.ttf  binary
+*.npz  binary
+*.parquet binary

@@ -1,0 +1,41 @@
+# ---------------------------------------------------------------- Python
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+.coverage
+htmlcov/
+
+# ---------------------------------------------------------- intermediate data
+# Solver outputs, parquet/npz, raw animation frames. Regenerate with the scripts.
+out/
+
+# ---------------------------------------------------------------- web (Node)
+web/node_modules/
+web/dist/
+web/.vite/
+web/test-results/
+web/playwright-report/
+npm-debug.log*
+
+# ---------------------------------------------------------------- sync
+# git bundle used to move commits from the build workspace to this folder
+.sync/
+*.bundle
+
+# ------------------------------------------------------------- OS / editors
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+*.log
+.env
+.env.*

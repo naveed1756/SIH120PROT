@@ -16,8 +16,8 @@ from twin import pumpbc as PB  # noqa: E402
 from twin import rodpump as RP  # noqa: E402
 from twin import style as S  # noqa: E402
 
-CASES = [("normal", 0.5, "Normal pump"), ("fluid_pound", 0.5, "Fluid pound (fill 0.6)"),
-         ("fluid_pound", 10.0, "Fluid pound, thick oil (informative)")]
+CASES = [("normal", 0.5, "Normal pump"), ("fluid_pound", 0.5, "Pump 60 % full"),
+         ("fluid_pound", 10.0, "Pump 60 % full, thick oil")]
 L, N, STROKE = P.ROD_LEN_M, 5.0, 3.0
 
 
@@ -35,25 +35,25 @@ def main():
         errs.append(e)
         close = lambda a: np.append(a, a[0])  # noqa: E731
         ax.plot(close(r["surf_pos"][0]), close(r["surf_load_raw"][0]) / 1e3, color=S.COLORS["wellbore"], lw=1.6,
-                label="surface card (simulated input)")
+                label="measured at the surface")
         ax.plot(close(r["dh_pos"][0]), close(r["dh_load"][0]) / 1e3, color="#8A938E", lw=3.2, alpha=0.55,
-                label="pump card imposed")
+                label="actual pump card")
         ax.plot(close(pos), close(Fp) / 1e3, color=S.COLORS["ai"], lw=1.3, ls=(0, (4, 2)),
-                label=f"pump card recovered · RMS {100 * e:.1f} % of range")
-        ax.set_title(f"{title}\nμ = {mu:g} Pa·s, N = {N:g} SPM, S = {STROKE:g} m, rods {L:.0f} m", loc="left", fontsize=11)
+                label=f"pump card worked out from the surface ({100 * e:.1f} % error)")
+        ax.set_title(f"{title}\noil viscosity {mu:g} Pa·s, {N:g} strokes/min", loc="left", fontsize=11)
         if r["float"][0]:
-            ax.text(0.02, 0.03, "surface load below 0 = rods float (unclipped model load shown)", transform=ax.transAxes,
+            ax.text(0.02, 0.97, "load below zero:\nrods are floating", transform=ax.transAxes, va="top",
                     fontsize=8.5, color=S.COLORS["warn"])
-        ax.set_xlabel("Position (m)")
+        ax.set_xlabel("Rod position (m)")
         ax.grid(True, color="#E1E6E2", lw=0.6)
         ax.set_axisbelow(True)
         ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.13), fontsize=8.5, frameon=False, ncol=1)
     axs[0].set_ylabel("Load (kN)")
     fig.subplots_adjust(bottom=0.27)
-    fig.suptitle("Diagnostic mode: the pump card recovered from the surface card (Gibbs wave equation)",
+    fig.suptitle("Seeing the pump from the surface",
                  x=0.055, ha="left", fontsize=15, fontweight="semibold")
-    fig.text(0.055, 0.895, "Surface card simulated from a known pump condition, then inverted by marching the same damped "
-             "wave equation down the rods (Everitt–Jennings finite differences). Done-when: RMS ≤ 5 % at μ ≤ 1 Pa·s.",
+    fig.text(0.055, 0.895, "We start from a known pump condition, simulate what the surface sensor would record, "
+             "then work back down 1,100 m of rods to the pump (Gibbs method).",
              fontsize=10, color="#58625C")
     S.save(fig, "A6b_gibbs_roundtrip")
     plt.close(fig)

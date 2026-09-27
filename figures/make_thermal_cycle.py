@@ -25,7 +25,8 @@ OUT = ROOT / "out"
 FRAMES = OUT / "thermal_frames"
 T_MIN, T_MAX = 50.0, 310.0
 PHASE_COLOR = {"injection": S.COLORS["thermal"], "soak": "#8A938E", "production": S.COLORS["wellbore"]}
-PHASE_LABEL = {"injection": "Steam injection", "soak": "Soak (well shut in)", "production": "Pumped production"}
+PHASE_LABEL = {"injection": "Steam injection", "soak": "Soak (well shut in)", "production": "Pumping"}
+PHASE_SHORT = {"injection": "injection", "soak": "soak", "production": "pumping"}
 
 _D = {}
 
@@ -88,14 +89,14 @@ def draw(i, fig=None, caption=True):
                    ls="-" if k in (0, len(tops) - 1) else (0, (4, 3)), alpha=0.8)
     for k in range(len(P.H_LAYERS_M)):
         zm = 0.5 * (tops[k] + tops[k + 1])
-        ax.text(118, depth_of(zm), f"L{k+1}", color="#DDE3DF", fontsize=11, ha="right", va="center")
+        ax.text(118, depth_of(zm), f"layer {k+1}", color="#DDE3DF", fontsize=11, ha="right", va="center")
     ax.text(118, depth_of(H + 7.5), "cap rock", color="#AEB6B1", fontsize=10, ha="right", va="center")
     ax.text(118, depth_of(-7.5), "base rock", color="#AEB6B1", fontsize=10, ha="right", va="center")
     ax.add_patch(Rectangle((0.1, ax.get_ylim()[1]), P.RW_M - 0.1, ax.get_ylim()[0] - ax.get_ylim()[1],
                            color="#9FB8D6", lw=0, zorder=3))
     ax.text(0.104, depth_of(H + 13.0), "well", rotation=90, fontsize=9, color="#24588A", ha="center",
             va="center", zorder=4)
-    ax.set_xlabel("Radius from the well (m, log scale)")
+    ax.set_xlabel("Distance from the well (m, log scale)")
     ax.set_ylabel("Depth (m)")
     ax.set_xticks([0.1, 0.3, 1, 3, 10, 30, 100])
     ax.set_xticklabels(["0.1", "0.3", "1", "3", "10", "30", "100"])
@@ -114,11 +115,11 @@ def draw(i, fig=None, caption=True):
     else:
         pday = (t_h - D["t_soak_end"]) / 24.0
     fig.text(0.07, 0.935, PHASE_LABEL[phase], fontsize=24, fontweight="semibold", color=PHASE_COLOR[phase])
-    fig.text(0.07, 0.885, f"cycle day {day:5.1f}   ·   {phase} day {pday:5.1f}", fontsize=14, color="#3A423D")
-    fig.text(0.87, 0.935, "Reservoir temperature, BGW-SYN-01", fontsize=14, ha="right", color="#18201C",
+    fig.text(0.07, 0.885, f"Day {day:.0f} of the cycle ({PHASE_SHORT[phase]} day {pday:.0f})", fontsize=14, color="#3A423D")
+    fig.text(0.87, 0.935, "Temperature around the well", fontsize=14, ha="right", color="#18201C",
              fontweight="semibold")
-    fig.text(0.87, 0.895, f"r–z grid · {P.STEAM_KGS*3.6:.1f} t/h steam for {P.T_INJ_D:.0f} d · override β = "
-             f"{P.BETA_OVERRIDE:g} (assumed closure)", fontsize=11, ha="right", color="#58625C")
+    fig.text(0.87, 0.895, f"{P.STEAM_KGS*3.6:.1f} t/h of steam for {P.T_INJ_D:.0f} days; steam rises, so the top layer heats most",
+             fontsize=11, ha="right", color="#58625C")
 
     # phase timeline
     t_end = D["t_end"]
@@ -127,7 +128,7 @@ def draw(i, fig=None, caption=True):
     for a, b, p in segs:
         tl.add_patch(Rectangle((a / t_end, 0.0), (b - a) / t_end, 1.0, color=PHASE_COLOR[p],
                                alpha=0.9 if p == phase else 0.35, lw=0))
-        tl.text((a + b) / 2 / t_end, 0.5, p, ha="center", va="center", fontsize=10, color="white")
+        tl.text((a + b) / 2 / t_end, 0.5, PHASE_SHORT[p], ha="center", va="center", fontsize=10, color="white")
     tl.axvline(t_h / t_end, color="#18201C", lw=2.2)
     tl.set_xlim(0, 1)
     tl.set_ylim(0, 1)

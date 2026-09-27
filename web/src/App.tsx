@@ -258,7 +258,7 @@ function TourOverlay({ kind }: { kind: "title" | "A3" | "A5" | "end" }) {
       <div className="overlay title">
         <h1>Baghewala Well-to-Surface Twin</h1>
         <p>Cyclic steam stimulation and sucker-rod pumping, simulated as one system</p>
-        <span className="chip">synthetic well BGW-SYN-01 · OIL published parameters · prototype v0</span>
+        <span className="chip">Synthetic test well BGW-SYN-01 · OIL published parameters · prototype</span>
       </div>
     );
   if (kind === "end")
@@ -269,11 +269,11 @@ function TourOverlay({ kind }: { kind: "title" | "A3" | "A5" | "end" }) {
             <span key={x} className={k >= 4 ? "ai" : ""}>{x}</span>
           ))}
         </div>
-        <p>synthetic well · OIL parameters · prototype v0</p>
+        <p>Synthetic test well · OIL published parameters · prototype</p>
       </div>
     );
   const src = kind === "A3" ? "A3_card_library.png" : "A5_confusion.png";
-  const cap = kind === "A3" ? "No failure data? The twin generates it: 9 pump conditions" : "The classifier, tested on an operating range it never saw";
+  const cap = kind === "A3" ? "No failure records, so we simulate them: nine pump problems" : "The AI, tested on thicker oil and deeper pumps than it trained on";
   return (
     <div className="overlay img">
       <img src={base + src} alt={cap} />

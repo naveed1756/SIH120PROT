@@ -14,15 +14,15 @@ CLASSES = ["normal", "fluid_pound", "steam_gas_interference", "rod_float", "tv_l
            "sv_leak", "unseated", "rod_parted", "tagging"]
 CID = {c: i for i, c in enumerate(CLASSES)}
 CAUSES = {
-    "normal": "full pump, valves working",
-    "fluid_pound": "incomplete pump fillage; plunger hits the fluid",
-    "steam_gas_interference": "steam or gas in the barrel compresses slowly",
-    "rod_float": "rods cannot fall through viscous oil",
-    "tv_leak": "travelling valve leaks; load bleeds off on the upstroke",
-    "sv_leak": "standing valve leaks; load bleeds on the downstroke",
-    "unseated": "pump pulled off its hold-down; no fluid load",
-    "rod_parted": "rod string broken; only rod weight above the break",
-    "tagging": "plunger strikes the bottom of the pump",
+    "normal": "pump fills fully, valves work",
+    "fluid_pound": "pump only partly fills, plunger hits the liquid",
+    "steam_gas_interference": "steam or gas in the pump squeezes slowly",
+    "rod_float": "rods can't sink fast enough through thick oil",
+    "tv_leak": "travelling valve leaks during the upstroke",
+    "sv_leak": "standing valve leaks during the downstroke",
+    "unseated": "pump has come loose, lifts no fluid",
+    "rod_parted": "rod string broken, only rod weight left",
+    "tagging": "plunger knocks the bottom of the pump",
 }
 
 

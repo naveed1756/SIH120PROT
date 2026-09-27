@@ -13,8 +13,8 @@ from matplotlib.colors import LinearSegmentedColormap  # noqa: E402
 
 from twin import style as S  # noqa: E402
 
-NAMES = {"normal": "Normal", "fluid_pound": "Fluid pound", "steam_gas_interference": "Steam / gas interf.",
-         "rod_float": "Rod float", "tv_leak": "TV leak", "sv_leak": "SV leak", "unseated": "Pump unseated",
+NAMES = {"normal": "Normal", "fluid_pound": "Fluid pound", "steam_gas_interference": "Steam or gas",
+         "rod_float": "Rod float", "tv_leak": "Travelling valve leak", "sv_leak": "Standing valve leak", "unseated": "Pump unseated",
          "rod_parted": "Rod parted", "tagging": "Tagging"}
 
 
@@ -26,8 +26,8 @@ def main():
     cm = np.array(r["confusion_test"], float)
     cmn = cm / np.maximum(cm.sum(1, keepdims=True), 1)
     cmap = LinearSegmentedColormap.from_list("ai", ["#FFFFFF", "#D9D3EC", S.COLORS["ai"]])
-    split = (f"Split by operating range, not random: trained on μ ≤ 10 Pa·s and pump depth ≤ 1,050 m "
-             f"({r['n_train']:,} cards); tested on all other cards ({r['n_test']:,}, extrapolation)")
+    split = (f"Trained on thinner oil and shallower pumps ({r['n_train']:,} cards), "
+             f"tested on thicker oil and deeper pumps it never saw ({r['n_test']:,} cards)")
 
     fig, ax = plt.subplots(figsize=(11.5, 9.6))
     fig.subplots_adjust(left=0.19, right=0.97, top=0.86, bottom=0.2)
@@ -40,15 +40,14 @@ def main():
                         color="white" if v > 0.55 else "#2A2F2C")
     ax.set_xticks(range(len(cls)), names, rotation=35, ha="right")
     ax.set_yticks(range(len(cls)), names)
-    ax.set_xlabel("Predicted class")
-    ax.set_ylabel("True class")
+    ax.set_xlabel("What the AI said")
+    ax.set_ylabel("Actual problem")
     for sp in ax.spines.values():
         sp.set_visible(False)
-    fig.suptitle(f"Card classifier on held-out operating range: macro-F1 {r['macro_f1_test']:.2f}",
+    fig.suptitle(f"The AI names the pump problem correctly {100 * r['accuracy_test']:.0f} % of the time on unseen conditions",
                  x=0.03, ha="left", fontsize=15, fontweight="semibold")
-    fig.text(0.03, 0.905, split + f"\nRow-normalised (% of true class). 5-fold CV inside the training range: "
-             f"macro-F1 {r['cv5_macro_f1_train_range']['mean']:.2f} ± {r['cv5_macro_f1_train_range']['std']:.2f}. "
-             "Features: Fourier descriptors, shape stats, Gibbs downhole fillage. XGBoost.",
+    fig.text(0.03, 0.905, split + ".\nEach row shows where the cards of one problem ended up (%). "
+             "Most mix-ups are between shapes that look alike, such as normal and tagging.",
              fontsize=9.5, color="#58625C", va="center")
     S.save(fig, "A5_confusion")
     plt.close(fig)
@@ -59,13 +58,13 @@ def main():
     fig.subplots_adjust(left=0.2, right=0.96, top=0.8, bottom=0.14)
     ax.barh(np.arange(len(cls)), f1[o], color=[S.COLORS["ai"] if v >= 0.8 else "#9A8FC4" for v in f1[o]], height=0.62)
     for k, v in enumerate(f1[o]):
-        ax.text(v + 0.01, k, f"{v:.2f}  (n = {r['n_test_per_class'][cls[o[k]]]})", va="center", fontsize=9.5)
+        ax.text(v + 0.01, k, f"{v:.2f}  ({r['n_test_per_class'][cls[o[k]]]:,} cards)", va="center", fontsize=9.5)
     ax.set_yticks(np.arange(len(cls)), [names[i] for i in o])
     ax.axvline(r["macro_f1_test"], color="#2F3532", lw=1, ls="--")
-    ax.text(r["macro_f1_test"], len(cls) - 0.4, f" macro-F1 {r['macro_f1_test']:.2f}", fontsize=9.5)
+    ax.text(r["macro_f1_test"], len(cls) - 0.4, f" average {r['macro_f1_test']:.2f}", fontsize=9.5)
     ax.set_xlim(0, 1.15)
-    ax.set_xlabel("F1 on the held-out operating range")
-    fig.suptitle("Per-class F1: where the card shapes overlap", x=0.03, ha="left", fontsize=15, fontweight="semibold")
+    ax.set_xlabel("Score on unseen conditions (1 = perfect)")
+    fig.suptitle("How well each pump problem is recognised", x=0.03, ha="left", fontsize=15, fontweight="semibold")
     fig.text(0.03, 0.87, split, fontsize=9.5, color="#58625C")
     S.save(fig, "A5_f1_bars")
     plt.close(fig)

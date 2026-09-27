@@ -161,4 +161,4 @@ export const COLORS = {
 };
 
 export const CAPTION =
-  "Synthetic reference well BGW-SYN-01 · OIL published parameters (Jul 2025) + literature · not field data · prototype v0";
+  "Synthetic test well (BGW-SYN-01) based on OIL's published parameters (July 2025) and literature. Not field data. Prototype.";

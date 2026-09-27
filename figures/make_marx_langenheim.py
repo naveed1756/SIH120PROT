@@ -21,12 +21,12 @@ def main():
 
     fig, ax = plt.subplots(figsize=(8.0, 5.0))
     fig.subplots_adjust(left=0.11, right=0.97, top=0.86, bottom=0.16)
-    ax.plot(d, r["A_ml"], color="#3A423D", lw=1.6, ls=(0, (5, 3)), label="Marx–Langenheim (analytical, A.7–A.8)")
-    ax.plot(d, r["A_grid"], color=S.COLORS["thermal"], lw=2.2, label="T1-A r–z grid (T − T$_R$ ≥ ½ΔT)")
+    ax.plot(d, r["A_ml"], color="#3A423D", lw=1.6, ls=(0, (5, 3)), label="textbook formula (Marx–Langenheim)")
+    ax.plot(d, r["A_grid"], color=S.COLORS["thermal"], lw=2.2, label="our reservoir simulator")
     for day, tgt in ((14, 276.0), (21, 403.0)):
         i = int(np.argmin(np.abs(d - day)))
         ax.plot([day], [r["A_grid"][i]], "o", ms=6, color=S.COLORS["thermal"], mec="white", mew=1.2, zorder=5)
-        ax.annotate(f"day {day}: grid {r['A_grid'][i]:.0f} m² vs {tgt:.0f} m² ({err[i]:+.0f} %)",
+        ax.annotate(f"day {day}: {r['A_grid'][i]:.0f} m² vs {tgt:.0f} m² ({err[i]:+.0f} %)",
                     xy=(day, r["A_grid"][i]), xytext=((10.6, 452) if day == 21 else (3.0, 330)),
                     fontsize=9.5, color="#18201C", arrowprops=dict(arrowstyle="-", color="#6B7570", lw=0.8))
     ax.set_xlim(0, 21.5)
@@ -43,13 +43,12 @@ def main():
     ins.axhline(0, color="#6B7570", lw=0.8)
     ins.set_ylim(-25, 25)
     ins.set_xlim(0, 21.5)
-    ins.set_title("grid vs analytical (%)  ·  ±20 % band", fontsize=8.5, color="#3A423D", loc="left")
+    ins.set_title("difference (%), shaded band = ±20 %", fontsize=8.5, color="#3A423D", loc="left")
     ins.tick_params(labelsize=8)
 
-    fig.suptitle("Thermal grid checked against a closed-form solution", x=0.11, ha="left",
+    fig.suptitle("Our reservoir simulator matches the textbook heated area", x=0.11, ha="left",
                  fontsize=13, fontweight="semibold")
-    ax.set_title(f"Single 10 m layer, no override (β = 0), steam at {P.ML_T_S_C:.0f} °C (ΔT = {r['dT']:.0f} K), "
-                 f"{r['q_heat_W']/1e6:.2f} MW; energy closure {r['eps_max']:.0e}",
+    ax.set_title(f"Test case: one 10 m layer, steam at {P.ML_T_S_C:.0f} °C, {r['q_heat_W']/1e6:.1f} MW of heat for 21 days",
                  fontsize=9, color="#58625C", loc="left")
     path = S.save(fig, "A6a_marx_langenheim")
     plt.close(fig)

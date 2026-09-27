@@ -77,37 +77,36 @@ def main():
     cyc = pd.read_parquet(OUT / "cycle.parquet")
     before, after, n = run(cyc)
     (OUT / "sectional_speed_notes.json").write_text(json.dumps(n, indent=2))
-    fig, axs = plt.subplots(1, 2, figsize=(14.0, 6.2), sharey=True)
-    fig.subplots_adjust(left=0.065, right=0.985, top=0.74, bottom=0.12, wspace=0.08)
-    cases = [(before, n["df_before"], n["v_down_before_mps"], "Before: symmetric stroke", S.COLORS["warn"]),
-             (after, n["df_after"], n["v_down_after_mps"], "After: slower downstroke (O1 sectional speed)", S.COLORS["ai"])]
+    fig, axs = plt.subplots(1, 2, figsize=(14.0, 6.8), sharey=True)
+    fig.subplots_adjust(left=0.065, right=0.985, top=0.76, bottom=0.2, wspace=0.08)
+    cases = [(before, n["df_before"], n["v_down_before_mps"], "Before: equal up and down", S.COLORS["warn"]),
+             (after, n["df_after"], n["v_down_after_mps"], "After: slower downstroke", S.COLORS["ai"])]
     for ax, (r, df, vd, title, col) in zip(axs, cases):
         close = lambda a: np.append(a, a[0])  # noqa: E731
         raw = close(r["surf_load_raw"]) / 1e3
-        ax.plot(close(r["surf_pos"]), raw, color="#B9C0BC", lw=1.0, label="rod load (model, unclipped)")
-        ax.plot(close(r["surf_pos"]), np.maximum(raw, 0), color=col, lw=2.0, label="surface card (measured, clipped at 0)")
-        ax.plot(close(r["dh_pos"]), close(r["dh_load"]) / 1e3, color="#8A938E", lw=1.2, ls=(0, (4, 2.5)), label="downhole (pump)")
+        ax.plot(close(r["surf_pos"]), raw, color="#B9C0BC", lw=1.0, label="load if the rods stayed attached")
+        ax.plot(close(r["surf_pos"]), np.maximum(raw, 0), color=col, lw=2.0, label="measured at the surface")
+        ax.plot(close(r["dh_pos"]), close(r["dh_load"]) / 1e3, color="#8A938E", lw=1.2, ls=(0, (4, 2.5)), label="at the pump")
         ax.axhline(0, color=S.COLORS["warn"], lw=0.8)
         mn = float(r["min_load_raw"]) / 1e3
-        state = "rods float: load clipped" if mn < 0 else f"min load {mn:.1f} kN ({100 * mn / np.nanmax(r['surf_load_raw']) * 1e3:.0f} % of peak)"
+        state = "rods floating" if mn < 0 else f"lowest load {mn:.1f} kN, rods stay attached"
         ax.set_title(title, loc="left", fontsize=12.5, fontweight="semibold", color=col, pad=38)
-        ax.text(0.0, 1.015, f"N {n['N_spm']:.1f} SPM · S {n['S_m']:.0f} m · downstroke {100 * df:.0f} % of the cycle · "
-                f"max down speed {vd:.2f} m/s\n{state}", transform=ax.transAxes, fontsize=9.5, color="#3E4642")
+        ax.text(0.0, 1.015, f"Downstroke takes {100 * df:.0f} % of each stroke, top speed {vd:.2f} m/s\n{state}",
+                transform=ax.transAxes, fontsize=9.5, color="#3E4642")
         j = int(np.nanargmin(r["surf_load_raw"]))
         if mn < 0:
-            ax.annotate(f"carrier bar outruns the rods:\nload clipped ({mn:.1f} kN)", xy=(r["surf_pos"][j], 0),
+            ax.annotate("the pump outruns\nthe falling rods", xy=(r["surf_pos"][j], 0),
                         xytext=(r["surf_pos"][j] - 1.6, 16), fontsize=9, color=S.COLORS["warn"],
                         arrowprops=dict(arrowstyle="->", color=S.COLORS["warn"], lw=1.0))
-        ax.set_xlabel("Position (m)")
+        ax.set_xlabel("Rod position (m)")
         ax.grid(True, color="#E1E6E2", lw=0.6)
         ax.set_axisbelow(True)
-        ax.legend(loc="upper right", fontsize=8.5, frameon=False)
+        ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.12), ncol=3, fontsize=8.5, frameon=False)
     axs[0].set_ylabel("Load (kN)")
-    fig.suptitle("Same pump speed, no rod float: slow only the downstroke", x=0.065, ha="left", fontsize=15, fontweight="semibold")
-    extra = "" if n["reached_5pct"] else f" (5 % target not reached within the unit's acceleration limit, df ≤ {n['df_limit_accel']:.2f})"
-    fig.text(0.065, 0.875, f"Hydraulic unit, production day {n['day']:.0f} ({DAYS_AFTER:.0f} d after this unit's own float onset, "
-             f"day {n['hydraulic_onset_day_df0.5']:.0f}); tubing μ_eff {n['mu_eff_Pas']:.1f} Pa·s. Wave equation, normal pump. "
-             f"Upstroke speeds up to {n['v_up_after_mps']:.2f} m/s to keep N{extra}.", fontsize=10, color="#58625C")
+    fig.suptitle("Slowing just the downstroke stops rod float", x=0.065, ha="left", fontsize=15, fontweight="semibold")
+    extra = "" if n["reached_5pct"] else " (the unit's speed limit stops it short of the target)"
+    fig.text(0.065, 0.875, f"Hydraulic pumping unit on day {n['day']:.0f} of pumping, same {n['N_spm']:.1f} strokes/min in both cases. "
+             f"The upstroke speeds up a little to make room{extra}.", fontsize=10, color="#58625C")
     S.save(fig, "A7_sectional_speed")
     plt.close(fig)
     print(json.dumps(n, indent=1))

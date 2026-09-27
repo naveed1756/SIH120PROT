@@ -35,10 +35,10 @@ export function tourState(sec: number, c: Cycle) {
   const overlay: Overlay = sec < 6 ? "title" : sec >= 68 ? "end" : sec >= 61 ? "A5" : sec >= 55 ? "A3" : null;
   const caption =
     sec < 6 ? "" :
-    sec < 22 ? "Steam injection: 3.1 t/h wet steam for 18 days; the hot halo grows wider at the top (steam override)" :
-    sec < 35 ? "Soak, then pumped production: the rod string's stress wave and the live dynamometer card" :
-    sec < 48 ? "Cooling: tubing viscosity rises as the halo shrinks and the emulsion inverts" :
-    sec < 51 ? "Forecast: rod float in ~14 h at the current speed" :
-    sec < 55 ? "Approved: the AI glide path steps the pump speed down; the card returns to normal" : "";
+    sec < 22 ? "Steaming: 3.1 t/h for 18 days. The hot zone grows, widest at the top because steam rises" :
+    sec < 35 ? "Soak, then pumping: watch the load travel along the rods and the live pump card" :
+    sec < 48 ? "Cooling: the hot zone shrinks, the water share drops and the oil in the tubing thickens" :
+    sec < 51 ? "Forecast: the rods will start to float in about 14 hours at this speed" :
+    sec < 55 ? "Approved: the AI slows the pump step by step and the card returns to normal" : "";
   return { tH, cam, scenario, overlay, caption };
 }
